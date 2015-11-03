@@ -9,8 +9,8 @@
 #ifndef _CF_FRAMEWORK_MODULE_H_
 #define _CF_FRAMEWORK_MODULE_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
-#include "../code_library/platform_cross/UC_Mem_Allocator_Recycle.h"
+#include "utils/UH_Define.h"
+#include "utils/UC_Mem_Allocator_Recycle.h"
 
 #include "CF_framework_config.h"
 #include "CF_framework_interface.h"

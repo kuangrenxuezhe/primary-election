@@ -1,27 +1,30 @@
-#ifndef __CANDIDATE_H__
-#define __CANDIDATE_H__
+#ifndef CF_CANDIDATE_H
+#define CF_CANDIDATE_H
+
+#include <stdint.h>
 
 #include <cstdio>
 #include <cstring>
-
-#include <iostream>
 #include <map>
-#include <fstream>
 #include <vector>
-#include <boost/unordered_map.hpp>
-using namespace std;
+#include <list>
+#include <iostream>
+#include <fstream>
 
-#include "UC_MD5.h"
-#include "UH_Define.h"
-#include "UC_LogManager.h"
-#include "UC_Persistent_Storage.h"
-#include "UC_Allocator_Recycle.h"
+#include "utils/UC_MD5.h"
+#include "utils/UH_Define.h"
+#include "utils/UC_LogManager.h"
+#include "utils/UC_Persistent_Storage.h"
+#include "utils/UC_Allocator_Recycle.h"
+
 #include "CF_framework_interface.h"
 #include "CF_framework_config.h"
 
-#define LOG_ERROR(x,y)		printf("FILE: %s LINE: %d\nERROR: [%s] [%s] \n", __FILE__, __LINE__, x, y)
+#define RESERVED_MAX_DAYS  (7) // ä¿ç•™å†å²çš„æœ€å¤§å¤©æ•°
+#define RESERVED_TIME_SLOT (24) // æŒ‰ç…§æ¯å°æ—¶åˆ‡åˆ†å†å²æ•°æ®
+#define SLIP_WINDOW_SIZE	(RESERVED_MAX_DAYS*RESERVED_TIME_SLOT)
+#define SECOND_PER_HOUR    (3600)
 
-#define SLIP_WINDOW_SIZE	(1440)
 #define SLIP_ITEM_NUM		(1000000)
 #define CIRCLE_AND_SRP_NUM	(200)
 #define MAX_BUFFER_SIZE		(1<<24)
@@ -33,7 +36,6 @@ using namespace std;
 #define MAX_FUN(a,b)	((a)>(b)?(a):(b))
 #define MIN_FUN(a,b) 	((a)<(b)?(a):(b))
 
-//#define unmap			boost::unordered_map
 #define unmap			map
 
 const var_4 UPDATE_USER 	= 1001;
@@ -42,160 +44,143 @@ const var_4 UPDATE_CLICK	= 1003;
 const var_4 RESPONSE_RECOMMEND	= 1004;
 const var_4 CATEGORY_NUM = 13;
 const var_4 default_category_id = 13;
-const var_1 global_category_name[][16] = {"»¥ÁªÍøĞÂÎÅ","¹úÄÚĞÂÎÅ","¹ú¼ÊĞÂÎÅ","Éç»áĞÂÎÅ","ÓéÀÖĞÂÎÅ","¾üÊÂĞÂÎÅ","ÌåÓıĞÂÎÅ","Æû³µĞÂÎÅ","¿Æ¼¼ĞÂÎÅ","²Æ¾­ĞÂÎÅ","½ÌÓıĞÂÎÅ","·¿²úĞÂÎÅ","Å®ĞÔĞÂÎÅ"};
 
-typedef struct st_user_info
-{
-	var_u8					user_id;
-	unmap<var_u8, var_4>	m_circle_and_srp;	// È¦×Ó»òÕßSRP´Ê     
-	unmap<var_u8, var_4>	m_has_read;			// ÒÑÔÄĞÂÎÅÁĞ±í
-	unmap<var_u8, var_4>	m_has_recommend;	// ÒÑÍÆ¼öĞÂÎÅÁĞ±í
-	unmap<var_u8, var_4>	m_dislike;			// ²»Ï²»¶ĞÂÎÅÁĞ±í
-	vector<var_u8>		v_has_read;		
-	vector<var_u8>		v_has_recommend;
-	vector<var_u8>		v_circle_and_srp;		
-	vector<var_u8>		v_dislike;		
-	
-	st_user_info()
-	{
-		m_circle_and_srp.clear();
-		v_circle_and_srp.clear();
-		m_has_read.clear();
-		v_has_read.clear();
-		m_has_recommend.clear();
-		v_has_recommend.clear();
-		m_dislike.clear();
-		v_dislike.clear();
-	}
-}USER_INFO;
+using namespace std;
 
-typedef struct st_item_info
-{
-	// ¶¨³¤Ğ´ËÀ
-	var_4   picture_num;
-	var_4   category_id;
-	var_4	circle_and_srp_num;
-	var_u4	publish_time;
-	var_u8	item_id;
-	var_u8	circle_and_srp[CIRCLE_AND_SRP_NUM];
-}ITEM_INFO;
+struct user_info_ {
+  var_u8					user_id;
+  unmap<var_u8, var_4>	m_circle_and_srp;	// åœˆå­æˆ–è€…SRPè¯     
+  unmap<var_u8, var_4>	m_has_read;			// å·²é˜…æ–°é—»åˆ—è¡¨
+  unmap<var_u8, var_4>	m_has_recommend;	// å·²æ¨èæ–°é—»åˆ—è¡¨
+  unmap<var_u8, var_4>	m_dislike;			// ä¸å–œæ¬¢æ–°é—»åˆ—è¡¨
+  vector<var_u8>		v_has_read;		
+  vector<var_u8>		v_has_recommend;
+  vector<var_u8>		v_circle_and_srp;		
+  vector<var_u8>		v_dislike;		
+};
+typedef struct user_info_ user_info_t;
 
-typedef struct st_item_click
-{
-	var_u4  click_count;
-	var_u4	click_time;
-	var_f4 	primary_power;
-}ITEM_CLICK;
+struct item_info_ {
+  var_4   picture_num;
+  var_4   category_id;
+  var_4	circle_and_srp_num;
+  var_u4	publish_time;
+  var_u8	item_id;
+  var_u8	circle_and_srp[CIRCLE_AND_SRP_NUM];
+};
+typedef struct item_info_ item_info_t;
 
-typedef struct st_slip_window
-{
-	var_u4 last_update_index;
-	var_u4 last_update_time;
-}SLIP_WINDOW;
+struct item_click_ {
+  var_u4  click_count;
+  var_u4	click_time;
+  var_f4 	primary_power;
+};
+typedef struct item_click_ item_click_t;
 
-typedef struct st_item_top
-{
-	var_bl global;
-	vector<var_u8> srps;
-	vector<var_u8> circles;
-	st_item_top()
-	{
-		global = false;
-		srps.clear();
-		circles.clear();
-	}
-}ITEM_TOP;
+struct item_index_ {
+  int32_t item_index;
+  int32_t publish_time;
+};
+typedef struct item_index_ item_index_t;
 
-class Candidate:public CF_framework_interface
-{
-public:
-	Candidate();
-	~Candidate();
-	
-	var_4 load();
-	var_4 invalid_old_items();
-	
-	var_4 module_type();
-	var_4 init_module(var_vd* config_info);
-	
-	var_4 update_user(var_1* user_info);
-	var_4 update_item(var_1* item_info);
-	var_4 update_click(var_1* click_info);
+struct slip_window_ {
+  std::list<item_index_t> item_list;
+};
+typedef struct slip_window_ slip_window_t;
 
-	var_4 query_user(var_u8 user_id, var_1* result_buf, var_4 result_max, var_4& result_len);	
-	var_4 query_recommend(var_u8 user_id, var_4 flag, var_1* result_buf, var_4 result_max, 
-			              var_4& result_len);
-	
-	var_4 query_history(var_u8 user_id, var_1* result_buf, var_4 result_max, var_4& result_len);
+struct top_item_ {
+  var_bl global;
+  vector<var_u8> srps;
+  vector<var_u8> circles;
+  top_item_() {
+    global = false;
+  }
+};
+typedef struct top_item_ top_item_t;
 
-	var_4 is_persistent_library();
-	var_4 persistent_library();
+class Candidate: public CF_framework_interface {
+  public:
+    Candidate();
+    virtual ~Candidate();
 
-	var_4 is_update_train();
-	var_4 update_pushData(var_u8 user_id, var_4 push_num, var_u8* push_data);
+  public:
+    virtual var_4 module_type();
+    virtual var_4 init_module(var_vd* config_info);
 
-	var_4 cold_boot(var_4 user_index, var_4 item_num, ITEM_INFO* item_list, var_f4* recommend_power, 
-			        var_4* item_times, var_4 flag);
-	
-private:
-	static UC_MD5							m_md5;
-	var_bl									m_is_init;
-	// ÓÃ»§ĞÅÏ¢µÄÕıÅÅ
-	vector<USER_INFO>						m_user_info;
-	// ÓÃ»§ĞÅÏ¢µÄµ¹ÅÅ
-	unmap<var_u8, var_4>					m_slip_hash;
-	unmap<var_u8, st_item_top>				m_item_top;
-	unmap<var_u8, st_item_click>			m_item_hash;	
-	unmap<var_u8, std::pair<var_4,var_u4> >	m_user_indexer;
+    virtual var_4 update_user(var_1* user_info);
+    virtual var_4 update_item(var_1* item_info);
+    virtual var_4 update_click(var_1* click_info);
 
-	// ÎÄµµIDÁĞ±í£¬4WÈİÁ¿
-	var_4						m_end;
-	var_4						m_last_index;
-	// »¬´°×îºó¸üĞÂÊ±¼ä
-	var_u4						m_last_time;
-	
-	st_item_info*				m_slip_items;
-	
-	var_4 						max_user_num;		// ÓÃ»§×î´óÊıÁ¿
-	var_4						max_circle_num;		// Ò»¸öÓÃ»§×î¶àÊôÓÚ¼¸¸öÈ¦×Ó
-	var_4						max_read_num;		// ÓÃ»§ÒÑ¾­ÔÄ¶ÁµÄitem±£ÁôÌõÊı
-	var_4						max_recommend_num;	// ÒÑ¾­ÍÆ¼ö¸øÓÃ»§µÄĞÂÎÅ±£ÁôÌõÊı
-	var_4						max_dislike_num;	// ÓÃ»§²»Ï²»¶µÄĞÂÎÅ±£ÁôÌõÊı
-	var_4						slip_item_num;		// Ã¿ÌìµÄĞÂÎÅÊı(»¬´°´óĞ¡)
-	var_4						choose_minutes_scope;	// Ñ¡Ôñ¹ıÈ¥n·ÖÖÓµÄItems×÷ÍÆ¼ö³õÑ¡¼¯
-	
-	var_4						item_num_limit;
-	
-	var_1						m_sto_path[256];
-	// ÈÕÖ¾
-	UC_LogManager*              m_log_manager;
-	// ±£ÁôÒ»ÌìµÄÎÄµµ¼¯ºÏ£¬»¬¶¯´°¿Ú£¬Ã¿·ÖÖÓÌÔÌ­Ò»´Î
-	SLIP_WINDOW					m_window_control[SLIP_WINDOW_SIZE];
-	CP_MUTEXLOCK_RW				m_item_lock;
-	CP_MUTEXLOCK_RW				m_user_lock;
-	// ´ıÍÆ¼ö¸øÓÃ»§µÄĞÂÎÅÁĞ±í£¬´óĞ¡SLIP_ITEM_NUM * sizeof(ITEM_INFO)
-	UC_Allocator_Recycle*		m_item_allocator;
-	UC_Allocator_Recycle*		m_large_allocator;
-	UC_Persistent_Storage*		m_data_storage;
+    virtual var_4 query_user(var_u8 user_id, var_1* result_buf, var_4 result_max, var_4& result_len);	
+    virtual var_4 query_recommend(var_u8 user_id, var_4 flag, var_1* result_buf, var_4 result_max, var_4& result_len);
+    virtual var_4 query_history(var_u8 user_id, var_1* result_buf, var_4 result_max, var_4& result_len);
+
+    virtual var_4 is_persistent_library();
+    virtual var_4 persistent_library();
+
+    virtual var_4 is_update_train();
+    virtual var_4 update_pushData(var_u8 user_id, var_4 push_num, var_u8* push_data);
+
+  protected:
+    var_4 load();
+    var_4 invalid_old_items();
+    var_4 cold_boot(var_4 user_index, var_4 item_num, item_info_t* item_list, var_f4* recommend_power, var_4* item_times, var_4 flag);
+
+  private:
+    void parse_slip_window(char* buffer, int buflen);
+    int serialize_slip_window(char* buffer, int maxsize);
+    void insert_slip_window(int32_t publish_time, int32_t term_index);
+    var_4 query_recommend(var_u8 user_id, var_4 flag, int32_t start_time, int32_t end_time, var_1* result_buf, var_4 result_max, var_4& result_len);
+
+  private:
+    static UC_MD5							m_md5;
+    var_bl									m_is_init;
+    // ç”¨æˆ·ä¿¡æ¯çš„æ­£æ’
+    vector<user_info_t>						m_user_info;
+    // ç”¨æˆ·ä¿¡æ¯çš„å€’æ’
+    unmap<var_u8, var_4>					m_slip_hash;
+    unmap<var_u8, top_item_t>				m_item_top;
+    unmap<var_u8, item_click_t>			m_item_hash;	
+    unmap<var_u8, std::pair<var_4,var_u4> >	m_user_indexer;
+
+    // æ–‡æ¡£IDåˆ—è¡¨ï¼Œ4Wå®¹é‡
+    var_4						m_end;
+    var_4						m_last_index;
+    // æ»‘çª—æœ€åæ›´æ–°æ—¶é—´
+    var_u4						m_last_time;
+
+    item_info_t*				m_slip_items;
+
+    var_4 						max_user_num;		// ç”¨æˆ·æœ€å¤§æ•°é‡
+    var_4						max_circle_num;		// ä¸€ä¸ªç”¨æˆ·æœ€å¤šå±äºå‡ ä¸ªåœˆå­
+    var_4						max_read_num;		// ç”¨æˆ·å·²ç»é˜…è¯»çš„itemä¿ç•™æ¡æ•°
+    var_4						max_recommend_num;	// å·²ç»æ¨èç»™ç”¨æˆ·çš„æ–°é—»ä¿ç•™æ¡æ•°
+    var_4						max_dislike_num;	// ç”¨æˆ·ä¸å–œæ¬¢çš„æ–°é—»ä¿ç•™æ¡æ•°
+    var_4						slip_item_num;		// æ¯å¤©çš„æ–°é—»æ•°(æ»‘çª—å¤§å°)
+    var_4						choose_minutes_scope;	// é€‰æ‹©è¿‡å»nåˆ†é’Ÿçš„Itemsä½œæ¨èåˆé€‰é›†
+
+    var_4						item_num_limit;
+
+    var_1						m_sto_path[256];
+
+    int32_t base_time_; // æ»‘çª—åŸºå‡†æ—¶é—´
+    // ä¿ç•™7å¤©çš„æ–‡æ¡£é›†åˆï¼Œæ»‘åŠ¨çª—å£ï¼Œå°æ—¶æ·˜æ±°ä¸€æ¬¡
+    slip_window_t slip_window_[SLIP_WINDOW_SIZE+1];
+
+    // æ—¥å¿—
+    UC_LogManager*              m_log_manager;
+    CP_MUTEXLOCK_RW				m_item_lock;
+    CP_MUTEXLOCK_RW				m_user_lock;
+    // å¾…æ¨èç»™ç”¨æˆ·çš„æ–°é—»åˆ—è¡¨ï¼Œå¤§å°SLIP_ITEM_NUM * sizeof(item_info_t)
+    UC_Allocator_Recycle*		m_item_allocator;
+    UC_Allocator_Recycle*		m_large_allocator;
+    UC_Persistent_Storage*		m_data_storage;
 };
 
-static var_u8 GetTimeDiff(struct timeval begin, struct timeval end)
+static uint64_t time_diff(const struct timeval& begin, const struct timeval& end)
 {
-	struct timeval diff;
-	if (end.tv_usec >= begin.tv_usec)
-	{   
-		diff.tv_sec = end.tv_sec - begin.tv_sec;
-		diff.tv_usec = end.tv_usec - begin.tv_usec;
-	}   
-	else
-	{   
-		diff.tv_sec = end.tv_sec - begin.tv_sec - 1;
-		diff.tv_usec = 1000000 -begin.tv_usec + end.tv_usec;
-	}   
-	return (diff.tv_sec * 1000000 + diff.tv_usec);
+  return ((end.tv_sec*1000000UL+end.tv_usec) - (begin.tv_sec*1000000UL+begin.tv_usec))/1000;
 }
 
-#endif
-
-
+#endif // #define CF_CANDIDATE_H
 

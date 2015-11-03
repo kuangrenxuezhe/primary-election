@@ -9,15 +9,15 @@
 #ifndef _CF_FRAMEWORK_CENTER_H_
 #define _CF_FRAMEWORK_CENTER_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
-#include "../code_library/platform_cross/UC_CenterMessage.h"
-#include "../code_library/platform_cross/UC_Mem_Allocator_Recycle.h"
+#include "utils/UH_Define.h"
+#include "utils/UC_CenterMessage.h"
+#include "utils/UC_Mem_Allocator_Recycle.h"
 
-#include "../code_library/platform_cross/UC_MD5.h"
-#include "../code_library/platform_cross/UT_Sort.h"
-#include "../code_library/platform_cross/UT_Queue.h"
-#include "../code_library/platform_cross/UC_Queue_VL.h"
-#include "../code_library/platform_cross/UT_HashTable_Pro.h"
+#include "utils/UC_MD5.h"
+#include "utils/UT_Sort.h"
+#include "utils/UT_Queue.h"
+#include "utils/UC_Queue_VL.h"
+#include "utils/UT_HashTable_Pro.h"
 
 #include "cJSON.h"
 

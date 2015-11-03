@@ -9,9 +9,8 @@
 #ifndef _CF_FRAMEWORK_CACHE_H_
 #define _CF_FRAMEWORK_CACHE_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
-
-#include "../code_library/platform_cross/UT_HashTable_Pro.h"
+#include "utils/UH_Define.h"
+#include "utils/UT_HashTable_Pro.h"
 
 #include "CF_framework_config.h"
 

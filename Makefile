@@ -5,9 +5,9 @@ endif
 ENABLE_DEBUG?=0
 
 ifneq ($(strip $(ENABLE_DEBUG)), 1)
-		CFLAGS+= -g -O2
+		CFLAGS+= -g -w -O2
 else
-		CFLAGS+=-g -O0 -DDEBUG
+		CFLAGS+=-g -w -O0 -DDEBUG
 endif
 
 all: 

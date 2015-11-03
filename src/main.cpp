@@ -3,84 +3,84 @@
 //  CollaborativeFiltering
 //
 //  Created by zhanghl on 14-9-3.
-//  Copyright (c) 2014Âπ¥ CrystalBall. All rights reserved.
+//  Copyright (c) 2014È™ûÔøΩ CrystalBall. All rights reserved.
 //
 
 #include "CF_framework_center.h"
 #include "CF_framework_module.h"
-
-#include "Candidate.h"
+#include "CF_candidate.h"
 
 enum ErrorType
 {
-    TYPE_OK = 0,    //‘À––’˝≥£
-    TYPE_NETWORK,   //Õ¯¬Áπ ’œ
-    TYPE_SERVICE,   //∑˛ŒÒ¥ÌŒÛ
-    TYPE_OTHER,     //∆‰À¸¥ÌŒÛ
+  TYPE_OK = 0,    //ËøêË°åÊ≠£Â∏∏
+  TYPE_NETWORK,   //ÁΩëÁªúÊïÖÈöú
+  TYPE_SERVICE,   //ÊúçÂä°ÈîôËØØ
+  TYPE_OTHER,     //ÂÖ∂ÂÆÉÈîôËØØ
 };
 
 enum ErrorLevel
 {
-    LEVEL_A = 1,    //—œ÷ÿ
-    LEVEL_B,        //÷ÿ“™
-    LEVEL_C,        //“ª∞„
-    LEVEL_D,        //µ˜ ‘
-    LEVEL_E,        //ø…∫ˆ¬‘
+  LEVEL_A = 1,    //‰∏•Èáç
+  LEVEL_B,        //ÈáçË¶Å
+  LEVEL_C,        //‰∏ÄËà¨
+  LEVEL_D,        //Ë∞ÉËØï
+  LEVEL_E,        //ÂèØÂøΩÁï•
 };
 
 var_4 main(var_4 argc, var_1* argv[])
 {
-    Candidate candidate;
-    
-    CF_framework_module cd_model;
-    if(cd_model.init_framework((CF_framework_interface*)&candidate))
-        return -1;
-	printf("candidate starting successfully"); 
-	
-	CP_SOCKET_T lis_sock;
-    var_4 ret = cp_listen_socket(lis_sock, 19001);
+  Candidate candidate;
+
+  CF_framework_module cd_model;
+  if(cd_model.init_framework((CF_framework_interface*)&candidate))
+    return -1;
+
+  printf("candidate starting successfully"); 
+
+  CP_SOCKET_T lis_sock;
+  var_4 ret = cp_listen_socket(lis_sock, 19001);
+  if (ret)
+  {   
+    printf("listen monitor error\n");
+    return -2; 
+  }   
+  var_1 monitor_buffer[1024];
+
+  for (;;)
+  {   
+    CP_SOCKET_T sock;
+    ret = cp_accept_socket(lis_sock, sock);
     if (ret)
     {   
-        printf("listen monitor error\n");
-        return -2; 
-    }   
-    var_1 monitor_buffer[1024];
+      printf("monitor failed to accept");
+      continue;                                                                                                      
+    }                                                                                                                  
+    cp_set_overtime(sock, 5000);                                                                                       
 
-    for (;;)
-    {   
-        CP_SOCKET_T sock;
-        ret = cp_accept_socket(lis_sock, sock);
-        if (ret)
-        {   
-            printf("monitor failed to accept");
-            continue;                                                                                                      
-        }                                                                                                                  
-        cp_set_overtime(sock, 5000);                                                                                       
-                                                                                                                           
-        ret = cp_recvbuf(sock, monitor_buffer, 4);                                                                         
-        if (ret)                                                                                                           
-        {                                                                                                                  
-            printf("monitor failed to recv error code[%d]\n", errno);                                           
-            cp_close_socket(sock);                                                                                         
-            continue;                                                                                                      
-        }                                                                                                                  
-                                                                                                                           
-        var_1* pos = monitor_buffer;                                                                                       
-        memcpy(pos, "MonitorP1", 10);                                                                                      
-        pos += 10 + 4;                                                                                                     
-        *(var_4*)pos = TYPE_OK;                                                                                            
-        pos += 4;                                                                                                          
-        *(var_4*)pos = LEVEL_B;                                                                                            
-        pos += 4;                                                                                                          
-                                                                                                                           
-        *(var_4*)(monitor_buffer + 10) = pos - monitor_buffer - 14;                                                        
-        ret = cp_sendbuf(sock, monitor_buffer, pos - monitor_buffer); 
-    	cp_close_socket(sock);
-        if (ret)
-        {
-            printf("monitor failed to send error code[%d]\n", errno);
-            continue;
-        }
-	}
-    return 0;
+    ret = cp_recvbuf(sock, monitor_buffer, 4);                                                                         
+    if (ret)                                                                                                           
+    {                                                                                                                  
+      printf("monitor failed to recv error code[%d]\n", errno);                                           
+      cp_close_socket(sock);                                                                                         
+      continue;                                                                                                      
+    }                                                                                                                  
+
+    var_1* pos = monitor_buffer;                                                                                       
+    memcpy(pos, "MonitorP1", 10);                                                                                      
+    pos += 10 + 4;                                                                                                     
+    *(var_4*)pos = TYPE_OK;                                                                                            
+    pos += 4;                                                                                                          
+    *(var_4*)pos = LEVEL_B;                                                                                            
+    pos += 4;                                                                                                          
+
+    *(var_4*)(monitor_buffer + 10) = pos - monitor_buffer - 14;                                                        
+    ret = cp_sendbuf(sock, monitor_buffer, pos - monitor_buffer); 
+    cp_close_socket(sock);
+    if (ret)
+    {
+      printf("monitor failed to send error code[%d]\n", errno);
+      continue;
+    }
+  }
+  return 0;
 }

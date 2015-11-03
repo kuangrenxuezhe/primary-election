@@ -9,7 +9,7 @@
 #ifndef _CF_FRAMEWORK_INTERFACE_H_
 #define _CF_FRAMEWORK_INTERFACE_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
+#include "utils/UH_Define.h"
 
 class CF_framework_interface
 {
