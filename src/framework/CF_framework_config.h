@@ -9,8 +9,8 @@
 #ifndef _CF_FRAMEWORK_CONFIG_H_
 #define _CF_FRAMEWORK_CONFIG_H_
 
-#include "utils/UH_Define.h"
-#include "utils/UC_ReadConfigFile.h"
+#include "util/UH_Define.h"
+#include "util/UC_ReadConfigFile.h"
 
 #define MAX_MACHINE_NUM 64
 

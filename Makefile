@@ -11,7 +11,7 @@ else
 endif
 
 all: 
-	g++ $(CFLAGS) -o bin/primary_election ./src/*.cpp -I./deps/include -lpthread -luuid
+	g++ $(CFLAGS) -o bin/primary_election ./src/main.cpp ./src/core/*.cpp -I./src -I./deps/include -lpthread -luuid
 
 clean:
 	rm -f bin/primary_election

@@ -6,9 +6,10 @@
 //  Copyright (c) 2014骞� CrystalBall. All rights reserved.
 //
 
-#include "CF_framework_center.h"
-#include "CF_framework_module.h"
-#include "CF_candidate.h"
+#include "core/candidate.h"
+
+#include "framework/CF_framework_center.h"
+#include "framework/CF_framework_module.h"
 
 enum ErrorType
 {

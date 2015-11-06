@@ -9,11 +9,11 @@
 #ifndef _CF_FRAMEWORK_MODULE_H_
 #define _CF_FRAMEWORK_MODULE_H_
 
-#include "utils/UH_Define.h"
-#include "utils/UC_Mem_Allocator_Recycle.h"
+#include "util/UH_Define.h"
+#include "util/UC_Mem_Allocator_Recycle.h"
 
-#include "CF_framework_config.h"
-#include "CF_framework_interface.h"
+#include "framework/CF_framework_config.h"
+#include "framework/CF_framework_interface.h"
 
 class CF_framework_module
 {
@@ -132,9 +132,12 @@ public:
             var_u8 uid = *(var_u8*)pos;
             pos += 8;
             
+            var_4 beg_time = 0;
+            var_4 end_time = 0;
+            
             if(type == 1)
             {
-                if(m_module->query_recommend(uid, *(var_4*)pos, send_buf + 4, send_max - 4, send_len))
+                if(m_module->query_recommend(uid, *(var_4*)pos, beg_time, end_time, send_buf + 4, send_max - 4, send_len))
                     return -1;
             }
             else if(type == 2)

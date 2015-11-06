@@ -11,14 +11,14 @@
 #include <iostream>
 #include <fstream>
 
-#include "utils/UC_MD5.h"
-#include "utils/UH_Define.h"
-#include "utils/UC_LogManager.h"
-#include "utils/UC_Persistent_Storage.h"
-#include "utils/UC_Allocator_Recycle.h"
+#include "util/UC_MD5.h"
+#include "util/UH_Define.h"
+#include "util/UC_LogManager.h"
+#include "util/UC_Persistent_Storage.h"
+#include "util/UC_Allocator_Recycle.h"
 
-#include "CF_framework_interface.h"
-#include "CF_framework_config.h"
+#include "framework/CF_framework_interface.h"
+#include "framework/CF_framework_config.h"
 
 #define RESERVED_MAX_DAYS  (7) // 保留历史的最大天数
 #define RESERVED_TIME_SLOT (24) // 按照每小时切分历史数据

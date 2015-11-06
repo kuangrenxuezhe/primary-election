@@ -1,4 +1,4 @@
-#include "CF_candidate.h"
+#include "core/candidate.h"
 
 #define LOG_ERROR(x,y)		printf("FILE: %s LINE: %d\nERROR: [%s] [%s] \n", __FILE__, __LINE__, x, y)
 
@@ -49,6 +49,8 @@ var_4 Candidate::init_module(var_vd *cfg_info)
 {
   MODULE_CONFIG *cfg = (MODULE_CONFIG*)cfg_info;
 
+  m_is_init = true;
+
   assert(NULL != cfg_info);
   max_user_num = cfg->pf_max_user_num;
   max_circle_num = cfg->pf_max_circle_num;
@@ -59,8 +61,6 @@ var_4 Candidate::init_module(var_vd *cfg_info)
   item_num_limit = cfg->pf_item_num_limit;
   strcpy(m_sto_path, cfg->pf_store_path);
 
-  m_is_init = true;
-
   assert(NULL == m_slip_items);
   m_slip_items = new item_info_t[SLIP_ITEM_NUM];
   if (NULL == m_slip_items)
@@ -70,26 +70,33 @@ var_4 Candidate::init_module(var_vd *cfg_info)
   m_item_allocator = new UC_Allocator_Recycle;
   if (NULL == m_item_allocator)
     return -11;
+
   if (m_item_allocator->initMem(SLIP_ITEM_NUM * sizeof(item_info_t), 400, 20))
     return -12;
+
   assert(NULL == m_large_allocator);
   m_large_allocator = new UC_Allocator_Recycle;
   if (NULL == m_large_allocator)
     return -12;
+  
   if (m_large_allocator->initMem(MAX_BUFFER_SIZE, 100, 10))
     return -12;
+
   assert(NULL == m_log_manager);
   m_log_manager = new UC_LogManager;
   if (m_log_manager->init((var_1*)"log", (var_1*)"log", 30, 1))
     return -6;
+
   m_data_storage = new UC_Persistent_Storage;
   if (NULL == m_data_storage)
     return -13;
+
   if (m_data_storage->init(m_sto_path, (var_1*)"data_sto"))
     return -14;
+
   if (load())
     return -15;
-  // 
+
   m_is_init = false;
   return 0;
 }
