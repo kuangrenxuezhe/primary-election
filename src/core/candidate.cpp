@@ -4,6 +4,7 @@
 
 var_4 query_cnt = 0;
 UC_MD5 Candidate::m_md5;
+
 const var_1 global_category_name[][16] = {
   "\xbb\xa5\xc1\xaa\xcd\xf8\xd0\xc2\xce\xc5", // 互联网新闻 GBK编码
   "\xb9\xfa\xc4\xda\xd0\xc2\xce\xc5", // 国内新闻 GBK编码
@@ -808,7 +809,7 @@ var_4 Candidate::query_recommend(var_u8 user_id, var_4 flag, int32_t start_time,
   gettimeofday(&end, NULL);
 
   var_1 query_log[128];
-  snprintf(query_log, 128, "query count:%d, query userid:%lu, recommend num:%d, history_num:%d, current time:%ld, cost time: %ld us\n", query_cnt, user_id, recommend_num, history_num, beg.tv_sec, time_diff(beg,end));
+  snprintf(query_log, 128, "query count:%d, query userid:%lu, recommend num:%d, history_num:%d, current time:%ld, cost time: %ld us\n", query_cnt, user_id, recommend_num, history_num, beg.tv_sec, time_diff_ms(beg,end));
   ofstream fout("query.log", ios::app);
   fout<<query_log;
   fout.close();

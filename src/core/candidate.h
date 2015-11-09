@@ -177,7 +177,8 @@ class Candidate: public CF_framework_interface {
     UC_Persistent_Storage*		m_data_storage;
 };
 
-static uint64_t time_diff(const struct timeval& begin, const struct timeval& end)
+// 返回时间差，单位毫秒
+static uint64_t time_diff_ms(const struct timeval& begin, const struct timeval& end)
 {
   return ((end.tv_sec*1000000UL+end.tv_usec) - (begin.tv_sec*1000000UL+begin.tv_usec))/1000;
 }

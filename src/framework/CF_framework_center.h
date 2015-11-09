@@ -19,7 +19,7 @@
 #include "util/UC_Queue_VL.h"
 #include "util/UT_HashTable_Pro.h"
 
-#include "cJSON.h"
+#include "util/cJSON.h"
 
 #include "framework/CF_framework_config.h"
 #include "framework/CF_framework_cache.h"
