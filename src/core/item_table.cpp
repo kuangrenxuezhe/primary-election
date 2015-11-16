@@ -5,7 +5,7 @@
 #include "util/crc32c.h"
 #include "glog/logging.h"
 #include "proto/record.pb.h"
-#include "proto/news_rsys.pb.h"
+#include "proto/service.pb.h"
 
 #include <sstream>
 
@@ -31,7 +31,7 @@ namespace rsys {
         virtual ~ActionUpdater() {
         }
         virtual bool update(item_index_t* item_index) {
-          if (item_action_.action == CLICK) {
+          if (item_action_.action == ACTION_CLICK) {
             item_index->click_count += 1;
             item_index->click_time = item_action_.action_time;
           }
@@ -78,7 +78,7 @@ namespace rsys {
       return true;
     }
 
-    bool serializeTo(item_index_t* item_index, std::string& data)
+    bool serializeTo(const item_index_t* item_index, std::string& data)
     {
       ItemRecord item_record;
       item_info_t* item_info = item_index->item_info;
@@ -125,7 +125,7 @@ namespace rsys {
       std::string serialized_str;
 
       while (iter.hasNext()) {
-        if (!serializeTo(iter.key(), iter.value(), serialized_str)) {
+        if (!serializeTo(iter.value(), serialized_str)) {
           LOG(WARNING) << "";
         } else {
           status = writer.write(serialized_str);

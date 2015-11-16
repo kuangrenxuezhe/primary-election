@@ -7,7 +7,7 @@
 #include "glog/logging.h"
 
 #include "proto/record.pb.h"
-#include "proto/news_rsys.pb.h"
+#include "proto/service.pb.h"
 
 namespace rsys {
   namespace news {

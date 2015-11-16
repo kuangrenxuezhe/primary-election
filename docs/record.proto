@@ -7,6 +7,11 @@ message Elimination {
   int32 etime = 2; // 淘汰时间
 }
 
+// ID集合
+message IdSet {
+  repeated fixed64 id = 1 [packed=true];
+}
+
 message LogRecord {
   google.protobuf.Any record = 1;
 }

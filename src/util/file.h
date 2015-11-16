@@ -1,12 +1,13 @@
 #ifndef RSYS_NEWS_FILE_H
 #define RSYS_NEWS_FILE_H
 
+#include <stdint.h>
 #include <stdio.h>
 #include "util/status.h"
 
 namespace rsys {
   namespace news {
-    static const uint32_t kVersionFlag = 0xAF;
+    static const uint32_t kVersionFlag = 0xAFU;
 
     class FileWriter {
       public:

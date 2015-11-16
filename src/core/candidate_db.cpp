@@ -2,7 +2,7 @@
 
 #include "core/core_type.h"
 #include "glog/logging.h"
-#include "proto/log_record.pb.h"
+#include "proto/record.pb.h"
 
 namespace rsys {
   namespace news {
@@ -187,7 +187,7 @@ namespace rsys {
       return status;
     }
 
-    Status CandidateDB::queryCandidateSet(const Query& query, CandidateSet& cset)
+    Status CandidateDB::queryCandidateSet(const CandidateQuery& query, CandidateSet& cset)
     {
       query_t cand_query;
       candidate_set_t cand_set;   

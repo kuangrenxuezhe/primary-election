@@ -5,11 +5,11 @@
 #include <set>
 #include <list>
 
-#include "core/base_table.h"
 #include "util/status.h"
-#include "util/options.h"
+#include "core/base_table.h"
+#include "core/options.h"
 #include "core/core_type.h"
-#include "proto/news_rsys.pb.h"
+#include "proto/service.pb.h"
 #include "util/level_table.h"
 #include "sparsehash/dense_hash_map"
 
@@ -72,7 +72,7 @@ namespace rsys {
         int syncSlipWindow(const char* fullpath);
 
         bool parseFrom(const std::string& data, item_index_t* item_index);
-        bool serializeTo(item_index_t* item_index, std::string& data);
+        bool serializeTo(const item_index_t* item_index, std::string& data);
 
       private:
         int window_size_; 

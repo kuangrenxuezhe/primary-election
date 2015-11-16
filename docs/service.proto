@@ -88,11 +88,6 @@ message UserSubscribe {
   repeated fixed64 circle_id = 3; // 圈子的SRPID
 }
 
-// ID集合
-message IdSet {
-  repeated fixed64 id = 1 [packed=true];
-}
-
 // 初选集
 message CandidateSet {
   message Candidate {
@@ -107,7 +102,7 @@ message CandidateSet {
 }
 
 // 推荐条件
-message Query {
+message CandidateQuery {
   fixed64 user_id = 1;
   int32 start_time = 2;
   int32 end_time = 3;
@@ -115,7 +110,7 @@ message Query {
 }
 
 service PrimaryElection {
-  // 
   rpc doAction(UserAction) returns (Response) {}
   rpc doActionStream(stream UserAction) returns (stream Response) {}
 }
+

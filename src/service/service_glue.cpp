@@ -2,11 +2,11 @@
 
 #include <assert.h>
 #include <time.h>
+#include <sstream>
+
 #include "glog/logging.h"
 #include "util/status.h"
-#include "util/options.h"
-
-#include <sstream>
+#include "core/options.h"
 
 namespace rsys {
   namespace news {

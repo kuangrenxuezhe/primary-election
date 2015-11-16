@@ -5,11 +5,12 @@
 #include <vector>
 
 #include "util/status.h"
-#include "util/options.h"
 #include "util/wal.h"
+#include "core/options.h"
 #include "core/user_table.h"
 #include "core/item_table.h"
-#include "proto/news_rsys.pb.h"
+#include "proto/record.pb.h"
+#include "proto/service.pb.h"
 
 namespace rsys {
   namespace news {
@@ -46,7 +47,7 @@ namespace rsys {
         // 获取用户已阅读的历史记录
         Status queryHistory(uint64_t user_id, IdSet& history);
         // 获取待推荐的候选集
-        Status queryCandidateSet(const Query& query, CandidateSet& candidate_set);
+        Status queryCandidateSet(const CandidateQuery& query, CandidateSet& candidate_set);
 
       private:
         Options options_;

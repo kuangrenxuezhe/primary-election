@@ -2,9 +2,9 @@
 #define RSYS_NEWS_SERVICE_GLUE_H
 
 #include "util/status.h"
-#include "util/options.h"
-#include "proto/news_rsys.pb.h"
+#include "core/options.h"
 #include "core/candidate_db.h"
+#include "proto/service.pb.h"
 #include "framework/CF_framework_interface.h"
 
 namespace rsys {

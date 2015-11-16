@@ -13,19 +13,21 @@ endif
 LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++
 sources=main.cpp \
 				util/status.cpp \
-				util/options.cpp \
 				util/crc32c.cpp \
 				util/wal.cpp \
 				util/file.cpp \
 				util/level_file.cpp \
+				core/options.cpp \
 				core/item_table.cpp \
 				core/user_table.cpp \
 				core/candidate_db.cpp \
 				service/service_glue.cpp \
-				proto/news_rsys.pb.cc \
-				proto/log_record.pb.cc
+				proto/record.pb.cc \
+				proto/service.pb.cc
+
 SOURCES=$(addprefix ./src/, $(sources))
 all: 
+	#protoc -I./deps/include -I./docs --cpp_out=./src/proto ./docs/record.proto ./docs/news_rsys.proto 
 	g++ $(CFLAGS) -o bin/primary_election $(SOURCES) -I./src -I./deps/include -L./deps/lib $(LIBS)
 
 clean:
