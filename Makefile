@@ -10,8 +10,23 @@ else
 		CFLAGS+=-g -w -O0 -DDEBUG
 endif
 
+LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++
+sources=main.cpp \
+				util/status.cpp \
+				util/options.cpp \
+				util/crc32c.cpp \
+				util/wal.cpp \
+				util/file.cpp \
+				util/level_file.cpp \
+				core/item_table.cpp \
+				core/user_table.cpp \
+				core/candidate_db.cpp \
+				service/service_glue.cpp \
+				proto/news_rsys.pb.cc \
+				proto/log_record.pb.cc
+SOURCES=$(addprefix ./src/, $(sources))
 all: 
-	g++ $(CFLAGS) -o bin/primary_election ./src/main.cpp ./src/core/*.cpp -I./src -I./deps/include -lpthread -luuid
+	g++ $(CFLAGS) -o bin/primary_election $(SOURCES) -I./src -I./deps/include -L./deps/lib $(LIBS)
 
 clean:
 	rm -f bin/primary_election

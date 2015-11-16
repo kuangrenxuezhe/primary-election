@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+message Elimination {
+  fixed64 id = 1; // 淘汰ID，为ItemID或者UserID
+  int32 etime = 2; // 淘汰时间
+}
+
+message LogRecord {
+  google.protobuf.Any record = 1;
+}
+

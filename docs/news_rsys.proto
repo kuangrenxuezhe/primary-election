@@ -1,0 +1,121 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+package rsys.news;
+
+//TODO: 将GBK编码转换为UTF-8编码
+
+// 回应
+message Response {
+  int32 status_code = 1; // 错误码（0为正常，其它为失败）
+  google.protobuf.Any detail = 2; // 回应具体内容
+}
+
+enum Action {
+  ACTION_NONE = 0; // 无操作
+  ACTION_CLICK = 1; // 点击
+  ACTION_LIKE = 2; // 点赞
+  ACTION_COMMENT = 3; // 评论
+  ACTION_FAVORITE = 4; // 收藏
+  ACTION_SHARE = 5; // 分享
+  ACTION_DISLIKE = 6; // 不喜欢
+  ACTION_CLOSE_PAGE = 7; // 关闭页面
+}
+
+// 用户行为
+message UserAction {
+  fixed64 user_id = 1; // 用户ID
+  fixed64 item_id = 2; // 文档ID
+  Action action = 3; // 用户操作
+  int32 click_time = 4; // 点击时间，单位秒
+  int32 stay_time = 5; // 停留时间, 单位秒
+  string location = 6; // 用户所在位置
+  fixed64 srp_id = 7; // SRPID
+  int32 source_id = 8; // 点击来源, 默认值0
+}
+
+// 关键词
+message Word {
+  string word = 1; // 关键词, 编码GKB编码
+  int32 count = 2; // 关键词频率
+}
+
+// SRP
+message Srp {
+  fixed64 srp_id = 1; // SRPID
+  float power = 2; // SRP权重
+}
+
+enum TopFlag {
+  TOP_FLAG_NONE = 0; // 不推荐
+  TOP_FLAG_GLOBAL = 1; // 全局推荐
+  TOP_FLAG_PARTIAL = 2; // 部分推荐
+}
+
+enum ItemType {
+  ITEM_TYPE_NONE = 0;
+  ITEM_TYPE_NEWS = 1;
+  ITEM_TYPE_VIDEO = 2;
+}
+
+// Top
+message TopInfo {
+  TopFlag top_flag = 1; // 推荐方式
+  repeated Srp srp = 2; // 文章所属SRP
+  repeated fixed64 circle_id = 3; // 文章所属圈子, 编码GBK字符串
+}
+
+// 新闻数据
+message ItemInfo {
+  fixed64 item_id = 1; // 文档ID
+  int32 publish_time = 2; // 发布时间,单位秒
+  int32 push_time = 3; // 推送到推荐系统的时间,单位秒
+  int32 picture_num = 4; // 图片数量
+  float power = 5; // 新闻权值
+  ItemType item_type = 6; // 数据类型
+  repeated string category = 7; // 文章所属分类, 编码GBK字符串
+  repeated Word word = 8; // 文章包含关键词
+  repeated Srp srp = 9; // 文章所属SRP
+  repeated fixed64 circle_id = 10; // 文章所属圈子, 编码GBK字符串
+  TopInfo top_info = 11; // 全局推荐信息
+}
+
+// 用户订阅
+message UserSubscribe {
+  fixed64 user_id = 1; // 用户ID（字符串）
+  repeated fixed64 srp_id = 2; // SRPID
+  repeated fixed64 circle_id = 3; // 圈子的SRPID
+}
+
+// ID集合
+message IdSet {
+  repeated fixed64 id = 1 [packed=true];
+}
+
+// 初选集
+message CandidateSet {
+  message Candidate {
+    fixed64 item_id = 1;
+    float power = 2;
+    int32 publish_time = 3;
+    int32 category_id = 4;
+    int32 picture_num = 5;
+  }
+  repeated Candidate candidate = 1;
+  repeated fixed64 history = 2 [packed=true];
+}
+
+// 推荐条件
+message Query {
+  fixed64 user_id = 1;
+  int32 start_time = 2;
+  int32 end_time = 3;
+  ItemType item_type = 4;
+}
+
+service PrimaryElection {
+  // 
+  rpc doAction(UserAction) returns (Response) {}
+  rpc doActionStream(stream UserAction) returns (stream Response) {}
+}

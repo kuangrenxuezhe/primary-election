@@ -1,3 +1,66 @@
+#ifndef RSYS_NEWS_CANDIDATE_DB_H
+#define RSYS_NEWS_CANDIDATE_DB_H
+
+#include <pthread.h>
+#include <vector>
+
+#include "util/status.h"
+#include "util/options.h"
+#include "util/wal.h"
+#include "core/user_table.h"
+#include "core/item_table.h"
+#include "proto/news_rsys.pb.h"
+
+namespace rsys {
+  namespace news {
+    class CandidateDB {
+      public:
+        CandidateDB(const Options& opts);
+        ~CandidateDB();
+
+      public:
+        static Status openDB(const Options& opts, CandidateDB** dbptr);
+
+      public:
+        // 可异步方式，线程安全
+        Status flush();
+        Status reload();
+
+        //与flush采用不同的周期,只保留days天
+        Status rollOverWALFile(int32_t expired_days);
+
+      public:
+        // 查询用户是否在用户表中
+        bool findUser(uint64_t user_id);
+
+        // 添加新闻数据
+        Status addItem(const ItemInfo& item);
+        
+        // 用户操作状态更新
+        Status updateAction(const UserAction& action);
+        // 全局更新用户订阅信息
+        Status updateUser(const UserSubscribe& subscribe);
+        // 更新用户候选集合
+        Status updateCandidateSet(uint64_t user_id, const IdSet& id_set);
+
+        // 获取用户已阅读的历史记录
+        Status queryHistory(uint64_t user_id, IdSet& history);
+        // 获取待推荐的候选集
+        Status queryCandidateSet(const Query& query, CandidateSet& candidate_set);
+
+      private:
+        Options options_;
+        UserTable* user_table_;
+        ItemTable* item_table_;
+        // 只是记录，该部分数据暂时没用
+        WALWriter* writer_;
+        pthread_mutex_t mutex_; 
+    };
+  }; // namespace news
+}; // namespace rsys
+#endif // #define RSYS_NEWS_CANDIDATE_DB_H
+
+/*
 #ifndef CF_CANDIDATE_H
 #define CF_CANDIDATE_H
 
@@ -17,6 +80,7 @@
 #include "util/UC_Persistent_Storage.h"
 #include "util/UC_Allocator_Recycle.h"
 
+#include "sparsehash/dense_hash_map"
 #include "framework/CF_framework_interface.h"
 #include "framework/CF_framework_config.h"
 
@@ -36,8 +100,6 @@
 #define MAX_FUN(a,b)	((a)>(b)?(a):(b))
 #define MIN_FUN(a,b) 	((a)<(b)?(a):(b))
 
-#define unmap			map
-
 const var_4 UPDATE_USER 	= 1001;
 const var_4 UPDATE_ITEM 	= 1002;
 const var_4 UPDATE_CLICK	= 1003;
@@ -45,56 +107,59 @@ const var_4 RESPONSE_RECOMMEND	= 1004;
 const var_4 CATEGORY_NUM = 13;
 const var_4 default_category_id = 13;
 
-using namespace std;
+#pragma pack(4)
+struct itemid_ {
+  uint64_t id;  // itemid
+  int32_t ctime; // 添加时间, 用于时间淘汰
+};
+typedef struct itemid_ itemid_t;
+#pragma pack()
+
+typedef std::set<uint64_t> id_set_t;
+typedef std::set<itemid_t> itemid_set_t;
 
 struct user_info_ {
-  var_u8					user_id;
-  unmap<var_u8, var_4>	m_circle_and_srp;	// 圈子或者SRP词     
-  unmap<var_u8, var_4>	m_has_read;			// 已阅新闻列表
-  unmap<var_u8, var_4>	m_has_recommend;	// 已推荐新闻列表
-  unmap<var_u8, var_4>	m_dislike;			// 不喜欢新闻列表
-  vector<var_u8>		v_has_read;		
-  vector<var_u8>		v_has_recommend;
-  vector<var_u8>		v_circle_and_srp;		
-  vector<var_u8>		v_dislike;		
+  id_set_t	circle_and_srp;	// 圈子或者SRP词     
+
+  itemid_set_t	dislike;			// 不喜欢新闻集合
+  itemid_set_t  readed;			// 已阅新闻集合
+  itemid_set_t	recommended;	// 已推荐新闻集合
 };
 typedef struct user_info_ user_info_t;
 
 struct item_info_ {
-  var_4   picture_num;
-  var_4   category_id;
-  var_4	circle_and_srp_num;
-  var_u4	publish_time;
-  var_u8	item_id;
-  var_u8	circle_and_srp[CIRCLE_AND_SRP_NUM];
+  uint64_t itemid; // itemid
+  float primary_power; // 初选权重
+  int32_t picture_num:24; // 图片个数
+  int32_t item_type:8; // item类型(0 咨询，1 视频)
+  int32_t category_id; // 分类ID
+  int32_t	publish_time; // 发布时间
+  int64_t region_id; // 所属地区
+  id_set_t circle_and_srp; //所属圈子和SRP词
 };
 typedef struct item_info_ item_info_t;
 
-struct item_click_ {
-  var_u4  click_count;
-  var_u4	click_time;
-  var_f4 	primary_power;
-};
-typedef struct item_click_ item_click_t;
-
 struct item_index_ {
-  int32_t item_index;
-  int32_t publish_time;
+  int32_t click_count; // 点击计数
+  int32_t click_time; // 最近点击时间
+  item_info_t* item_info;
 };
 typedef struct item_index_ item_index_t;
 
+typedef std::list<item_info_t*> item_list_t;
+
 struct slip_window_ {
-  std::list<item_index_t> item_list;
+  int32_t index_base; // 基准位
+  int32_t index_cursor; // 当前位置
+  item_list_t* item_window; // 滑窗数组
 };
 typedef struct slip_window_ slip_window_t;
 
 struct top_item_ {
-  var_bl global;
-  vector<var_u8> srps;
-  vector<var_u8> circles;
-  top_item_() {
-    global = false;
-  }
+  int32_t is_global; // 是否全局推荐
+  int32_t expired_time; // 推荐过期时间
+  id_set_t srp; // 部分推荐，所属srp
+  id_set_t circle; // 部分推荐，所属圈子
 };
 typedef struct top_item_ top_item_t;
 
@@ -184,4 +249,4 @@ static uint64_t time_diff_ms(const struct timeval& begin, const struct timeval& 
 }
 
 #endif // #define CF_CANDIDATE_H
-
+*/
