@@ -4,6 +4,7 @@
 #include "util/util.h"
 #include "util/crc32c.h"
 #include "glog/logging.h"
+#include "proto/record.pb.h"
 #include "proto/news_rsys.pb.h"
 
 #include <sstream>
@@ -51,6 +52,54 @@ namespace rsys {
 
     ItemTable::~ItemTable()
     {
+    }
+
+    bool ItemTable::parseFrom(const std::string& data, item_index_t* item_index)
+    {
+      ItemRecord item_record;
+
+      if (!item_record.ParseFromString(data)) {
+        return false;
+      }
+      item_info_t* item_info = item_index->item_info;
+
+      item_index->click_count = item_record.click_count();
+      item_index->click_time = item_record.click_time();
+      
+      item_info->item_id = item_record.item_id();
+      item_info->publish_time = item_record.publish_time();
+      item_info->primary_power = item_record.primary_power();
+      item_info->item_type = item_record.item_type();
+      item_info->picture_num = item_record.picture_num();
+      item_info->category_id = item_record.category_id();
+      for (int i = 0; i < item_record.circle_and_srp_size(); ++i) {
+        item_info->circle_and_srp.insert(item_record.circle_and_srp(i));
+      }
+      return true;
+    }
+
+    bool serializeTo(item_index_t* item_index, std::string& data)
+    {
+      ItemRecord item_record;
+      item_info_t* item_info = item_index->item_info;
+
+      item_record.set_click_time(item_index->click_time);
+      item_record.set_click_count(item_index->click_count);
+
+      item_record.set_item_id(item_info->item_id);
+      item_record.set_publish_time(item_info->publish_time);
+      item_record.set_primary_power(item_info->primary_power);
+      item_record.set_item_type(item_info->item_type);
+      item_record.set_picture_num(item_info->picture_num);
+      item_record.set_category_id(item_info->category_id);
+      item_record.set_region_id(item_info->region_id);
+
+      id_set_t::const_iterator citer = item_info->circle_and_srp.begin();
+      for (; citer != item_info->circle_and_srp.end(); ++citer) {
+        item_record.add_circle_and_srp(*citer);
+      }
+      data = item_record.SerializeAsString();
+      return true;
     }
 
     // 保存用户表

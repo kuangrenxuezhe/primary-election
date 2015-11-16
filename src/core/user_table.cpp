@@ -5,6 +5,8 @@
 
 #include "util/crc32c.h"
 #include "glog/logging.h"
+
+#include "proto/record.pb.h"
 #include "proto/news_rsys.pb.h"
 
 namespace rsys {
@@ -269,6 +271,70 @@ namespace rsys {
       loadTableLog(fullpath); 
       }
       return 0; */
+    }
+
+    bool UserTable::parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info)
+    {
+      UserRecord user_record;
+      if (!user_record.ParseFromString(data))
+        return false;
+
+      *user_id = user_record.user_id();
+      user_info->ctime = user_record.ctime();
+      for (int i = 0; i < user_record.srp_id_size(); ++i) {
+        user_info->srp.insert(user_record.srp_id(i));
+      }
+      for (int i = 0; i < user_record.circle_id_size(); ++i) {
+        user_info->circle.insert(user_record.circle_id(i));
+      }
+      for (int i = 0; i < user_record.dislike_size(); ++i) {
+        const ItemPair& pair  = user_record.dislike(i);
+        user_info->dislike.insert(std::make_pair(pair.item_id(), pair.ctime()));
+      }
+      for (int i = 0; i < user_record.readed(); ++i) {
+        const ItemPair& pair  = user_record.readed(i);
+        user_info->readed.insert(std::make_pair(pair.item_id(), pair.ctime()));
+      }
+      for (int i = 0; i < user_record.recommended(); ++i) {
+        const ItemPair& pair  = user_record.recommended(i);
+        user_info->recommended.insert(std::make_pair(pair.item_id(), pair.ctime()));
+      }
+      return true;
+    }
+
+    bool UserTable::serializeTo(uint64_t user_id, const user_info_t* user_info, std::string& data)
+    {
+      UserRecord user_record;
+
+      user_record.set_user_id(user_id);
+      for (id_set_t::const_iterator citer = user_info->srp.begin();
+          citer != user_info->srp.end(); ++citer) {
+        user_record.add_srp_id(*citer);
+      }
+      for (id_set_t::const_iterator citer = user_info->circle.begin();
+          citer != user_info->circle.end(); ++citer) {
+        user_record.add_circle_id(*citer);
+      }
+      for (itemid_map_t::const_iterator citer = user_info->dislike.begin();
+          citer != user_info->dislike.end(); ++citer) {
+        ItemPair* pair = user_record.add_dislike();
+        pair->set_item_id(citer->first);
+        pair->set_ctime(citer->second);
+      }
+      for (itemid_map_t::const_iterator citer = user_info->readed.begin();
+          citer != user_info->readed.end(); ++citer) {
+        ItemPair* pair = user_record.add_readed();
+        pair->set_item_id(citer->first);
+        pair->set_ctime(citer->second);
+      }
+      for (itemid_map_t::const_iterator citer = user_info->recommended.begin();
+          citer != user_info->recommended.end(); ++citer) {
+        ItemPair* pair = user_record.add_recommended();
+        pair->set_item_id(citer->first);
+        pair->set_ctime(citer->second);
+      }
+      data = user_record.SerializeAsString();
+      return true;
     }
 
     /*

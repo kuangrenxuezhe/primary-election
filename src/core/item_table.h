@@ -67,8 +67,12 @@ namespace rsys {
       protected:
         int getWindowIndex(int32_t ctime);
         Status addItemIndex(item_info_t* item_info);
+
         int loadSlipWindow(const char* fullpath);
         int syncSlipWindow(const char* fullpath);
+
+        bool parseFrom(const std::string& data, item_index_t* item_index);
+        bool serializeTo(item_index_t* item_index, std::string& data);
 
       private:
         int window_size_; 

@@ -68,18 +68,9 @@ namespace rsys {
       protected:
         bool isObsoleteUser(const user_info_t* user_info, int32_t hold_time);
         bool isObsoleteUserInfo(const user_info_t* user_info, int32_t hold_time);
-        //int rollOverTable(); 
-        //int loadTable(const char* fullpath);
-        //int loadTableLog(const char* fullpath);
 
-        //int dumpTable(user_map_t* l1, user_map_t* l2, const char* fullpath);
-
-        //int addUser(uint64_t userid, user_info_t* user_info);
-
-        //char* growBuffer(char* buffer, int length, int& retlen);
-
-        //user_info_t* parseUserInfo(const char* buffer, int len, user_info_t* user_info);
-        //int serializeUserInfo(user_info_t* user_info, char* buffer, int len);
+        bool parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info);
+        bool serializeTo(uint64_t user_id, const user_info_t* user_info, std::string& data);
 
       private:
         int max_level_;

@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+message Elimination {
+  fixed64 id = 1; // 淘汰ID，为ItemID或者UserID
+  int32 etime = 2; // 淘汰时间
+}
+
+message LogRecord {
+  google.protobuf.Any record = 1;
+}
+
+message ItemPair {
+  fixed64 item_id = 1;
+  int32 ctime = 2;
+}
+
+message UserRecord {
+  fixed64 user_id = 1;
+  int32 ctime = 2; // 用户最后活跃时间
+  repeated fixed64 srp_id = 3 [packed=true];
+  repeated fixed64 circle_id = 4 [packed=true];
+  repeated ItemPair dislike = 5;
+  repeated ItemPair reader = 6;
+  repeated ItemPair recommended = 7;
+}
+
+message ItemRecord {
+  fixed64 item_id = 1;
+  int32 click_count = 2;
+  int32 click_time = 3;
+  int32	publish_time = 4; // 发布时间
+  float primary_power = 5; // 初选权重
+  int32 item_type = 6; // item类型(0 咨询，1 视频)
+  int32 picture_num = 7; // 图片个数
+  int32 category_id = 8; // 分类ID
+  int64 region_id = 9; // 所属地区
+  repeated fixed64 circle_and_srp = 10; //所属圈子和SRP词
+}
+
+
