@@ -41,6 +41,11 @@ namespace rsys {
       return writer_.write(data);
     }
 
+    const std::string& LevelFileWriter::filename() const 
+    {
+      return writer_.filename();
+    }
+
     LevelFileReader::LevelFileReader(const std::string& name)
       : crc_(0), reader_(name)
     {
@@ -87,6 +92,11 @@ namespace rsys {
 
       crc_ = crc::extend(crc_, data.c_str(), data.length());
       return Status::OK();
+    }
+
+    const std::string& LevelFileReader::filename() const 
+    {
+      return reader_.filename();
     }
   } // namespace news
 } // namespace rsys

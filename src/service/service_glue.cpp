@@ -67,7 +67,7 @@ namespace rsys {
           has_flushed_wal = false;
         } else {
           if (!has_flushed_wal) {
-            Status status = glue->candb_->rollOverWALFile(glue->options_.wal_expired_days);
+            Status status = glue->candb_->rollover(glue->options_.wal_expired_days);
             if (status.ok()) {
               has_flushed_wal = true;
               LOG(INFO) << "roll over wal file.";
@@ -168,7 +168,7 @@ namespace rsys {
     var_4 ServiceGlue::query_recommend(var_u8 user_id, var_4 flag, var_4 beg_time, var_4 end_time, 
         var_1* result_buf, var_4 result_max, var_4& result_len)
     {
-      Query query;
+      CandidateQuery query;
       CandidateSet candidate_set;
 
       query.set_user_id(user_id);

@@ -6,15 +6,15 @@
 
 #include <map>
 
-#include "core/base_table.h"
-#include "util/status.h"
 #include "core/core_type.h"
+#include "core/options.h"
+#include "util/base_table.h"
+#include "util/status.h"
 #include "util/level_table.h"
 #include "sparsehash/dense_hash_map"
 
 namespace rsys {
   namespace news {
-
     typedef std::map<uint64_t, int32_t> itemid_map_t;
 
     struct user_info_ {
@@ -28,24 +28,26 @@ namespace rsys {
     };
     typedef struct user_info_ user_info_t;
     
-    class UserTable: public BaseTable {
+    class UserTable: public BaseTable<user_info_t> {
       public:
-        UserTable(const char* path, const char* prefix);
+        UserTable(const Options& opts);
         ~UserTable();
 
       public:
-        // 保存用户表
-        Status flushTable();
-        // 加载用户表
-        Status loadTable();
-       // 淘汰用户，包括已读，不喜欢和推荐信息
-        Status eliminate(int32_t hold_time);
+        // 写入表的版本号
+        fver_t tableVersion() const {
+          return fver_;
+        }
+        virtual const std::string tableName() const {
+          return options_.work_path + "/" + options_.table_name;
+        }
+        virtual const std::string workPath() const {
+          return options_.work_path;
+        }
 
       public:
-        // 设置保存库的最大层级
-        void set_max_level(int level);
-        // 设置同步库文件的间隔，单位分钟
-        void set_sync_gap(int32_t gap);
+      // 淘汰用户，包括已读，不喜欢和推荐信息
+        Status eliminate(int32_t hold_time);
 
       public:
         // 查询用户是否存在
@@ -66,25 +68,24 @@ namespace rsys {
         Status filterCandidateSet(uint64_t user_id, candidate_set_t& candset);
 
       protected:
+        virtual value_t* newValue() {
+          return NULL;
+        }
+        virtual bool rollback(const std::string& data) {
+          return true;
+        }
+
         bool isObsoleteUser(const user_info_t* user_info, int32_t hold_time);
         bool isObsoleteUserInfo(const user_info_t* user_info, int32_t hold_time);
 
-        bool parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info);
-        bool serializeTo(uint64_t user_id, const user_info_t* user_info, std::string& data);
+        virtual bool parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info);
+        virtual bool serializeTo(uint64_t user_id, const user_info_t* user_info, std::string& data);
 
       private:
-        int max_level_;
-        int size_;
-        int32_t sync_gap_;
-
-        std::string path_;
-        std::string prefix_;
-
-        typedef LevelTable<uint64_t, user_info_t> level_table_t;
-        level_table_t level_table_;
+        static fver_t fver_;
+        const Options& options_;
     };
-
-  }; // namespace rsys
-}; // namespace rsys::news
+  } // namespace news
+} // namespace rsys
 #endif // #define RSYS_NEWS_PRIMARY_ELECTION_H
 

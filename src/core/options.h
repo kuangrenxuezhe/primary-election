@@ -8,6 +8,12 @@
 namespace rsys {
   namespace news {
     struct Options {
+      // 数据保存目录
+      std::string work_path;
+
+      // 表名
+      std::string table_name;
+
       // 新闻数据保留时间, 单位秒
       int32_t item_hold_time;
 
@@ -26,9 +32,6 @@ namespace rsys {
       //  Gap：mon 月(1-31), week 周(0-6)，day 天(0-23), hour: 时(0-59)
       // 样例: 23/day, 表示每天的23点进行flush操作
       std::string flush_timer;
-
-      // 数据保存目录
-      std::string path;
 
       // WAL文件过期天数
       int32_t wal_expired_days; 

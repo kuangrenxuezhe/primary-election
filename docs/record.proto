@@ -27,7 +27,7 @@ message UserRecord {
   repeated fixed64 srp_id = 3 [packed=true];
   repeated fixed64 circle_id = 4 [packed=true];
   repeated ItemPair dislike = 5;
-  repeated ItemPair reader = 6;
+  repeated ItemPair readed = 6;
   repeated ItemPair recommended = 7;
 }
 

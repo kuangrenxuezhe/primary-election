@@ -5,22 +5,18 @@
 //  Created by zhanghl on 14-9-3.
 //  Copyright (c) 2014 CrystalBall. All rights reserved.
 //
-
 #include "service/service_glue.h"
-
 #include "framework/CF_framework_center.h"
 #include "framework/CF_framework_module.h"
 
-enum ErrorType
-{
+enum ErrorType {
   TYPE_OK = 0,    //运行正常
   TYPE_NETWORK,   //网络故障
   TYPE_SERVICE,   //服务错误
   TYPE_OTHER,     //其它错误
 };
 
-enum ErrorLevel
-{
+enum ErrorLevel {
   LEVEL_A = 1,    //严重
   LEVEL_B,        //重要
   LEVEL_C,        //一般
@@ -40,28 +36,8 @@ enum ErrorLevel
 #include <vector>
 #include <string>
 
-static void make_time_str(struct tm* ctm, std::vector<std::string>& time_str)
-{
-  int tm_val[] = {ctm->tm_min, ctm->tm_hour, ctm->tm_wday, ctm->tm_mday};
-  const char* tm_str[] = {"/hour", "/day", "/week", "/mon"};
-
-  for (size_t i = 0; i < sizeof(tm_val)/sizeof(int); ++i) {
-    std::ostringstream oss;
-    oss << tm_val[i] << tm_str[i];
-    time_str.push_back(oss.str()); 
-  }
-}
-
 int main()
 {
-  printf("time_t: %d\n", sizeof(time_t));
-  time_t ctime = time(NULL);
-  struct tm* ctm = localtime(&ctime);
-  std::vector<std::string> time_str;
-  make_time_str(ctm, time_str);
-  for (int i=0; i<time_str.size(); ++i)
-    printf("%s\n", time_str[i].c_str());
-  /*
   rsys::news::ServiceGlue serv_glue;
 
   CF_framework_module cd_model;
@@ -111,5 +87,4 @@ int main()
     }
   }
   return 0;
-  */
 }

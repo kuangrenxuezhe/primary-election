@@ -22,6 +22,7 @@ namespace rsys {
 
     // 允许新增Item的最大时间, 默认最大两天
     static int32_t kItemMaxAge = 2*24*60*60;
+    fver_t ItemTable::fver_(kItemTableMajorVersion, kItemTableMinorVersion);
 
     class ActionUpdater: public LevelTable<uint64_t, item_index_t>::Updater{
       public:
@@ -44,7 +45,7 @@ namespace rsys {
         const action_t& item_action_;
     };
 
-    ItemTable::ItemTable(const Options& opts)
+    ItemTable::ItemTable(const Options& opts): options_(opts)
     {
       if (opts.new_item_max_age > 0)
         kItemMaxAge = opts.new_item_max_age;
@@ -54,7 +55,7 @@ namespace rsys {
     {
     }
 
-    bool ItemTable::parseFrom(const std::string& data, item_index_t* item_index)
+    bool ItemTable::parseFrom(const std::string& data, uint64_t* item_id, item_index_t* item_index)
     {
       ItemRecord item_record;
 
@@ -78,7 +79,7 @@ namespace rsys {
       return true;
     }
 
-    bool serializeTo(const item_index_t* item_index, std::string& data)
+    bool ItemTable::serializeTo(uint64_t item_id, const item_index_t* item_index, std::string& data)
     {
       ItemRecord item_record;
       item_info_t* item_info = item_index->item_info;
@@ -102,88 +103,18 @@ namespace rsys {
       return true;
     }
 
-    // 保存用户表
-    Status ItemTable::flushTable()
-    {
-      
-      level_table_t::Iterator iter  = level_table_.snapshot();
-      if (!iter.valid()) {
-        return Status::Corruption("depth not enough");
-      }
-      fver_t fver;
-      std::string tabname = options().path + "/item.tab.tmp";
-      LevelFileWriter writer(tabname);
-
-      fver.flag = kVersionFlag;
-      fver.major = kItemTableMajorVersion;
-      fver.minor = kItemTableMinorVersion;
-
-      Status status = writer.create(fver);
-      if (!status.ok()) {
-        return status;
-      }
-      std::string serialized_str;
-
-      while (iter.hasNext()) {
-        if (!serializeTo(iter.value(), serialized_str)) {
-          LOG(WARNING) << "";
-        } else {
-          status = writer.write(serialized_str);
-          if (!status.ok()) {
-            writer.close();
-            return status;
-          }
-        }
-        iter.next();
-      }
-
-      return apply();
-    }
-
-    // 加载用户表
-    Status ItemTable::loadTable()
-    {
-      fver_t fver;
-      std::string tab_name = options().path + "/item.tab";
-      LevelFileReader reader(tab_name);
-
-      Status status = reader.open(fver);
-      if (!status.ok()) {
-        return status;
-      }
-
-      if (fver.flag != kVersionFlag) {
-        std::ostringstream oss;
-        oss<<"Invalid file version flag: expect="<<kVersionFlag
-          <<", real="<<fver.flag;
-        return Status::IOError(oss.str());
-      }
-      // 可以做多版本处理
-     
-      std::string data;
-      do {
-        status = reader.read(data);
-        if (status.ok()) {
-          if (parseFrom(data, item_index)) {
-          }
-        }
-      }
-      while (status.ok());
-      return Status::OK();
-    }
-
-    // 淘汰用户，包括已读，不喜欢和推荐信息
+   // 淘汰用户，包括已读，不喜欢和推荐信息
     Status ItemTable::eliminate(int32_t hold_time)
     {
-      int index = 0;
+      //int index = 0;
 
-      pthread_rwlock_wrlock(&window_rwlock_[index%kWindowLockSize]);
-      item_list_t::iterator iter = item_window_[index].begin();
-      for (; iter != item_window_[index].end(); ++iter) {
-        level_table_.erase((*iter)->item_id);
-      }
-      window_time_ = 0;
-      pthread_rwlock_unlock(&window_rwlock_[index%kWindowLockSize]);
+      //pthread_rwlock_wrlock(&window_rwlock_[index%kWindowLockSize]);
+      //item_list_t::iterator iter = item_window_[index].begin();
+      //for (; iter != item_window_[index].end(); ++iter) {
+      //  level_table().erase((*iter)->item_id);
+      //}
+      //window_time_ = 0;
+      //pthread_rwlock_unlock(&window_rwlock_[index%kWindowLockSize]);
 
       return Status::OK();
     }
@@ -230,7 +161,7 @@ namespace rsys {
       item_index->click_count = 1;
       item_index->click_time = time(NULL);
 
-      if (level_table_.add(item_info->item_id, item_index))
+      if (level_table().add(item_info->item_id, item_index))
         return Status::OK();
       delete item_info;
 
@@ -242,7 +173,7 @@ namespace rsys {
 
     Status ItemTable::updateAction(const action_t& item_action)
     {
-      if (level_table_.find(item_action.item_id)) {
+      if (level_table().find(item_action.item_id)) {
         std::ostringstream oss;
 
         // 点击了已淘汰的数据则不记录用户点击
@@ -251,7 +182,7 @@ namespace rsys {
       } 
       ActionUpdater updater(item_action);
 
-      if (level_table_.update(item_action.item_id, updater))
+      if (level_table().update(item_action.item_id, updater))
         return Status::OK();
 
       std::stringstream oss;

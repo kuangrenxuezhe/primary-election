@@ -8,6 +8,7 @@ namespace rsys {
   namespace news {
     // 默认推荐时间范围
     static const int32_t kDefaultRecommendGap = 1*24*60*60;
+    static const fver_t kWALVersion(0, 1);
 
     const char kCategoryName[][16] = {
       "\xbb\xa5\xc1\xaa\xcd\xf8\xd0\xc2\xce\xc5", // 互联网新闻 GBK编码
@@ -25,6 +26,25 @@ namespace rsys {
       "\xc5\xae\xd0\xd4\xd0\xc2\xce\xc5", // 女性新闻 GBK编码
     };
 
+    class CandidateAheadLog: public AheadLog {
+      public:
+        CandidateAheadLog(const std::string& path, const fver_t& fver)
+          : AheadLog(path, fver) {
+        }
+        virtual ~CandidateAheadLog() {
+        }
+
+      public:
+        // ahead log滚存触发器
+        virtual bool trigger() {
+          return true;
+        }
+        // 处理数据回滚
+        virtual bool rollback(const std::string& data) {
+          return true;
+        }
+    };
+
     Status CandidateDB::openDB(const Options& opts, CandidateDB** dbptr)
     {
       *dbptr = new CandidateDB(opts);
@@ -32,57 +52,26 @@ namespace rsys {
     }
 
     CandidateDB::CandidateDB(const Options& opts)
+      : ahead_log_(NULL), user_table_(NULL), item_table_(NULL)
     {
       options_ = opts;
-      pthread_mutex_init(&mutex_, NULL);
+
+      user_table_ = new UserTable(opts);
+      item_table_ = new ItemTable(opts);
+
+      ahead_log_ = new CandidateAheadLog(opts.work_path, kWALVersion);
     }
 
     CandidateDB::~CandidateDB() 
     {
-      pthread_mutex_destroy(&mutex_);
+      delete ahead_log_;
+      delete user_table_;
+      delete item_table_;
     }
 
-    //与flush采用不同的周期,只保留days天
-    Status CandidateDB::rollOverWALFile(int32_t expired_days)
+    Status CandidateDB::rollover(int32_t expired) 
     {
-      char today[300], yesterday[300];
-
-      pthread_mutex_lock(&mutex_);
-      for (int i = expired_days; i > 0; --i) {
-        sprintf(today, "%s/wal.day-%d", options_.path.c_str(), i);
-        if (access(today, F_OK))
-          continue;
-        if (i == expired_days) {
-          if (remove(today)) {
-            LOG(FATAL) << "remove file failed: " << strerror(errno)
-              << ", file: " << today;
-            pthread_mutex_unlock(&mutex_);
-            return Status::IOError(strerror(errno));
-          }
-        } else {
-          sprintf(yesterday, "%s/wal.day-%d", options_.path.c_str(), i);
-          if (rename(today, yesterday)) {
-            LOG(FATAL) << "rename file failed: " << strerror(errno)
-              << ", oldfile: " << today << ", newfile: " << yesterday;
-            pthread_mutex_unlock(&mutex_);
-            return Status::IOError(strerror(errno));
-          }
-        }
-      }
-      writer_->close();
-
-      sprintf(today, "%s/wal.day-0", options_.path.c_str());
-      sprintf(yesterday, "%s/wal.day-1", options_.path.c_str());
-      if (rename(today, yesterday)) {
-        LOG(FATAL) << "rename file failed: " << strerror(errno)
-          << ", oldfile: " << today << ", newfile: " << yesterday;
-        pthread_mutex_unlock(&mutex_);
-        return Status::IOError(strerror(errno));
-      }
-      writer_ = new WALWriter(today);
-      pthread_mutex_unlock(&mutex_);
-
-      return Status::OK();
+      return ahead_log_->apply(expired);
     }
 
     // 可异步方式，线程安全
@@ -115,17 +104,17 @@ namespace rsys {
     {
       Status status = user_table_->loadTable();
       if (!status.ok()) {
-        LOG(ERROR) << "load user table failed: " << status.toString();
+        LOG(ERROR) << status.toString();
         return status;
       }
 
       status = item_table_->loadTable();
       if (!status.ok()) {
-        LOG(ERROR) << "load item table failed: " << status.toString();
+        LOG(ERROR) << status.toString();
         return status;
       }
 
-      return Status::OK();
+      return ahead_log_->recovery();
     }
 
     bool CandidateDB::findUser(uint64_t user_id)
@@ -142,7 +131,7 @@ namespace rsys {
       log_record.mutable_record()->PackFrom(item);
       serialize_str = log_record.SerializeAsString();
 
-      Status status = writer_->append(serialize_str);
+      Status status = ahead_log_->write(serialize_str);
       if (!status.ok()) {
         LOG(WARNING) << "write item log failed: " << status.toString() 
           << std::hex << ", item id=" << item.item_id();
@@ -248,7 +237,7 @@ namespace rsys {
       log_record.mutable_record()->PackFrom(action);
       serialize_str = log_record.SerializeAsString();
 
-      Status status = writer_->append(serialize_str);
+      Status status = ahead_log_->write(serialize_str);
       if (!status.ok()) {
         LOG(WARNING) << "write action log failed: " << status.toString()
           << std::hex << ", user id=" << action.user_id() << ", item id=" << action.item_id();
@@ -286,7 +275,7 @@ namespace rsys {
       log_record.mutable_record()->PackFrom(subscribe);
       serialize_str = log_record.SerializeAsString();
 
-      Status status = writer_->append(serialize_str);
+      Status status = ahead_log_->write(serialize_str);
       if (!status.ok()) {
         LOG(WARNING) << "write subscribe log failed: " << status.toString()
           << std::hex << ", user id=" << subscribe.user_id();
@@ -311,7 +300,7 @@ namespace rsys {
       log_record.mutable_record()->PackFrom(recommend_set);
       serialize_str = log_record.SerializeAsString();
 
-      Status status = writer_->append(serialize_str);
+      Status status = ahead_log_->write(serialize_str);
       if (!status.ok()) {
         LOG(WARNING) << "write recommend set log failed: " << status.toString()
           << std::hex << ", user id=" << user_id;

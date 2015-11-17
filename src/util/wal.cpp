@@ -38,9 +38,17 @@ namespace rsys {
 
     Status WALWriter::append(const std::string& data)
     {
-      return writer_.write(data);
+      Status status = writer_.write(data);
+      if (!status.ok())
+        return status;
+      return writer_.flush();
     }
 
+    const std::string& WALWriter::filename() const 
+    {
+      return writer_.filename();
+    }
+ 
     WALReader::WALReader(const std::string& name)
       : reader_(name)
     {
@@ -64,6 +72,11 @@ namespace rsys {
       return reader_.read(data);
     }
 
+    const std::string& WALReader::filename() const 
+    {
+      return reader_.filename();
+    }
+       
     void WALReader::close()
     {
       reader_.close();

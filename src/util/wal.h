@@ -16,7 +16,8 @@ namespace rsys {
       public:
         Status create(const fver_t& ver);
         void close();
-       
+        const std::string& filename() const;
+
       public:
         Status append(const std::string& data);
 
@@ -32,6 +33,7 @@ namespace rsys {
       public:
         Status open(fver_t& ver);
         void close();
+        const std::string& filename() const;
 
       public:
         Status read(std::string& data);
@@ -39,10 +41,6 @@ namespace rsys {
       private:
         FileReader reader_;
     };
-
-    // 从不完整WAL文件中创建WALWriter
-    // 采用从不完整WAL文件中复制正常记录到新创建的WALWriter中的策略
-    extern Status recoverWALWriter(const std::string& name, WALWriter* writer);
   } // namespace news
 } // namespace rsys
 #endif // #define RSYS_NEWS_WAL_H

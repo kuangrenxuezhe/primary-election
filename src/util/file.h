@@ -7,8 +7,6 @@
 
 namespace rsys {
   namespace news {
-    static const uint32_t kVersionFlag = 0xAFU;
-
     class FileWriter {
       public:
         FileWriter(const std::string& name);
@@ -29,7 +27,7 @@ namespace rsys {
         Status writeMeta(const char* data, ssize_t len);
 
       public:
-        const std::string& filename() {
+        const std::string& filename() const {
           return name_;
         }
 
@@ -54,7 +52,7 @@ namespace rsys {
         Status readMeta(ssize_t len, char* buffer);
 
       public:
-        const std::string& filename() {
+        const std::string& filename() const {
           return name_;
         }
 

@@ -55,6 +55,16 @@ namespace rsys {
       return Status::OK();
     }
 
+    Status FileWriter::flush()
+    {
+      if (fsync(wfd_)) {
+        std::ostringstream strstream;
+
+        strstream<<"Flush '"<<name_<<"' failed: "<<strerror(errno);
+        return Status::IOError(strstream.str());
+      }
+      return Status::OK();
+    }
 
     Status FileWriter::write(const std::string& data)
     {
@@ -114,10 +124,9 @@ namespace rsys {
       if (rfd_ <= 0) {
         std::stringstream strstream;
 
-        strstream<<"Open '"<<name_<<"' failed: "<<strerror(errno);
+        strstream<<strerror(errno)<<", file="<<name_;
         return Status::IOError(strstream.str());
       }
-
       return Status::OK(); 
     }
 

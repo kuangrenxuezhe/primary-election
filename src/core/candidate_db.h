@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "util/status.h"
-#include "util/wal.h"
+#include "util/ahead_log.h"
 #include "core/options.h"
 #include "core/user_table.h"
 #include "core/item_table.h"
@@ -26,9 +26,7 @@ namespace rsys {
         // 可异步方式，线程安全
         Status flush();
         Status reload();
-
-        //与flush采用不同的周期,只保留days天
-        Status rollOverWALFile(int32_t expired_days);
+        Status rollover(int32_t expired);
 
       public:
         // 查询用户是否在用户表中
@@ -51,11 +49,10 @@ namespace rsys {
 
       private:
         Options options_;
+        AheadLog* ahead_log_;
+
         UserTable* user_table_;
         ItemTable* item_table_;
-        // 只是记录，该部分数据暂时没用
-        WALWriter* writer_;
-        pthread_mutex_t mutex_; 
     };
   }; // namespace news
 }; // namespace rsys

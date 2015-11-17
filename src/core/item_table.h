@@ -5,12 +5,12 @@
 #include <set>
 #include <list>
 
-#include "util/status.h"
-#include "core/base_table.h"
 #include "core/options.h"
 #include "core/core_type.h"
-#include "proto/service.pb.h"
+#include "util/status.h"
+#include "util/base_table.h"
 #include "util/level_table.h"
+#include "proto/service.pb.h"
 #include "sparsehash/dense_hash_map"
 
 namespace rsys {
@@ -44,17 +44,25 @@ namespace rsys {
 
     typedef std::list<item_info_t*> item_list_t;
 
-    class ItemTable: public BaseTable {
+    class ItemTable: public BaseTable<item_index_t> {
       public:
         ItemTable(const Options& opts);
         ~ItemTable();
 
       public:
-        // 保存用户表
-        Status flushTable();
-        // 加载用户表
-        Status loadTable();
-       // 淘汰用户，包括已读，不喜欢和推荐信息
+        // 写入表的版本号
+        fver_t tableVersion() const {
+          return fver_;
+        }
+        virtual const std::string tableName() const {
+          return options_.work_path + "/" + options_.table_name;
+        }
+        virtual const std::string workPath() const {
+          return options_.work_path;
+        }
+
+      public:
+      // 淘汰用户，包括已读，不喜欢和推荐信息
         Status eliminate(int32_t hold_time);
 
       public:
@@ -71,10 +79,21 @@ namespace rsys {
         int loadSlipWindow(const char* fullpath);
         int syncSlipWindow(const char* fullpath);
 
-        bool parseFrom(const std::string& data, item_index_t* item_index);
-        bool serializeTo(const item_index_t* item_index, std::string& data);
+        virtual value_t* newValue() {
+          return NULL;
+        }
+
+        virtual bool rollback(const std::string& data) {
+          return true;
+        }
+ 
+        virtual bool parseFrom(const std::string& data, uint64_t* item_id, item_index_t* item_index);
+        virtual bool serializeTo(uint64_t item_id, const item_index_t* item_index, std::string& data);
 
       private:
+        static fver_t fver_;
+        const Options& options_;
+
         int window_size_; 
 
         // 滑窗基准位
@@ -85,9 +104,6 @@ namespace rsys {
         // 采用循环列表存储item，每个slot表示1小时
         item_list_t* item_window_;
         pthread_rwlock_t* window_rwlock_;
-        
-        typedef LevelTable<uint64_t, item_index_t> level_table_t;
-        level_table_t level_table_;
     };
   }; // namespace news
 }; // namespace rsys

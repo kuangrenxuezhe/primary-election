@@ -7,11 +7,19 @@
 
 namespace rsys {
   namespace news {
+    static const uint32_t kVersionFlag = 0xAFU;
     // level file version
     struct fver_ {
       uint32_t flag:8; // 默认表示：0xAF
       uint32_t major:16; // 主版本号
       uint32_t minor:8; // 小版本号
+
+      fver_(): flag(kVersionFlag) {
+        this->major = this->minor = 0;
+      }
+      fver_(uint32_t major, uint32_t minor): flag(kVersionFlag) {
+        this->major = major; this->minor = minor;
+      }
     };
     typedef struct fver_ fver_t; 
     // 不允许写入空记录，空记录作为LevelFile结尾标记
@@ -24,6 +32,7 @@ namespace rsys {
         Status create(const fver_t& ver);
         // 文件关闭时，写入CRC
         Status close();
+        const std::string& filename() const;
 
       public:
         Status write(std::string& data);
@@ -43,6 +52,7 @@ namespace rsys {
         Status open(fver_t& ver);
         // 关闭文件时，验证CRC
         Status close();
+        const std::string& filename() const;
 
       public:
         Status read(std::string& data);
