@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <set>
 #include <list>
+#include <string>
 
 namespace rsys {
   namespace news {
@@ -12,6 +13,7 @@ namespace rsys {
       uint64_t item_id; // 点击的item_id
       int32_t action; // 用户行为
       int32_t action_time; // 用户操作时间
+      std::string dislike_reason; // 不喜欢原因
     };
     typedef struct action_ action_t;
 

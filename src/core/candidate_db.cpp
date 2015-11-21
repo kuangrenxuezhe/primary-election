@@ -79,21 +79,21 @@ namespace rsys {
     {
       Status status = user_table_->eliminate(options_.user_hold_time);
       if (!status.ok()) {
-        LOG(WARNING) << "eliminate user failed: " << status.toString();
+        LOG(WARNING) << status.toString();
       }
       status = user_table_->flushTable();
       if (!status.ok()) {
-        LOG(ERROR) << "flush user table failed: " << status.toString();
+        LOG(ERROR) << status.toString();
         return status;
       }
 
       status = item_table_->eliminate(options_.item_hold_time);
       if (!status.ok()) {
-        LOG(WARNING) << "eliminate item failed: " << status.toString();
+        LOG(WARNING) << status.toString();
       }
       status = item_table_->flushTable();
       if (!status.ok()) {
-        LOG(ERROR) << "flush item table failed: " << status.toString();
+        LOG(ERROR) << status.toString();
         return status;
       }
 
@@ -133,8 +133,7 @@ namespace rsys {
 
       Status status = ahead_log_->write(serialize_str);
       if (!status.ok()) {
-        LOG(WARNING) << "write item log failed: " << status.toString() 
-          << std::hex << ", item id=" << item.item_id();
+        LOG(WARNING) << status.toString() << std::hex << ", item_id=" << item.item_id();
       }
 
       // convert ItemInfo to item_info_t

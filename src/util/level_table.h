@@ -1,7 +1,6 @@
 #ifndef RSYS_NEWS_LEVEL_TABLE_H
 #define RSYS_NEWS_LEVEL_TABLE_H
 
-#include "level_file.h"
 #include "sparsehash/dense_hash_map"
 
 namespace rsys {
@@ -37,10 +36,6 @@ namespace rsys {
 
           class Iterator {
             public:
-              Iterator(hash_map_ptr_t hash_map, bool valid=true)
-                : hash_map_(hash_map), valid_(valid) {
-                  if (hash_map) iter_ = hash_map->begin();
-                };
               ~Iterator() {};
 
             public:
@@ -57,13 +52,19 @@ namespace rsys {
               bool valid_;
               hash_map_ptr_t hash_map_;
               typename hash_map_t::iterator iter_;
+
+            protected:
+              Iterator(hash_map_ptr_t hash_map, bool valid=true)
+                : hash_map_(hash_map), valid_(valid) {
+                  if (hash_map) iter_ = hash_map->begin();
+                };
+              friend class LevelTable;
          };
 
         public:
           // level层级必须大于３, 小于３时默认为３
-          LevelTable(){};//size_t level);
-          virtual ~LevelTable() {
-          }
+          LevelTable(size_t level);
+          ~LevelTable();
 
         public:
           bool add(const key_t& key, value_t* value);
@@ -77,7 +78,7 @@ namespace rsys {
           // 其可与add/find/update/erase并行执行，但其之间不可并行运行
          
           // 增加层级
-          void deepen();
+          bool deepen();
 
           // 返回当前层级表的深度
           size_t depth();

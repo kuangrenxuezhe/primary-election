@@ -30,7 +30,7 @@ namespace rsys {
       if (wfd_ <= 0) {
         std::ostringstream strstream;
 
-        strstream<<"Open '"<<name_<<"' failed: "<<strerror(errno);
+        strstream<<strerror(errno)<<", file="<<name_;
         return Status::IOError(strstream.str());
       }
       return Status::OK(); 
@@ -49,7 +49,7 @@ namespace rsys {
       if (flock(wfd_, LOCK_EX|LOCK_NB)) {
         std::ostringstream strstream;
 
-        strstream<<"Lock '"<<name_<<"' failed: "<<strerror(errno);
+        strstream<<strerror(errno)<<", file="<<name_;
         return Status::IOError(strstream.str());
       }
       return Status::OK();
@@ -60,7 +60,7 @@ namespace rsys {
       if (fsync(wfd_)) {
         std::ostringstream strstream;
 
-        strstream<<"Flush '"<<name_<<"' failed: "<<strerror(errno);
+        strstream<<strerror(errno)<<", file="<<name_;
         return Status::IOError(strstream.str());
       }
       return Status::OK();
@@ -68,7 +68,7 @@ namespace rsys {
 
     Status FileWriter::write(const std::string& data)
     {
-      ssize_t len = data.length();
+      uint32_t len = data.length();
 
       Status status = writeMeta((char*)&len, sizeof(len));
       if (!status.ok())
@@ -83,7 +83,7 @@ namespace rsys {
         if (len != ::write(wfd_, data, len)) {
           std::ostringstream strstream;
 
-          strstream<<"Write to '"<<name_<<"' failed: "<<strerror(errno);
+          strstream<<strerror(errno)<<", file="<<name_;
           return Status::IOError(strstream.str());
         }
       }
@@ -140,18 +140,18 @@ namespace rsys {
         // 读取长度+数据
     Status FileReader::read(std::string& data)
     {
-      ssize_t total = 0, slen = 0;
+      int32_t total = 0, slen = 0;
 
-      Status status = readMeta(sizeof(ssize_t), (char*)&total);
+      Status status = readMeta(sizeof(int32_t), (char*)&total);
       if (!status.ok())
         return status;
 
       data.clear();
       data.reserve(total);
 
-      char buf[kBufSize];
+      char buf[kBufSize + 1];
       while (slen < total) {
-        ssize_t rlen = total - slen > kBufSize ? kBufSize : total - slen;
+        int32_t rlen = total - slen > kBufSize ? kBufSize : total - slen;
 
         status = readMeta(rlen, buf);
         if (!status.ok())
@@ -168,18 +168,18 @@ namespace rsys {
     Status FileReader::readMeta(ssize_t len, char* buffer)
     {
       if (len > 0) {
-        ssize_t rlen = ::read(rfd_, buffer, len);
+        int32_t rlen = ::read(rfd_, buffer, len);
         if (rlen <= 0) {
           std::stringstream strstream;
 
-          strstream<<"Read '"<<name_<<"' failed: "<<strerror(errno);
+          strstream<<strerror(errno)<<", file="<<name_;
           return Status::IOError(strstream.str());
         }
 
         if (rlen != len) {
           std::stringstream strstream;
 
-          strstream<<"File '"<<name_<<"' not enough data.";
+          strstream<<"File not enough data"<<", file="<<name_;
           return Status::IOError(strstream.str());
         }
       }

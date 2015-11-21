@@ -7,10 +7,9 @@
 namespace rsys {
   namespace news {
     inline std::string timeToString(time_t ctime) {
-      char timebuf[100];
+      char timebuf[20];
       struct tm *stm = std::localtime(&ctime);
-
-      std::strftime(timebuf, 100, "%Y/%m/%d %H:%M:%S", stm);
+      std::strftime(timebuf, 20, "%Y/%m/%d %H:%M:%S", stm);
       return std::string(timebuf);
     }
 

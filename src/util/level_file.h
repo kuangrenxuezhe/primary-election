@@ -2,6 +2,7 @@
 #define RSYS_NEWS_LEVEL_FILE_H
 
 #include <stdint.h>
+#include <sstream>
 #include "util/status.h"
 #include "util/file.h"
 
@@ -20,8 +21,19 @@ namespace rsys {
       fver_(uint32_t major, uint32_t minor): flag(kVersionFlag) {
         this->major = major; this->minor = minor;
       }
+      bool valid(const fver_& fver) {
+        return flag == fver.flag && major == fver.major && minor == fver.minor;
+      }
+      std::string toString() {
+        std::ostringstream oss;
+
+        oss << std::hex << "0x" << flag;
+        oss << std::dec << "v" << major << "." << minor;
+        return oss.str();
+      }
     };
     typedef struct fver_ fver_t; 
+
     // 不允许写入空记录，空记录作为LevelFile结尾标记
     class LevelFileWriter {
       public:

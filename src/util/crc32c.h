@@ -5,13 +5,12 @@
 #include <stdint.h>
 
 namespace crc {
+static const uint32_t kMaskDelta = 0xa282ead8ul;
 
 // Return the crc32c of concat(A, data[0,n-1]) where init_crc is the
 // crc32c of some string A.  Extend() is often used to maintain the
 // crc32c of a stream of data.
 extern uint32_t extend(uint32_t init_crc, const char* data, size_t n);
-
-static const uint32_t kMaskDelta = 0xa282ead8ul;
 
 // Return a masked representation of crc.
 //

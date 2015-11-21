@@ -2,6 +2,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <assert.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -9,6 +10,9 @@
 
 namespace rsys {
   namespace news {
+    static const std::string kRecoveryName = "/wal.recovery";
+    static const std::string kWritingName = "/wal.writing";
+
     AheadLog::AheadLog(const std::string& path, const fver_t& fver)
       : path_(path), fver_(fver.major, fver.minor), writer_(NULL)
     {
@@ -18,8 +22,23 @@ namespace rsys {
 
     AheadLog::~AheadLog()
     {
-      writer_->close();
+      if (writer_)
+        delete writer_;
       pthread_mutex_destroy(&mutex_);
+    }
+
+    int AheadLog::stat_file_numb() 
+    {
+      char name[300];
+      int max_no = 0;
+
+      // 计算最大文件序号
+      for (;; ++max_no) {
+        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
+        if (::access(name, F_OK))
+          break;
+      }
+      return max_no;
     }
 
     // 丢弃已生效的ahead log
@@ -44,20 +63,14 @@ namespace rsys {
         }
         return status;
       }
-      int max_no = 0;
+      int max_no = stat_file_numb();
 
-      // 计算最大文件序号
-      for (;; ++max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
-        if (::access(name, F_OK))
-          break;
-      }
       int32_t ctime = time(NULL);
 
-      for (; max_no>=0; --max_no) {
+      for (; max_no > 0; --max_no) {
         struct stat stbuf;
 
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
+        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
         if (::stat(name, &stbuf)) {
           std::ostringstream oss;
 
@@ -90,21 +103,15 @@ namespace rsys {
 
       pthread_mutex_lock(&mutex_);
       writer_->close();
-      if (trigger()) {
+      if (!trigger()) {
         status = Status::Corruption("Trigger failed");
-      }
-
-      // 计算最大文件序号
-      for (max_no = 0;; ++max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
-        if (::access(name, F_OK))
-          break;
       }
       char newname[300];
  
-      for (; max_no>=0; --max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
-        sprintf(newname, "%s/wal-%d.dat", path_.c_str(), max_no+1);
+      max_no = stat_file_numb();
+      for (; max_no > 0; --max_no) {
+        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
+        sprintf(newname, "%s/wal-%d.dat", path_.c_str(), max_no);
 
         if (::rename(name, newname)) {
           std::ostringstream oss;
@@ -138,7 +145,7 @@ namespace rsys {
     {
       pthread_mutex_lock(&mutex_);
       Status status = writer_->append(data);
-      if (status.ok()) {
+      if (!status.ok()) {
         pthread_mutex_unlock(&mutex_);
         return status;
       }
@@ -147,15 +154,26 @@ namespace rsys {
       return Status::OK();
     }
 
-    Status AheadLog::recovery()
+    Status AheadLog::open()
     {
+      char name[300];
+
+      int max_no = stat_file_numb();
+      for (; max_no > 0; --max_no) {
+        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
+        Status status = recovery(name);
+        if (!status.ok())
+          return status;
+      }
       std::string recovery_name = path_ + "/wal.recovery";
       std::string writing_name = path_ + "/wal.writing";
 
-      if (NULL == writer_)
-        writer_ = new WALWriter(writing_name);
-
+      assert(NULL != writer_);
       if (!access(recovery_name.c_str(), F_OK)) {
+        Status status = writer_->create(fver_);
+        if (!status.ok()) {
+          return status;
+        }
         return recovery(recovery_name, writer_);
       } else {
         if (access(writing_name.c_str(), F_OK)) {
@@ -168,9 +186,38 @@ namespace rsys {
             oss<<", oldfile="<<writing_name<<", newfile="<<recovery_name;
             return Status::IOError(oss.str());
           }
+
+          Status status = writer_->create(fver_);
+          if (!status.ok()) {
+            return status;
+          }
           return recovery(recovery_name, writer_);
         }
       }
+    }
+
+    Status AheadLog::recovery(const std::string& name)
+    {
+      fver_t ver;
+      WALReader reader(name);
+
+      Status status = reader.open(ver);
+      if (!status.ok()) {
+        return status;
+      }
+      std::string serialized_data;
+
+      do {
+        status = reader.read(serialized_data);
+        if (!status.ok())
+          break;
+
+        if (serialized_data.length() <= 0)
+          break;
+      } while (rollback(serialized_data));
+
+      reader.close();
+      return Status::OK();
     }
 
     Status AheadLog::recovery(const std::string& name, WALWriter* writer)
@@ -200,9 +247,20 @@ namespace rsys {
           }
         }
       } while (true);
-
       reader.close();
+
+      if (::remove(name.c_str())) {
+        std::ostringstream oss;
+
+        oss<<strerror(errno)<<", file="<<name;
+        status = Status::IOError(oss.str());
+      }
       return Status::OK();
     } 
+
+    void AheadLog::close() 
+    {
+      writer_->close();
+    }
   } // namespace news
 } // namespace rsys

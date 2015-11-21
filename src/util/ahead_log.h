@@ -12,15 +12,16 @@ namespace rsys {
         virtual ~AheadLog();
 
       public:
-        //滚存Log文件
+        // 创建ahead log
+        Status open();
+        // 滚存ahead log文件
         Status rollover();
-        Status recovery();
-
         // 丢弃已生效的ahead log
         Status apply(int32_t expired);
-
-        // Write-Ahead Log
+        // 写入ahead log
         Status write(const std::string& data);
+        // 关闭Ahead log
+        void close();
 
       protected:
         // ahead log滚存触发器
@@ -33,6 +34,8 @@ namespace rsys {
         }
 
       protected:
+        int stat_file_numb();
+        Status recovery(const std::string& name);
         Status recovery(const std::string& name, WALWriter* writer);
 
       private:

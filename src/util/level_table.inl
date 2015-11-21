@@ -19,13 +19,43 @@ namespace rsys {
     template<typename K, typename V>
       inline bool LevelTable<K, V>::Iterator::hasNext()
       {
-        return iter_ == hash_map_->end() ? true:false;
+        return iter_ == hash_map_->end() ? false:true;
       }
 
     template<typename K, typename V>
       inline void LevelTable<K, V>::Iterator::next()
       {
         ++iter_;
+      }
+
+    // level层级必须大于３, 小于３时默认为３
+    template<typename K, typename V>
+      LevelTable<K, V>::LevelTable(size_t level)
+        : level_size_(level), level_map_(NULL), level_lock_(NULL) {
+          level_map_ = new hash_map_ptr_t[level];
+          level_lock_ = new pthread_rwlock_t[level];
+          for (size_t i = 0; i < level; ++i) {
+            level_map_[i] = NULL;
+            if (0 == i) {
+              level_map_[0] = new hash_map_t();
+              level_map_[0]->set_empty_key(0);
+            }
+            pthread_rwlock_init(&level_lock_[i], NULL);
+          }
+      }
+
+    template<typename K, typename V>
+      LevelTable<K, V>::~LevelTable() {
+        for (size_t i = 0; i < level_size_; ++i) {
+          if (level_map_[i])
+            delete level_map_[i];
+        }
+        delete [] level_map_;
+
+        for (size_t i = 0; i < level_size_; ++i) {
+          pthread_rwlock_destroy(&level_lock_[i]);
+        }
+        delete [] level_lock_;
       }
 
     template<typename K, typename V>
@@ -234,18 +264,27 @@ namespace rsys {
       }
 
     template<typename K, typename V>
-      inline void LevelTable<K, V>::deepen() {
+      inline bool LevelTable<K, V>::deepen() {
         size_t depth_size = depth();
-        for (size_t i = depth_size - 1;  i > 0; --i) {
-          pthread_rwlock_wrlock(&level_lock_[i]);
-          pthread_rwlock_wrlock(&level_lock_[i - 1]);
-          level_map_[i] = level_map_[i - 1];
-          pthread_rwlock_unlock(&level_lock_[i - 1]);
-          pthread_rwlock_unlock(&level_lock_[i]);
+
+        if (depth_size + 1 > level_size_)
+          return false;
+
+        if (depth_size > 0) {
+          for (size_t i = depth_size;  i > 0; --i) {
+            pthread_rwlock_wrlock(&level_lock_[i]);
+            pthread_rwlock_wrlock(&level_lock_[i - 1]);
+            level_map_[i] = level_map_[i - 1];
+            pthread_rwlock_unlock(&level_lock_[i - 1]);
+            pthread_rwlock_unlock(&level_lock_[i]);
+          }
         }
         pthread_rwlock_wrlock(&level_lock_[0]);
         level_map_[0] = new hash_map_t();
+        level_map_[0]->set_empty_key(0);
         pthread_rwlock_unlock(&level_lock_[0]);
+
+        return true;
       }
 
     // 获取访问不可变库迭代器

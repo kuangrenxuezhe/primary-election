@@ -15,7 +15,6 @@
 
 namespace rsys {
   namespace news {
-
     struct item_info_ {
       uint64_t item_id; // itemid
       int32_t	publish_time; // 发布时间
@@ -72,6 +71,10 @@ namespace rsys {
 
         Status queryCandidateSet(const query_t& query, candidate_set_t& candset);
 
+      public:
+        virtual bool parseFrom(const std::string& data, uint64_t* item_id, item_index_t* item_index);
+        virtual bool serializeTo(uint64_t item_id, const item_index_t* item_index, std::string& data);
+
       protected:
         int getWindowIndex(int32_t ctime);
         Status addItemIndex(item_info_t* item_info);
@@ -79,23 +82,20 @@ namespace rsys {
         int loadSlipWindow(const char* fullpath);
         int syncSlipWindow(const char* fullpath);
 
+      protected:
+        virtual AheadLog* createAheadLog() {
+          return NULL;
+        }
         virtual value_t* newValue() {
           return NULL;
         }
-
-        virtual bool rollback(const std::string& data) {
-          return true;
-        }
- 
-        virtual bool parseFrom(const std::string& data, uint64_t* item_id, item_index_t* item_index);
-        virtual bool serializeTo(uint64_t item_id, const item_index_t* item_index, std::string& data);
 
       private:
         static fver_t fver_;
         const Options& options_;
 
+        // 滑窗大小
         int window_size_; 
-
         // 滑窗基准位
         int window_base_;
         // 滑窗基准时间
@@ -103,7 +103,7 @@ namespace rsys {
         
         // 采用循环列表存储item，每个slot表示1小时
         item_list_t* item_window_;
-        pthread_rwlock_t* window_rwlock_;
+        pthread_rwlock_t* window_lock_;
     };
   }; // namespace news
 }; // namespace rsys

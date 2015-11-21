@@ -14,7 +14,7 @@ namespace rsys {
 
     inline buffer_t* newBuffer(int size) {
       int align_size = ((size/1024)+1)*1024;
-      int struct_size = offsetof(buffer_t, maxlen);
+      int struct_size = offsetof(buffer_t, buffer);
 
       buffer_t* buffer = (buffer_t *)new char[align_size+struct_size];
       buffer->maxlen = align_size;

@@ -30,22 +30,17 @@ namespace rsys {
 
       public:
         // 查询用户是否在用户表中
-        bool findUser(uint64_t user_id);
-
+        Status findUser(const User& user_id, UserHistory& history);
         // 添加新闻数据
-        Status addItem(const ItemInfo& item);
-        
-        // 用户操作状态更新
-        Status updateAction(const UserAction& action);
-        // 全局更新用户订阅信息
-        Status updateUser(const UserSubscribe& subscribe);
+        Status addItem(const Item& item);
+       // 全局更新用户订阅信息
+        Status updateUser(const Subscribe& subscribe);
         // 更新用户候选集合
         Status updateCandidateSet(uint64_t user_id, const IdSet& id_set);
-
-        // 获取用户已阅读的历史记录
-        Status queryHistory(uint64_t user_id, IdSet& history);
+        // 用户操作状态更新
+        Status action(const Action& action, Action& );
         // 获取待推荐的候选集
-        Status queryCandidateSet(const CandidateQuery& query, CandidateSet& candidate_set);
+        Status queryCandidateSet(const Recommend& query, CandidateSet& candidate_set);
 
       private:
         Options options_;

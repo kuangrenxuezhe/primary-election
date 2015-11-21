@@ -81,31 +81,5 @@ namespace rsys {
     {
       reader_.close();
     }
-
-    Status recoverWALWriter(const std::string& name, WALWriter* writer)
-    {
-      fver_t ver;
-      WALReader reader(name);
-
-      Status status = reader.open(ver);
-      if (!status.ok()) {
-        return status;
-      }
-      std::string data;
-
-      status = reader.read(data);
-      while (status.ok()) {
-        status = writer->append(data);
-        if (!status.ok()) {
-          reader.close();
-          return status;
-        }
-        data.clear();
-        status = reader.read(data);
-      }
-      reader.close();
-
-      return Status::OK();
-    }
   } // namespace news
 } // namespace rsys

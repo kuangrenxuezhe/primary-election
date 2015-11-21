@@ -2,6 +2,7 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <openssl/md5.h>
 
 #include "util/crc32c.h"
 #include "glog/logging.h"
@@ -11,61 +12,111 @@
 
 namespace rsys {
   namespace news {
-    fver_t UserTable::fver_(0, 1);
+    static const fver_t kUserFver(0, 1);
 
-    class UserUpdater: public LevelTable<uint64_t, user_info_t>::Updater {
+    class UserAheadLog: public AheadLog {
+      public:
+        UserAheadLog(UserTable* user_table, const std::string& path, 
+            const fver_t& fver): AheadLog(path, fver), user_table_(user_table) {
+        }
+
+      public:
+        // ahead log滚存触发器
+        virtual bool trigger() {
+          return user_table_->level_table()->deepen();
+        }
+        // 处理数据回滚
+        virtual bool rollback(const std::string& data) {
+          uint64_t user_id;
+
+          user_info_t* user_info = user_table_->newValue();
+          if (!user_table_->parseFrom(data, &user_id, user_info))
+            return false;
+
+          if (!user_table_->level_table()->add(user_id, user_info)) {
+            delete user_info;
+            return false;
+          }
+          return true;
+        }
+
+      private:
+        UserTable* user_table_; 
+    };
+
+    class UpdaterBase: public LevelTable<uint64_t, user_info_t>::Updater {
+      public:
+        virtual user_info_t* clone(user_info_t* value) {
+          user_info_t* user_info = new user_info_t();
+          user_info->ctime = value->ctime;
+          user_info->subscribe = user_info->subscribe;
+          user_info->dislike = user_info->dislike;
+          user_info->readed = user_info->readed;
+          user_info->recommended = user_info->recommended;
+          return user_info;
+        }
+    };
+
+    class UserUpdater: public UpdaterBase {
       public:
         UserUpdater(user_info_t* user_info)
           : user_info_(user_info) {
           }
-        virtual ~UserUpdater() {
-        }
         virtual bool update(user_info_t* user_info) {
-          // 用户订阅信息为全量更新
-          user_info->srp = user_info_->srp;
-          user_info->circle = user_info_->circle;
+          user_info->subscribe = user_info_->subscribe;
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
-
       private:
         user_info_t* user_info_;
     };
 
-    class ActionUpdater: public LevelTable<uint64_t, user_info_t>::Updater {
+    class ActionUpdater: public UpdaterBase {
       public:
         ActionUpdater(const action_t& user_action)
           : user_action_(user_action) {
           }
-        virtual ~ActionUpdater() {
+        // 创建60位的id
+        uint64_t make_id(const char* str, size_t len) {
+          uint8_t digest[16];
+          MD5_CTX ctx;
+
+          MD5_Init(&ctx);
+          MD5_Update(&ctx, str, len);
+          MD5_Final(digest, &ctx);
+          return (*(uint64_t*)digest)&0xFFFFFFFFFFFFFFFUL;
         }
         virtual bool update(user_info_t* user_info) {
-          std::pair<uint64_t, int32_t> item_id = 
-            std::make_pair(user_action_.item_id, time(NULL));
-          if (user_action_.action == ACTION_CLICK) {
-            user_info->readed.insert(item_id);
-          } else if (user_action_.action == ACTION_DISLIKE) {
-            user_info->dislike.insert(item_id);
+          if (user_action_.action == ACTION_TYPE_CLICK) {
+            std::pair<uint64_t, int32_t> id_time = 
+              std::make_pair(user_action_.item_id, time(NULL));
+            return user_info->readed.insert(id_time).second;
+          } else if (user_action_.action == ACTION_TYPE_DISLIKE) {
+            const char* seperator;
+            subscribe_id_t sid;
+            
+            // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
+            sid.subscribe_id_component.type = atoi(user_action_.dislike_reason.c_str());
+            if (user_action_.dislike_reason.length() > 2) {
+              seperator = strchr(user_action_.dislike_reason.c_str(), '_');
+              if (NULL != seperator) {
+                sid.subscribe_id_component.id = make_id(seperator + 1, strlen(seperator));
+              }
+            }
+            std::pair<uint64_t, std::string> id_str = 
+              std::make_pair(sid.subscribe_id, user_action_.dislike_reason);
+            return user_info->dislike.insert(id_str).second;
           }
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
-
       private:
         const action_t& user_action_;
     };
 
-    class CandidateUpdater: public LevelTable<uint64_t, user_info_t>::Updater {
+    class CandidateUpdater: public UpdaterBase {
       public:
         CandidateUpdater(const id_set_t& id_set)
           : id_set_(id_set) {
           }
-        virtual ~CandidateUpdater() {
-        }
         virtual bool update(user_info_t* user_info) {
           int32_t ctime = time(NULL);
           id_set_t::iterator iter = id_set_.begin();
@@ -74,52 +125,53 @@ namespace rsys {
           }
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
-
       private:
         const id_set_t& id_set_;
     };
 
-    class HistoryFetcher: public LevelTable<uint64_t, user_info_t>::Updater {
+    class UserFetcher: public UpdaterBase {
+      public:
+        UserFetcher(user_info_t* user_info)
+          : user_info_(user_info) { }
+        virtual bool update(user_info_t* user_info) {
+          user_info_->ctime = user_info->ctime;
+          user_info_->subscribe = user_info->subscribe;
+          user_info_->dislike = user_info->dislike;
+          user_info_->readed = user_info->readed;
+          user_info_->recommended = user_info->recommended;
+          return true;
+        }
+      private:
+        user_info_t* user_info_;
+    };
+
+    class HistoryFetcher: public UpdaterBase {
       public:
         HistoryFetcher(id_set_t& id_set)
           : id_set_(id_set) {
           }
-        virtual ~HistoryFetcher() {
-        }
         virtual bool update(user_info_t* user_info) {
-          itemid_map_t::iterator iter = user_info->readed.begin();
+          map_time_t::iterator iter = user_info->readed.begin();
           for (; iter != user_info->readed.end(); ++iter) {
             //TODO: 添加过期判定
             id_set_.insert(iter->first);
           }
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
-
       private:
         id_set_t& id_set_;
     };
 
-    class CandidateFilter: public LevelTable<uint64_t, user_info_t>::Updater {
+    class CandidateFilter: public UpdaterBase {
       public:
         CandidateFilter(candidate_set_t& cand_set)
           : cand_set_(cand_set) {
           }
-        virtual ~CandidateFilter() {
-        }
         virtual bool update(user_info_t* user_info) {
           candidate_set_t::iterator iter = cand_set_.begin();
-          while (iter != cand_set_.end()) {
+
+          while(iter != cand_set_.end()) {
             if (user_info->readed.find(iter->item_id) != user_info->readed.end()) {
-              cand_set_.erase(iter++);
-              continue;
-            }
-            if (user_info->dislike.find(iter->item_id) != user_info->dislike.end()) {
               cand_set_.erase(iter++);
               continue;
             }
@@ -127,19 +179,19 @@ namespace rsys {
               cand_set_.erase(iter++);
               continue;
             }
+            if (user_info->dislike.find(iter->item_id) != user_info->dislike.end()) {
+              cand_set_.erase(iter++);
+              continue;
+            }
             ++iter;
           }
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
-
       private:
         candidate_set_t& cand_set_;
     };
 
-    class EliminateUpdater: public LevelTable<uint64_t, user_info_t>::Updater {
+    class EliminateUpdater: public UpdaterBase {
       public:
         EliminateUpdater() {
         }
@@ -148,39 +200,16 @@ namespace rsys {
         virtual bool update(user_info_t* user_info) {
           return true;
         }
-        virtual user_info_t* clone(user_info_t* value) {
-          return NULL;
-        }
     };
 
-    UserTable::UserTable(const Options& opts): options_(opts)
+    UserTable::UserTable(const Options& opts)
+      : TableBase(opts.work_path, opts.table_name, kUserFver, opts.max_table_level)
     {
-      //mutex_ = new pthread_mutex_t;
-      //if (NULL != path && '\0' == path[0])
-      //  path_ = path;
-      //if (NULL != prefix && '\0' == prefix[0])
-      //  prefix_ = prefix;
-      //pthread_mutex_init(mutex_, NULL);
+      options_ = opts;
     }
 
     UserTable::~UserTable()
     {
-      //if (mutex_)
-      //  delete mutex_;
-      //if (user_map_) {
-      //  for (int i=0; i<max_level_; ++i) {
-      //    if (user_map_[i])
-      //      delete user_map_[i];
-      //  }
-      //  delete[] user_map_;
-      //}
-      //if (rwlock_) {
-      //  for (int i=0; i<max_level_; ++i) {
-      //    if (rwlock_[i])
-      //      delete rwlock_[i];
-      //  }
-      //  delete[] rwlock_;
-      //}
     }
 
     bool UserTable::parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info)
@@ -192,14 +221,14 @@ namespace rsys {
       *user_id = user_record.user_id();
       user_info->ctime = user_record.ctime();
       for (int i = 0; i < user_record.srp_id_size(); ++i) {
-        user_info->srp.insert(user_record.srp_id(i));
+        //user_info->srp.insert(user_record.srp_id(i));
       }
       for (int i = 0; i < user_record.circle_id_size(); ++i) {
-        user_info->circle.insert(user_record.circle_id(i));
+        //user_info->circle.insert(user_record.circle_id(i));
       }
       for (int i = 0; i < user_record.dislike_size(); ++i) {
-        const ItemPair& pair  = user_record.dislike(i);
-        user_info->dislike.insert(std::make_pair(pair.item_id(), pair.ctime()));
+        //const ItemPair& pair  = user_record.dislike(i);
+        //user_info->dislike.insert(std::make_pair(pair.item_id(), pair.ctime()));
       }
       for (int i = 0; i < user_record.readed_size(); ++i) {
         const ItemPair& pair  = user_record.readed(i);
@@ -217,49 +246,49 @@ namespace rsys {
       UserRecord user_record;
 
       user_record.set_user_id(user_id);
-      for (id_set_t::const_iterator citer = user_info->srp.begin();
-          citer != user_info->srp.end(); ++citer) {
-        user_record.add_srp_id(*citer);
-      }
-      for (id_set_t::const_iterator citer = user_info->circle.begin();
-          citer != user_info->circle.end(); ++citer) {
-        user_record.add_circle_id(*citer);
-      }
-      for (itemid_map_t::const_iterator citer = user_info->dislike.begin();
-          citer != user_info->dislike.end(); ++citer) {
-        ItemPair* pair = user_record.add_dislike();
-        pair->set_item_id(citer->first);
-        pair->set_ctime(citer->second);
-      }
-      for (itemid_map_t::const_iterator citer = user_info->readed.begin();
-          citer != user_info->readed.end(); ++citer) {
-        ItemPair* pair = user_record.add_readed();
-        pair->set_item_id(citer->first);
-        pair->set_ctime(citer->second);
-      }
-      for (itemid_map_t::const_iterator citer = user_info->recommended.begin();
-          citer != user_info->recommended.end(); ++citer) {
-        ItemPair* pair = user_record.add_recommended();
-        pair->set_item_id(citer->first);
-        pair->set_ctime(citer->second);
-      }
+      //for (id_set_t::const_iterator citer = user_info->srp.begin();
+      //    citer != user_info->srp.end(); ++citer) {
+      //  user_record.add_srp_id(*citer);
+      //}
+      //for (id_set_t::const_iterator citer = user_info->circle.begin();
+      //    citer != user_info->circle.end(); ++citer) {
+      //  user_record.add_circle_id(*citer);
+      //}
+      //for (itemid_map_t::const_iterator citer = user_info->dislike.begin();
+      //    citer != user_info->dislike.end(); ++citer) {
+      //  ItemPair* pair = user_record.add_dislike();
+      //  pair->set_item_id(citer->first);
+      //  pair->set_ctime(citer->second);
+      //}
+      //for (itemid_map_t::const_iterator citer = user_info->readed.begin();
+      //    citer != user_info->readed.end(); ++citer) {
+      //  ItemPair* pair = user_record.add_readed();
+      //  pair->set_item_id(citer->first);
+      //  pair->set_ctime(citer->second);
+      //}
+      //for (itemid_map_t::const_iterator citer = user_info->recommended.begin();
+      //    citer != user_info->recommended.end(); ++citer) {
+      //  ItemPair* pair = user_record.add_recommended();
+      //  pair->set_item_id(citer->first);
+      //  pair->set_ctime(citer->second);
+      //}
       data = user_record.SerializeAsString();
       return true;
     }
 
     // 增量更新已读新闻
-    Status UserTable::updateReaded(uint64_t user_id, const action_t& user_action)
+    Status UserTable::updateAction(uint64_t user_id, const action_t& user_action)
     {
-      if (level_table().find(user_id)) {
+      if (!level_table()->find(user_id)) {
         std::ostringstream oss;
 
         // 点击了已淘汰的数据则不记录用户点击
-        oss << "Obsolete user: " << std::hex << user_id;
+        oss<<"Obsolete user: id="<<std::hex<<user_id;
         return Status::InvalidArgument(oss.str());
       } 
       ActionUpdater updater(user_action);
 
-      if (level_table().update(user_id, updater)) {
+      if (level_table()->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -269,16 +298,10 @@ namespace rsys {
       return Status::InvalidArgument(oss.str());
     }
 
-    // 增量更新不喜欢新闻
-    int UserTable::updateDislike(uint64_t itemid)
-    {
-      return 0;
-    }
-
     // 增量更新已推荐新闻
     Status UserTable::updateCandidateSet(uint64_t user_id, const id_set_t& id_set)
     {
-      if (!level_table().find(user_id)) {
+      if (!level_table()->find(user_id)) {
         std::ostringstream oss;
 
         // 点击了已淘汰的数据则不记录用户点击
@@ -287,7 +310,7 @@ namespace rsys {
       } 
       CandidateUpdater updater(id_set);
 
-      if (level_table().update(user_id, updater)) {
+      if (level_table()->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -303,20 +326,21 @@ namespace rsys {
 
     bool UserTable::isObsoleteUserInfo(const user_info_t* user_info, int32_t hold_time)
     {
-      itemid_map_t::const_iterator iter = user_info->readed.begin();
-      for (; iter != user_info->readed.end(); ++iter) {
+      //itemid_map_t::const_iterator iter = user_info->readed.begin();
+      //for (; iter != user_info->readed.end(); ++iter) {
 
-      }
+      //}
 
-      iter = user_info->dislike.begin();
-      for (; iter != user_info->dislike.end(); ++iter) {
+      //iter = user_info->dislike.begin();
+      //for (; iter != user_info->dislike.end(); ++iter) {
 
-      }
+      //}
 
-      iter = user_info->recommended.begin();
-      for (; iter != user_info->recommended.end(); ++iter) {
+      //iter = user_info->recommended.begin();
+      //for (; iter != user_info->recommended.end(); ++iter) {
 
-      }
+      //}
+      return true;
     }
 
     // 淘汰用户，包括已读，不喜欢和推荐信息
@@ -344,19 +368,32 @@ namespace rsys {
 
     bool UserTable::findUser(uint64_t user_id)
     {
-      return level_table().find(user_id);
+      return level_table()->find(user_id);
+    }
+
+    Status UserTable::getUser(uint64_t user_id, user_info_t* user_info)
+    {
+      UserFetcher fetcher(user_info);
+
+      if (level_table()->update(user_id, fetcher)) {
+        return Status::OK();
+      }
+      std::stringstream oss;
+
+      oss<<"Not found user: id=0x"<<std::hex<<user_id;
+      return Status::InvalidArgument(oss.str());
     }
 
     Status UserTable::updateUser(uint64_t user_id, user_info_t* user_info)
     {
-      if (!level_table().find(user_id)) {
-        if (level_table().add(user_id, user_info)) {
+      if (!level_table()->find(user_id)) {
+        if (level_table()->add(user_id, user_info)) {
           return Status::OK();
         }
       } 
       UserUpdater updater(user_info);
 
-      if (level_table().update(user_id, updater)) {
+      if (level_table()->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -367,7 +404,7 @@ namespace rsys {
 
     Status UserTable::queryHistory(uint64_t user_id, id_set_t& id_set)
     {
-      if (!level_table().find(user_id)) {
+      if (!level_table()->find(user_id)) {
         std::ostringstream oss;
 
         oss << "Obsolete user: " << std::hex << user_id;
@@ -375,7 +412,7 @@ namespace rsys {
       } 
       HistoryFetcher fetcher(id_set);
 
-      if (level_table().update(user_id, fetcher)) {
+      if (level_table()->update(user_id, fetcher)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -386,7 +423,7 @@ namespace rsys {
 
     Status UserTable::filterCandidateSet(uint64_t user_id, candidate_set_t& candset)
     {
-      if (!level_table().find(user_id)) {
+      if (!level_table()->find(user_id)) {
         std::ostringstream oss;
 
         oss << "Obsolete user: " << std::hex << user_id;
@@ -394,13 +431,17 @@ namespace rsys {
       } 
       CandidateFilter filter(candset);
 
-      if (level_table().update(user_id, filter)) {
+      if (level_table()->update(user_id, filter)) {
         return Status::OK();
       }
       std::stringstream oss;
 
       oss << "Cann`t filter candidate set: user_id=" << user_id;
       return Status::InvalidArgument(oss.str());
+    }
+
+    inline AheadLog* UserTable::createAheadLog() {
+      return new UserAheadLog(this, options_.work_path, kUserFver);
     }
   } // namespace news
 } // namespace rsys

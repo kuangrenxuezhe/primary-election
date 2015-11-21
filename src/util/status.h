@@ -2,6 +2,7 @@
 #define RSYS_NEWS_STATUS_H
 
 #include <string>
+#include <iostream>
 
 namespace rsys {
   namespace news {
@@ -15,8 +16,9 @@ namespace rsys {
         Status(const Status& s);
         void operator=(const Status& s);
 
-        static Status OK() { return Status(); }
-
+        static Status OK() {
+          return Status(); 
+        }
         // Return error status of an appropriate type.
         static Status NotFound(const std::string& msg) {
           return Status(kNotFound, msg);
