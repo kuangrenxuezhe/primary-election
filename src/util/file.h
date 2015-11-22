@@ -3,10 +3,37 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <sstream>
 #include "util/status.h"
 
 namespace rsys {
   namespace news {
+    static const uint32_t kVersionFlag = 0xAFU;
+    // level file version
+    struct fver_ {
+      uint32_t   flag:8; // 默认表示：0xAF
+      uint32_t major:16; // 主版本号
+      uint32_t  minor:8; // 小版本号
+
+      fver_(): flag(kVersionFlag) {
+        this->major = this->minor = 0;
+      }
+      fver_(uint32_t major, uint32_t minor): flag(kVersionFlag) {
+        this->major = major; this->minor = minor;
+      }
+      bool valid(const fver_& fver) {
+        return flag == fver.flag && major == fver.major && minor == fver.minor;
+      }
+      std::string toString() {
+        std::ostringstream oss;
+
+        oss << std::hex << "0x" << flag;
+        oss << std::dec << "v" << major << "." << minor;
+        return oss.str();
+      }
+    };
+    typedef struct fver_ fver_t; 
+
     class FileWriter {
       public:
         FileWriter(const std::string& name);
@@ -32,7 +59,7 @@ namespace rsys {
         }
 
       private:
-        int wfd_;
+        int          wfd_;
         std::string name_;
     };
 
@@ -57,7 +84,7 @@ namespace rsys {
         }
 
       private:
-        int rfd_;
+        int          rfd_;
         std::string name_;
     };
   } // namespace news

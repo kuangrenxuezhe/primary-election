@@ -32,6 +32,11 @@ message Action {
 
 /////////////////////////////////////////////////
 // 文档
+message ItemCategory {
+  int32    category_id = 1; // 内容分类ID
+  string category_name = 2; // 内容分类
+}
+
 message ItemWord {
   string word = 1; // 关键词
   int32 count = 2; // 关键词频率
@@ -40,16 +45,6 @@ message ItemWord {
 message ItemSrp {
   string srp_id = 1; // SRPID
   float   power = 2; // SRP权重
-}
-
-message ItemCategory {
-  int32    category_id = 1; // 内容分类ID
-  string category_name = 2; // 内容分类
-}
-
-message ItemSource {
-  fixed64  source_id = 1; // 数据来源ID
-  string source_name = 2; // 数据来源
 }
 
 enum ItemType {
@@ -69,6 +64,11 @@ message TopInfo {
   TopType              top_type = 1; // 推荐方式
   repeated string    top_srp_id = 2; // 文章所属SRPID
   repeated string top_circle_id = 3; // 文章所属圈子ID
+}
+
+message ItemSource {
+  fixed64  source_id = 1; // 数据来源ID
+  string source_name = 2; // 数据来源
 }
 
 message Item {
@@ -151,7 +151,7 @@ message User {
 }
 
 // 推荐 - Candidate to CC(user)
-message UserHistory {
+message UserStatus {
   int32 is_new_user = 1;
 }
 

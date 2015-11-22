@@ -7,8 +7,8 @@ namespace rsys {
   namespace news {
 
     struct buffer_ {
-      int maxlen;
-      char buffer[1];
+      int     maxlen; // buffer大小
+      char buffer[1]; // buffer地址
     };
     typedef struct buffer_ buffer_t;
 

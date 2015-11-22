@@ -29,19 +29,22 @@ sources=util/status.cpp \
 unittests=unittest.cpp \
 					util/file_test.cpp \
 					util/ahead_log_test.cpp \
-					util/level_file_test.cpp \
+					util/table_file_test.cpp \
 					util/level_table_test.cpp \
 					util/table_base_test.cpp \
 					core/user_table_test.cpp \
+					core/item_table_test.cpp
 
 temp=util/status.cpp \
 		 util/crc32c.cpp \
 		 util/file.cpp \
-		 util/level_file.cpp \
+		 util/table_file.cpp \
 		 util/wal.cpp \
 		 util/ahead_log.cpp \
+		 util/table_base.cpp \
 		 core/options.cpp \
-		 core/user_table.cpp \
+	   core/user_table.cpp \
+		 core/item_table.cpp \
 		 proto/record.pb.cc
 
 #SOURCES=$(addprefix ./src/, $(sources))
@@ -59,4 +62,4 @@ unittest:
 	#g++ $(CFLAGS) -o bin/unittest $(SOURCES) ./src/unittest.cpp $(INCLUDES) $(LIBS)
 
 clean:
-	rm -f bin/primary_election libcandset $(OBJS)
+	rm -f bin/primary_election 

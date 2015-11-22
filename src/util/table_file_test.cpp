@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 #include <stdio.h>
-#include "util/level_file.h"
+#include "util/table_file.h"
 
 using namespace rsys::news;
 SCENARIO("测试level file的reader/writer", "[base]") {
@@ -12,7 +12,7 @@ SCENARIO("测试level file的reader/writer", "[base]") {
       remove(level_file.c_str());
 
     fver_t fver(1, 9);
-    LevelFileWriter writer(level_file);
+    TableFileWriter writer(level_file);
     Status status = writer.create(fver);
     REQUIRE(status.ok());
     REQUIRE(writer.filename() == level_file);
@@ -24,7 +24,7 @@ SCENARIO("测试level file的reader/writer", "[base]") {
     REQUIRE(status.ok());
 
     THEN("正常读取level file") {
-      LevelFileReader reader(level_file);
+      TableFileReader reader(level_file);
       fver_t rfver;
       status = reader.open(rfver);
       REQUIRE(status.ok());

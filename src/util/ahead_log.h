@@ -8,7 +8,7 @@ namespace rsys {
   namespace news {
     class AheadLog {
       public:
-        AheadLog(const std::string& path, const fver_t& fver);
+        AheadLog(const std::string& path, const std::string& name, const fver_t& fver);
         virtual ~AheadLog();
 
       public:
@@ -25,12 +25,12 @@ namespace rsys {
 
       protected:
         // ahead log滚存触发器
-        virtual bool trigger() {
-          return true;
+        virtual Status trigger() {
+          return Status::OK();
         }
         // 处理数据回滚
-        virtual bool rollback(const std::string& data) {
-          return true;
+        virtual Status rollback(const std::string& data) {
+          return Status::OK();
         }
 
       protected:
@@ -39,10 +39,11 @@ namespace rsys {
         Status recovery(const std::string& name, WALWriter* writer);
 
       private:
-        fver_t fver_;
-        std::string path_;
-        WALWriter* writer_;
-        pthread_mutex_t mutex_; 
+        fver_t           fver_; // 文件版本号
+        std::string      path_; // 文件保存路径
+        std::string      name_; // ahead-log名称
+        WALWriter*     writer_; // ahead-log writer
+        pthread_mutex_t mutex_; // 互斥器
     };
   } // namespace news
 } // namespace rsys

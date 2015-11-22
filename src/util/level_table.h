@@ -18,7 +18,7 @@ namespace rsys {
           typedef enum mode_ mode_t;
 #pragma pack(1)
           struct node_ {
-            uint8_t mode;
+            uint8_t   mode;
             value_t* value;
           };
           typedef struct node_ node_t;
@@ -26,6 +26,12 @@ namespace rsys {
           typedef google::dense_hash_map<key_t, node_t> hash_map_t;
           typedef hash_map_t* hash_map_ptr_t;
 
+          class Getter {
+            public:
+              Getter() {}
+              virtual ~Getter() {}
+              virtual bool copy(value_t* value) = 0;
+          };
           class Updater {
             public:
               Updater() {};
@@ -49,8 +55,8 @@ namespace rsys {
               void next();
 
             private:
-              bool valid_;
-              hash_map_ptr_t hash_map_;
+              bool                         valid_;
+              hash_map_ptr_t            hash_map_;
               typename hash_map_t::iterator iter_;
 
             protected:
@@ -69,6 +75,7 @@ namespace rsys {
         public:
           bool add(const key_t& key, value_t* value);
           bool find(const key_t& key);
+          bool get(const key_t& key, Getter& getter);
 
           bool update(const key_t& key, Updater& updater);
           bool erase(const key_t& key);
@@ -90,8 +97,8 @@ namespace rsys {
           Iterator snapshot();
 
         private:
-          size_t level_size_;
-          hash_map_ptr_t* level_map_;
+          size_t            level_size_;
+          hash_map_ptr_t*    level_map_;
           pthread_rwlock_t* level_lock_;
       };
   }; // namespace news

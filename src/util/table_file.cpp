@@ -1,19 +1,19 @@
-#include "util/level_file.h"
+#include "util/table_file.h"
 #include "util/crc32c.h"
 #include <sstream>
 
 namespace rsys {
   namespace news {
-    LevelFileWriter::LevelFileWriter(const std::string& name)
+    TableFileWriter::TableFileWriter(const std::string& name)
       : crc_(0), writer_(name)
     {
     }
 
-    LevelFileWriter::~LevelFileWriter()
+    TableFileWriter::~TableFileWriter()
     {
     }
 
-    Status LevelFileWriter::create(const fver_t& ver)
+    Status TableFileWriter::create(const fver_t& ver)
     {
       Status status = writer_.create();
       if (!status.ok())
@@ -22,7 +22,7 @@ namespace rsys {
       return writer_.writeMeta((char*)&ver, sizeof(fver_t));
     }
 
-    Status LevelFileWriter::close()
+    Status TableFileWriter::close()
     {
       static std::string nullstr;
       // 写一个空记录表示结尾
@@ -35,27 +35,27 @@ namespace rsys {
       return status;
     }
 
-    Status LevelFileWriter::write(std::string& data)
+    Status TableFileWriter::write(std::string& data)
     {
       crc_ = crc::extend(crc_, data.c_str(), data.length());
       return writer_.write(data);
     }
 
-    const std::string& LevelFileWriter::filename() const 
+    const std::string& TableFileWriter::filename() const 
     {
       return writer_.filename();
     }
 
-    LevelFileReader::LevelFileReader(const std::string& name)
+    TableFileReader::TableFileReader(const std::string& name)
       : crc_(0), reader_(name)
     {
     }
 
-    LevelFileReader::~LevelFileReader()
+    TableFileReader::~TableFileReader()
     {
     }
 
-    Status LevelFileReader::open(fver_t& ver)
+    Status TableFileReader::open(fver_t& ver)
     {
       Status status = reader_.open();
       if (!status.ok())
@@ -64,7 +64,7 @@ namespace rsys {
       return reader_.readMeta(sizeof(fver_t), (char*)&ver);
     }
 
-    Status LevelFileReader::close()
+    Status TableFileReader::close()
     {
       uint32_t valid_crc;
       Status status = reader_.readMeta(sizeof(uint32_t), (char*)&valid_crc);
@@ -84,7 +84,7 @@ namespace rsys {
       return Status::OK();
     }
 
-    Status LevelFileReader::read(std::string& data)
+    Status TableFileReader::read(std::string& data)
     {
       Status status = reader_.read(data);
       if (!status.ok())
@@ -94,7 +94,7 @@ namespace rsys {
       return Status::OK();
     }
 
-    const std::string& LevelFileReader::filename() const 
+    const std::string& TableFileReader::filename() const 
     {
       return reader_.filename();
     }

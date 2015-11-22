@@ -13,31 +13,70 @@
 namespace rsys {
   namespace news {
     static const fver_t kUserFver(0, 1);
+    static const std::string kUserAheadLog = "wal-user";
+    static const std::string kUserTable = "table-user.dat";
 
     class UserAheadLog: public AheadLog {
       public:
         UserAheadLog(UserTable* user_table, const std::string& path, 
-            const fver_t& fver): AheadLog(path, fver), user_table_(user_table) {
+            const fver_t& fver): AheadLog(path, kUserAheadLog, fver), user_table_(user_table) {
         }
 
       public:
         // ahead log滚存触发器
-        virtual bool trigger() {
-          return user_table_->level_table()->deepen();
+        virtual Status trigger() {
+          if (user_table_->level_table_->deepen())
+            return Status::OK();
+          return Status::Corruption("Trigger");
         }
         // 处理数据回滚
-        virtual bool rollback(const std::string& data) {
-          uint64_t user_id;
-
-          user_info_t* user_info = user_table_->newValue();
-          if (!user_table_->parseFrom(data, &user_id, user_info))
-            return false;
-
-          if (!user_table_->level_table()->add(user_id, user_info)) {
-            delete user_info;
-            return false;
+        virtual Status rollback(const std::string& data) {
+          LogRecord record;
+          if (!record.ParseFromString(data)) {
+            return Status::Corruption("Parse user info");
           }
-          return true;
+
+          if (record.record().Is<LogAction>()) {
+            LogAction log_action;
+            action_t action;
+
+            record.record().UnpackTo(&log_action);
+            action.item_id = log_action.item_id();
+            action.action = log_action.action();
+            action.action_time = log_action.action_time();
+            action.dislike_reason = log_action.dislike_reason();
+
+            Status status = user_table_->updateAction(log_action.user_id(), action);
+            if (status.ok())
+              return status;
+          } else if (record.record().Is<LogSubscribe>()) {
+            LogSubscribe log_subscribe;
+            subscribe_t subscribe;
+
+            record.record().UnpackTo(&log_subscribe);
+            for (int i = 0; i < log_subscribe.keystr_size(); ++i) {
+              const KeyStr& pair = log_subscribe.keystr(i);
+              subscribe.insert(std::make_pair(pair.key(), pair.str()));
+            }
+
+            Status status = user_table_->updateUser(log_subscribe.user_id(), subscribe);
+            if (status.ok())
+              return status;
+          } else if (record.record().Is<LogCandidateSet>()) {
+            LogCandidateSet log_cand_set;
+            id_set_t cand_set;
+
+            record.record().UnpackTo(&log_cand_set);
+            for (int i = 0; i < log_cand_set.cand_id_size(); ++i) {
+              cand_set.insert(log_cand_set.cand_id(i));
+            }
+
+            Status status = user_table_->updateCandidateSet(log_cand_set.user_id(), cand_set);
+            if (status.ok())
+              return status;
+          }
+
+          return Status::InvalidArgument("Invalid data");
         }
 
       private:
@@ -59,15 +98,15 @@ namespace rsys {
 
     class UserUpdater: public UpdaterBase {
       public:
-        UserUpdater(user_info_t* user_info)
-          : user_info_(user_info) {
+        UserUpdater(const subscribe_t& subscribe)
+          : subscribe_(subscribe) {
           }
         virtual bool update(user_info_t* user_info) {
-          user_info->subscribe = user_info_->subscribe;
+          user_info->subscribe = subscribe_;
           return true;
         }
       private:
-        user_info_t* user_info_;
+        const subscribe_t& subscribe_;
     };
 
     class ActionUpdater: public UpdaterBase {
@@ -129,11 +168,11 @@ namespace rsys {
         const id_set_t& id_set_;
     };
 
-    class UserFetcher: public UpdaterBase {
+    class UserFetcher: public LevelTable<uint64_t, user_info_t>::Getter {
       public:
         UserFetcher(user_info_t* user_info)
           : user_info_(user_info) { }
-        virtual bool update(user_info_t* user_info) {
+        virtual bool copy(user_info_t* user_info) {
           user_info_->ctime = user_info->ctime;
           user_info_->subscribe = user_info->subscribe;
           user_info_->dislike = user_info->dislike;
@@ -195,91 +234,46 @@ namespace rsys {
       public:
         EliminateUpdater() {
         }
-        virtual ~EliminateUpdater() {
-        }
         virtual bool update(user_info_t* user_info) {
+          user_info->readed.clear();
+          user_info->recommended.clear();
           return true;
         }
     };
 
     UserTable::UserTable(const Options& opts)
-      : TableBase(opts.work_path, opts.table_name, kUserFver, opts.max_table_level)
+      : TableBase(opts.work_path, kUserTable, kUserFver), level_table_(NULL)
     {
       options_ = opts;
+      level_table_ = new level_table_t(opts.max_table_level);
     }
 
     UserTable::~UserTable()
     {
+      if (level_table_)
+        delete level_table_;
     }
-
-    bool UserTable::parseFrom(const std::string& data, uint64_t* user_id, user_info_t* user_info)
-    {
-      UserRecord user_record;
-      if (!user_record.ParseFromString(data))
-        return false;
-
-      *user_id = user_record.user_id();
-      user_info->ctime = user_record.ctime();
-      for (int i = 0; i < user_record.srp_id_size(); ++i) {
-        //user_info->srp.insert(user_record.srp_id(i));
-      }
-      for (int i = 0; i < user_record.circle_id_size(); ++i) {
-        //user_info->circle.insert(user_record.circle_id(i));
-      }
-      for (int i = 0; i < user_record.dislike_size(); ++i) {
-        //const ItemPair& pair  = user_record.dislike(i);
-        //user_info->dislike.insert(std::make_pair(pair.item_id(), pair.ctime()));
-      }
-      for (int i = 0; i < user_record.readed_size(); ++i) {
-        const ItemPair& pair  = user_record.readed(i);
-        user_info->readed.insert(std::make_pair(pair.item_id(), pair.ctime()));
-      }
-      for (int i = 0; i < user_record.recommended_size(); ++i) {
-        const ItemPair& pair  = user_record.recommended(i);
-        user_info->recommended.insert(std::make_pair(pair.item_id(), pair.ctime()));
-      }
-      return true;
-    }
-
-    bool UserTable::serializeTo(uint64_t user_id, const user_info_t* user_info, std::string& data)
-    {
-      UserRecord user_record;
-
-      user_record.set_user_id(user_id);
-      //for (id_set_t::const_iterator citer = user_info->srp.begin();
-      //    citer != user_info->srp.end(); ++citer) {
-      //  user_record.add_srp_id(*citer);
-      //}
-      //for (id_set_t::const_iterator citer = user_info->circle.begin();
-      //    citer != user_info->circle.end(); ++citer) {
-      //  user_record.add_circle_id(*citer);
-      //}
-      //for (itemid_map_t::const_iterator citer = user_info->dislike.begin();
-      //    citer != user_info->dislike.end(); ++citer) {
-      //  ItemPair* pair = user_record.add_dislike();
-      //  pair->set_item_id(citer->first);
-      //  pair->set_ctime(citer->second);
-      //}
-      //for (itemid_map_t::const_iterator citer = user_info->readed.begin();
-      //    citer != user_info->readed.end(); ++citer) {
-      //  ItemPair* pair = user_record.add_readed();
-      //  pair->set_item_id(citer->first);
-      //  pair->set_ctime(citer->second);
-      //}
-      //for (itemid_map_t::const_iterator citer = user_info->recommended.begin();
-      //    citer != user_info->recommended.end(); ++citer) {
-      //  ItemPair* pair = user_record.add_recommended();
-      //  pair->set_item_id(citer->first);
-      //  pair->set_ctime(citer->second);
-      //}
-      data = user_record.SerializeAsString();
-      return true;
-    }
-
+    
     // 增量更新已读新闻
     Status UserTable::updateAction(uint64_t user_id, const action_t& user_action)
     {
-      if (!level_table()->find(user_id)) {
+      LogRecord record;
+      LogAction log_action;
+
+      log_action.set_user_id(user_id);
+      log_action.set_item_id(user_action.item_id);
+      log_action.set_action(user_action.action);
+      log_action.set_action_time(user_action.action_time);
+      log_action.set_dislike_reason(user_action.dislike_reason);
+      record.mutable_record()->PackFrom(log_action);
+
+      std::string serialize_record = record.SerializeAsString();
+      Status status = writeAheadLog(serialize_record);
+      if (!status.ok()) {
+        return status;
+      }
+
+      if (!level_table_->find(user_id)) {
         std::ostringstream oss;
 
         // 点击了已淘汰的数据则不记录用户点击
@@ -288,7 +282,7 @@ namespace rsys {
       } 
       ActionUpdater updater(user_action);
 
-      if (level_table()->update(user_id, updater)) {
+      if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -301,7 +295,23 @@ namespace rsys {
     // 增量更新已推荐新闻
     Status UserTable::updateCandidateSet(uint64_t user_id, const id_set_t& id_set)
     {
-      if (!level_table()->find(user_id)) {
+      LogRecord record;
+      LogCandidateSet log_cand_set;
+
+      id_set_t::iterator iter = id_set.begin();
+      for (; iter != id_set.end(); ++iter) {
+        log_cand_set.add_cand_id(*iter);
+      }
+      log_cand_set.set_user_id(user_id);
+      record.mutable_record()->PackFrom(log_cand_set);
+
+      std::string serialize_id_set = record.SerializeAsString();
+      Status status = writeAheadLog(serialize_id_set);
+      if (!status.ok()) {
+        return status;
+      }
+
+      if (!level_table_->find(user_id)) {
         std::ostringstream oss;
 
         // 点击了已淘汰的数据则不记录用户点击
@@ -310,7 +320,7 @@ namespace rsys {
       } 
       CandidateUpdater updater(id_set);
 
-      if (level_table()->update(user_id, updater)) {
+      if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -319,63 +329,58 @@ namespace rsys {
       return Status::InvalidArgument(oss.str());
     }
 
-    bool UserTable::isObsoleteUser(const user_info_t* user_info, int32_t hold_time)
+    bool UserTable::isObsolete(const user_info_t* user_info)
     {
+      int32_t ctime = time(NULL);
+      if (ctime - user_info->ctime > options_.user_hold_time)
+        return true;
       return false;
     }
 
-    bool UserTable::isObsoleteUserInfo(const user_info_t* user_info, int32_t hold_time)
-    {
-      //itemid_map_t::const_iterator iter = user_info->readed.begin();
-      //for (; iter != user_info->readed.end(); ++iter) {
-
-      //}
-
-      //iter = user_info->dislike.begin();
-      //for (; iter != user_info->dislike.end(); ++iter) {
-
-      //}
-
-      //iter = user_info->recommended.begin();
-      //for (; iter != user_info->recommended.end(); ++iter) {
-
-      //}
-      return true;
-    }
-
     // 淘汰用户，包括已读，不喜欢和推荐信息
-    Status UserTable::eliminate(int32_t hold_time)
+    Status UserTable::eliminate()
     {
-      // LevelTable<uint64_t, user_info_t>::Iterator 
-      //   iter = level_table().snapshot();
+      Status status = Status::OK();
+      LevelTable<uint64_t, user_info_t>::Iterator iter = level_table_->snapshot();
+      for (; iter.hasNext(); iter.next()) {
+        const user_info_t* user_info = iter.value();
 
-      // while (iter.hasNext()) {
-      //   user_info_t* user_info = iter.value();
+        // 用户是否过期
+        if (isObsolete(user_info)) {
+          if (user_info->dislike.size() == 0) {
+            // 若用户没有不喜欢信息则直接删除
+            if (!level_table_->erase(iter.key())) {
+              std::ostringstream oss;
 
-      //   if (isObsoleteUser(user_info, hold_time))
-      //     level_table().erase(iter.key());
+              oss<<"Eliminate user failed: id="<<std::hex<<iter.key();
+              status = Status::Corruption(oss.str());
+            }
+          } else {
+            EliminateUpdater updater;
 
-      //   // 淘汰用户
-      //   if (isObsoleteUserInfo(user_info, hold_time))  {
-      //     EliminateUpdater updater;
+            // 若用户有点击过不喜欢信息则只淘汰已读和推荐结果
+            if (!level_table_->update(iter.key(), updater)) {
+              std::ostringstream oss;
 
-      //     level_table().update(iter.key(), updater);
-      //   }
-      //   iter.next();
-      // }
-      return Status::OK();
+              oss<<"Eliminate user failed: id="<<std::hex<<iter.key();
+              status = Status::Corruption(oss.str());
+            }
+          }
+        }
+      }
+      return status;
     }
 
     bool UserTable::findUser(uint64_t user_id)
     {
-      return level_table()->find(user_id);
+      return level_table_->find(user_id);
     }
 
     Status UserTable::getUser(uint64_t user_id, user_info_t* user_info)
     {
       UserFetcher fetcher(user_info);
 
-      if (level_table()->update(user_id, fetcher)) {
+      if (level_table_->get(user_id, fetcher)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -384,27 +389,55 @@ namespace rsys {
       return Status::InvalidArgument(oss.str());
     }
 
-    Status UserTable::updateUser(uint64_t user_id, user_info_t* user_info)
+    Status UserTable::updateUser(uint64_t user_id, const subscribe_t& subscribe)
     {
-      if (!level_table()->find(user_id)) {
-        if (level_table()->add(user_id, user_info)) {
+      LogRecord record;
+      LogSubscribe log_subscribe;
+
+      map_str_t::const_iterator iter = subscribe.begin();
+      for (; iter != subscribe.end(); ++iter) {
+        KeyStr* keystr = log_subscribe.add_keystr();
+
+        keystr->set_key(iter->first);
+        keystr->set_str(iter->second);
+      }
+      log_subscribe.set_user_id(user_id);
+      record.mutable_record()->PackFrom(log_subscribe);
+
+      std::string serialize_subscribe = record.SerializeAsString();
+      Status status = writeAheadLog(serialize_subscribe);
+      if (!status.ok()) {
+        return status;
+      }
+
+      if (!level_table_->find(user_id)) {
+        user_info_t* user_info = new user_info_t;
+
+        user_info->ctime = time(NULL);
+        user_info->subscribe = subscribe;
+        if (level_table_->add(user_id, user_info)) {
           return Status::OK();
+        } else {
+          std::stringstream oss;
+
+          oss<<"Cann`t insert user: id="<<std::hex<<user_id;
+          return Status::InvalidArgument(oss.str());
         }
       } 
-      UserUpdater updater(user_info);
+      UserUpdater updater(subscribe);
 
-      if (level_table()->update(user_id, updater)) {
+      if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
       std::stringstream oss;
 
-      oss << "Cann`t update user info: user_id=" << user_id;
+      oss<<"Cann`t update user info: id="<<std::hex<<user_id;
       return Status::InvalidArgument(oss.str());
     }
 
     Status UserTable::queryHistory(uint64_t user_id, id_set_t& id_set)
     {
-      if (!level_table()->find(user_id)) {
+      if (!level_table_->find(user_id)) {
         std::ostringstream oss;
 
         oss << "Obsolete user: " << std::hex << user_id;
@@ -412,7 +445,7 @@ namespace rsys {
       } 
       HistoryFetcher fetcher(id_set);
 
-      if (level_table()->update(user_id, fetcher)) {
+      if (level_table_->update(user_id, fetcher)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -423,7 +456,7 @@ namespace rsys {
 
     Status UserTable::filterCandidateSet(uint64_t user_id, candidate_set_t& candset)
     {
-      if (!level_table()->find(user_id)) {
+      if (!level_table_->find(user_id)) {
         std::ostringstream oss;
 
         oss << "Obsolete user: " << std::hex << user_id;
@@ -431,7 +464,7 @@ namespace rsys {
       } 
       CandidateFilter filter(candset);
 
-      if (level_table()->update(user_id, filter)) {
+      if (level_table_->update(user_id, filter)) {
         return Status::OK();
       }
       std::stringstream oss;
@@ -442,6 +475,114 @@ namespace rsys {
 
     inline AheadLog* UserTable::createAheadLog() {
       return new UserAheadLog(this, options_.work_path, kUserFver);
+    }
+
+    Status UserTable::loadData(const std::string& data) 
+    {
+      LogUserInfo log_user_info;
+      if (!log_user_info.ParseFromString(data)) {
+        return Status::Corruption("Parse user_info failed");
+      }
+      user_info_t* user_info = new user_info_t;
+
+      user_info->ctime = log_user_info.ctime();
+      for (int i = 0; i < log_user_info.subscribe_size(); ++i) {
+        const KeyStr& pair = log_user_info.subscribe(i);
+        user_info->subscribe.insert(std::make_pair(pair.key(), pair.str()));
+      }
+      for (int i = 0; i < log_user_info.dislike_size(); ++i) {
+        const KeyStr& pair = log_user_info.dislike(i);
+        user_info->dislike.insert(std::make_pair(pair.key(), pair.str()));
+      }
+      for (int i = 0; i < log_user_info.readed_size(); ++i) {
+        const KeyTime& pair  = log_user_info.readed(i);
+        user_info->readed.insert(std::make_pair(pair.key(), pair.ctime()));
+      }
+      for (int i = 0; i < log_user_info.recommended_size(); ++i) {
+        const KeyTime& pair  = log_user_info.recommended(i);
+        user_info->recommended.insert(std::make_pair(pair.key(), pair.ctime()));
+      }
+
+      if (!level_table_->add(log_user_info.user_id(), user_info)) {
+        std::ostringstream oss;
+
+        oss<<"Insert level table: key=0x"<<std::hex<<log_user_info.user_id();
+        return Status::Corruption(oss.str());
+      }
+      return Status::OK();
+    }
+
+    Status UserTable::onLoadComplete() 
+    {
+      if (level_table_->deepen()) {
+        return Status::OK();
+      }
+      return Status::Corruption("Deepen level table failed");
+    }
+
+    Status UserTable::dumpToFile(const std::string& temp_name) 
+    {
+      if (level_table_->depth() >= kMinLevel) {
+        if (!level_table_->merge()) {
+          return Status::Corruption("Table merge failed");
+        }
+      }
+
+      level_table_t::Iterator iter = level_table_->snapshot();
+      if (!iter.valid()) {
+        return Status::Corruption("Table depth not enough");
+      }
+      TableFileWriter writer(temp_name);
+
+      Status status = writer.create(kUserFver);
+      if (!status.ok()) {
+        return status;
+      }
+      std::string serialized_data;
+
+      for (; iter.hasNext(); iter.next()) {
+        const user_info_t* user_info = iter.value();
+        if (NULL == user_info) {
+          continue;
+        }
+        LogUserInfo log_user_info;
+
+        log_user_info.set_user_id(iter.key());
+        for (subscribe_t::const_iterator citer = user_info->subscribe.begin();
+            citer != user_info->subscribe.end(); ++citer) {
+          KeyStr* pair = log_user_info.add_subscribe();
+          pair->set_key(citer->first);
+          pair->set_str(citer->second);
+        }
+        for (map_str_t::const_iterator citer = user_info->dislike.begin();
+            citer != user_info->dislike.end(); ++citer) {
+          KeyStr* pair = log_user_info.add_dislike();
+          pair->set_key(citer->first);
+          pair->set_str(citer->second);
+        }
+        for (map_time_t::const_iterator citer = user_info->readed.begin();
+            citer != user_info->readed.end(); ++citer) {
+          KeyTime* pair = log_user_info.add_readed();
+          pair->set_key(citer->first);
+          pair->set_ctime(citer->second);
+        }
+        for (map_time_t::const_iterator citer = user_info->recommended.begin();
+            citer != user_info->recommended.end(); ++citer) {
+          KeyTime* pair = log_user_info.add_recommended();
+          pair->set_key(citer->first);
+          pair->set_ctime(citer->second);
+        }
+        std::string serialized_data = log_user_info.SerializeAsString();
+
+        status = writer.write(serialized_data);
+        if (!status.ok()) {
+          writer.close();
+          return status;
+        }
+      }
+      writer.close();
+
+      return Status::OK();
     }
   } // namespace news
 } // namespace rsys

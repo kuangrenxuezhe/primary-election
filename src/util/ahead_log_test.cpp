@@ -5,18 +5,18 @@ using namespace rsys::news;
 class MockAheadLog: public AheadLog {
   public:
     MockAheadLog(const std::string& path, const fver_t& fver)
-      : AheadLog(path, fver) {
+      : AheadLog(path, "wal", fver) {
     }
     virtual ~MockAheadLog() {
     }
     // ahead log滚存触发器
-    virtual bool trigger() {
-      return true;
+    virtual Status trigger() {
+      return Status::OK();
     }
     // 处理数据回滚
-    virtual bool rollback(const std::string& data) {
+    virtual Status rollback(const std::string& data) {
       logs_.push_back(data);
-      return true;
+      return Status::OK();
     }
   public:
     std::vector<std::string> logs_;

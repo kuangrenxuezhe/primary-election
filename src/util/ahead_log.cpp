@@ -6,17 +6,22 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <stdio.h>
 #include <sstream>
 
 namespace rsys {
   namespace news {
-    static const std::string kRecoveryName = "/wal.recovery";
-    static const std::string kWritingName = "/wal.writing";
+    static const char kRecoveryExt[] = "recovery";
+    static const char kWritingExt[] = "writing";
 
-    AheadLog::AheadLog(const std::string& path, const fver_t& fver)
-      : path_(path), fver_(fver.major, fver.minor), writer_(NULL)
+    AheadLog::AheadLog(const std::string& path, const std::string& name, const fver_t& fver)
+      : path_(path), name_(name), writer_(NULL)
     {
-      writer_ = new WALWriter(path_ + "/wal.writing");
+      char fullpath[300];
+
+      fver_ = fver;
+      sprintf(fullpath, "%s/%s.%s", path_.c_str(), name_.c_str(), kWritingExt);
+      writer_ = new WALWriter(fullpath);
       pthread_mutex_init(&mutex_, NULL);
     }
 
@@ -34,7 +39,7 @@ namespace rsys {
 
       // 计算最大文件序号
       for (;; ++max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no);
+        sprintf(name, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no);
         if (::access(name, F_OK))
           break;
       }
@@ -50,7 +55,7 @@ namespace rsys {
       Status status = Status::OK();
       if (expired <= 0) { // 表示删除所有的ahead log
         for (i = 0;; ++i) {
-          sprintf(name, "%s/wal-%d.dat", path_.c_str(), i);
+          sprintf(name, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), i);
           if (::access(name, F_OK))
             break;
 
@@ -70,7 +75,7 @@ namespace rsys {
       for (; max_no > 0; --max_no) {
         struct stat stbuf;
 
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
+        sprintf(name, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no - 1);
         if (::stat(name, &stbuf)) {
           std::ostringstream oss;
 
@@ -103,15 +108,14 @@ namespace rsys {
 
       pthread_mutex_lock(&mutex_);
       writer_->close();
-      if (!trigger()) {
-        status = Status::Corruption("Trigger failed");
-      }
+      status = trigger();
+
       char newname[300];
  
       max_no = stat_file_numb();
       for (; max_no > 0; --max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
-        sprintf(newname, "%s/wal-%d.dat", path_.c_str(), max_no);
+        sprintf(name, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no - 1);
+        sprintf(newname, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no);
 
         if (::rename(name, newname)) {
           std::ostringstream oss;
@@ -122,7 +126,7 @@ namespace rsys {
         }
       }
 
-      sprintf(newname, "%s/wal-%d.dat", path_.c_str(), max_no);
+      sprintf(newname, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no);
       if (::rename(writer_->filename().c_str(), newname)) {
         std::ostringstream oss;
 
@@ -160,13 +164,16 @@ namespace rsys {
 
       int max_no = stat_file_numb();
       for (; max_no > 0; --max_no) {
-        sprintf(name, "%s/wal-%d.dat", path_.c_str(), max_no - 1);
+        sprintf(name, "%s/%s-%d.dat", path_.c_str(), name_.c_str(), max_no - 1);
         Status status = recovery(name);
         if (!status.ok())
           return status;
       }
-      std::string recovery_name = path_ + "/wal.recovery";
-      std::string writing_name = path_ + "/wal.writing";
+      sprintf(name, "%s/%s.%s", path_.c_str(), name_.c_str(), kRecoveryExt);
+      std::string recovery_name(name);
+
+      sprintf(name, "%s/%s.%s", path_.c_str(), name_.c_str(), kWritingExt);
+      std::string writing_name(name);
 
       assert(NULL != writer_);
       if (!access(recovery_name.c_str(), F_OK)) {
@@ -214,7 +221,9 @@ namespace rsys {
 
         if (serialized_data.length() <= 0)
           break;
-      } while (rollback(serialized_data));
+        status = rollback(serialized_data);
+      }
+      while (status.ok());
 
       reader.close();
       return Status::OK();
@@ -239,14 +248,15 @@ namespace rsys {
         if (serialized_data.length() <= 0)
           break;
 
-        if (rollback(serialized_data)) {
+        status = rollback(serialized_data);
+        if (status.ok()) {
           status = writer->append(serialized_data);
           if (!status.ok()) {
             reader.close();
             return status;
           }
         }
-      } while (true);
+      } while (status.ok());
       reader.close();
 
       if (::remove(name.c_str())) {

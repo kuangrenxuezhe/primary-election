@@ -8,102 +8,87 @@
 #include "core/options.h"
 #include "core/core_type.h"
 #include "util/status.h"
-#include "util/base_table.h"
-#include "util/level_table.h"
+#include "util/table_base.h"
 #include "proto/service.pb.h"
-#include "sparsehash/dense_hash_map"
 
 namespace rsys {
   namespace news {
     struct item_info_ {
-      uint64_t item_id; // itemid
-      int32_t	publish_time; // 发布时间
-      float primary_power; // 初选权重
-      int32_t item_type:16; // item类型(0 咨询，1 视频)
-      int32_t picture_num:16; // 图片个数
-      int32_t category_id; // 分类ID
-      int64_t region_id; // 所属地区
-      id_set_t circle_and_srp; //所属圈子和SRP词
+      uint64_t       item_id; // itemid
+      float            power; // 初选权重
+      int32_t	  publish_time; // 发布时间
+      int32_t      item_type; // item类型
+      int32_t    picture_num; // 图片个数
+      int32_t    click_count; // 点击计数
+      int32_t     click_time; // 最近点击时间
+      int32_t    category_id; // 所属分类, 用于返回
+      map_str_t    region_id; // 所属地区
+      map_str_t   belongs_to; // 所属分类, 圈子, SRP词
     };
     typedef struct item_info_ item_info_t;
 
     struct item_index_ {
-      int32_t click_count; // 点击计数
-      int32_t click_time; // 最近点击时间
-      item_info_t* item_info;
+      int32_t          index; // 滑窗内的偏移
+      item_info_t* item_info; // item_info地址
     };
     typedef struct item_index_ item_index_t;
 
     struct query_ {
-      int item_type;
+      int      item_type;
       int32_t start_time;
-      int32_t end_time;
+      int32_t   end_time;
     };
     typedef struct query_ query_t;
 
     typedef std::list<item_info_t*> item_list_t;
 
-    class ItemTable: public BaseTable<item_index_t> {
+    class ItemTable: public TableBase {
+      public:
+        typedef google::dense_hash_map<uint64_t, item_index_t> hash_map_t;
+
       public:
         ItemTable(const Options& opts);
         ~ItemTable();
-
+      
       public:
-        // 写入表的版本号
-        fver_t tableVersion() const {
-          return fver_;
-        }
-        virtual const std::string tableName() const {
-          return options_.work_path + "/" + options_.table_name;
-        }
-        virtual const std::string workPath() const {
-          return options_.work_path;
-        }
-
-      public:
-      // 淘汰用户，包括已读，不喜欢和推荐信息
-        Status eliminate(int32_t hold_time);
+        // 淘汰过期数据, 更新滑窗基准时间
+        Status eliminate();
 
       public:
         // 添加item, item_info由外部分配内存(避免复制)
         Status addItem(item_info_t* item_info);
-        Status updateAction(const action_t& item_action);
-
+        // 更新用户点击
+        Status updateAction(const action_t& action);
+        // 查询item, 需设置item_info.item_id
+        Status queryItem(item_info_t& item_info);
+        // 获取候选集合
         Status queryCandidateSet(const query_t& query, candidate_set_t& candset);
-
+        
       public:
-        virtual bool parseFrom(const std::string& data, uint64_t* item_id, item_index_t* item_index);
-        virtual bool serializeTo(uint64_t item_id, const item_index_t* item_index, std::string& data);
+        // 创建AheadLog对象
+        virtual AheadLog* createAheadLog();
+        virtual Status loadData(const std::string& data);
+        virtual Status dumpToFile(const std::string& temp_name);
 
       protected:
-        int getWindowIndex(int32_t ctime);
-        Status addItemIndex(item_info_t* item_info);
+        // 计算存储在滑窗内的物理位置
+        int windowIndex(int32_t ctime);
+        Status addItemIndex(int index, item_info_t* item_info);
+        void addToList(item_list_t& item_list, item_info_t* term_info);
 
         int loadSlipWindow(const char* fullpath);
         int syncSlipWindow(const char* fullpath);
 
-      protected:
-        virtual AheadLog* createAheadLog() {
-          return NULL;
-        }
-        virtual value_t* newValue() {
-          return NULL;
-        }
-
       private:
-        static fver_t fver_;
-        const Options& options_;
-
-        // 滑窗大小
-        int window_size_; 
-        // 滑窗基准位
-        int window_base_;
-        // 滑窗基准时间
-        int32_t window_time_;
-        
-        // 采用循环列表存储item，每个slot表示1小时
-        item_list_t* item_window_;
+        Options               options_;
+        int               window_size_; // 滑窗大小
+        int               window_base_; // 滑窗基准位
+        int32_t           window_time_; // 滑窗基准时间
+        item_list_t*      item_window_; // 采用循环列表存储item，每个slot表示1小时
         pthread_rwlock_t* window_lock_;
+
+        hash_map_t*        item_index_; // 存储item索引
+        pthread_mutex_t    index_lock_;
     };
   }; // namespace news
 }; // namespace rsys

@@ -119,8 +119,48 @@ namespace rsys {
       }
 
     template<typename K, typename V>
-      inline bool LevelTable<K, V>::update(const key_t& key, Updater& updater)
-      {
+      inline bool LevelTable<K, V>::get(const key_t& key, Getter& getter) {
+        bool finded = false;
+
+        pthread_rwlock_rdlock(&level_lock_[0]);
+        typename hash_map_t::iterator iter = level_map_[0]->find(key);
+
+        if (iter != level_map_[0]->end()) {
+          bool copied = getter.copy(iter->second.value);
+
+          finded = true;
+          pthread_rwlock_rdlock(&level_lock_[0]);
+
+          return copied;
+        } 
+        pthread_rwlock_rdlock(&level_lock_[0]);
+
+        if (!finded) {
+          for (size_t i = 1; i < level_size_; ++i) {
+            pthread_rwlock_rdlock(&level_lock_[i]);
+            if (NULL == level_map_[i]) {
+              pthread_rwlock_unlock(&level_lock_[i]);
+              break;
+            }
+            iter = level_map_[i]->find(key);
+
+            if (iter != level_map_[i]->end()) {
+              uint8_t mode = iter->second.mode;
+
+              if (!(mode&MODE_DELETED) && getter.copy(iter->second.value)) {
+                finded=true;
+              }
+              pthread_rwlock_unlock(&level_lock_[i]);
+              break;
+            }
+            pthread_rwlock_unlock(&level_lock_[i]);
+          }
+        }
+        return finded;
+      }
+
+    template<typename K, typename V>
+      inline bool LevelTable<K, V>::update(const key_t& key, Updater& updater) {
         bool updated = false;
 
         pthread_rwlock_wrlock(&level_lock_[0]);
