@@ -45,7 +45,11 @@ temp=util/status.cpp \
 		 core/options.cpp \
 	   core/user_table.cpp \
 		 core/item_table.cpp \
-		 proto/record.pb.cc
+		 core/candidate_db.cpp \
+		 proto/record.pb.cc \
+		 proto/message.pb.cc \
+		 proto/service.pb.cc \
+		 proto/service.grpc.pb.cc
 
 #SOURCES=$(addprefix ./src/, $(sources))
 SOURCES=$(addprefix ./src/, $(temp))

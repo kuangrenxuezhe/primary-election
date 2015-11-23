@@ -21,6 +21,9 @@ namespace rsys {
     // 时间校正因子
     static const int32_t kTimeFactor = 2*60;
 
+    static const char kLogTypeItem   = 'I';
+    static const char kLogTypeAction = 'A';
+
     class ItemAheadLog: public AheadLog {
       public:
         ItemAheadLog(const std::string& path, const fver_t& fver)
@@ -70,15 +73,22 @@ namespace rsys {
     // 淘汰item数据
     Status ItemTable::eliminate()
     {
-      //int index = 0;
+      int32_t ctime = time(NULL);
 
-      //pthread_rwlock_wrlock(&window_lock_[index%kWindowLockSize]);
-      //item_list_t::iterator iter = item_window_[index].begin();
-      //for (; iter != item_window_[index].end(); ++iter) {
-      //  level_table()->erase((*iter)->item_id);
-      //}
-      //window_time_ = 0;
-      //pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
+      for (int index = window_base_; window_time_ < ctime - options_.item_hold_time; 
+          index = (index + 1)%window_size_) {
+        pthread_rwlock_wrlock(&window_lock_[index%kWindowLockSize]);
+        item_list_t::iterator iter = item_window_[index].begin();
+        for (; iter != item_window_[index].end(); ++iter) {
+          pthread_mutex_lock(&index_lock_);
+          item_index_->erase((*iter)->item_id);
+          pthread_mutex_unlock(&index_lock_);
+        }
+        pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
+
+        window_base_ = (window_base_ + 1)%window_size_;
+        window_time_ += kSecondPerHour;
+      }
 
       return Status::OK();
     }
@@ -90,40 +100,126 @@ namespace rsys {
       return (window_base_ + index) % window_size_;
     }
 
-    Status ItemTable::addItem(item_info_t* item_info)
+    // 查询新闻数据信息, 需设置item_id
+    Status ItemTable::queryItem(const proto::ItemQuery& query, proto::ItemInfo& item_info)
     {
-      int32_t ctime = time(NULL);
+      item_info_t item;
 
-      LogRecord record;
-      LogItemInfo log_item_info;
-
-      log_item_info.set_item_id(item_info->item_id);
-      log_item_info.set_power(item_info->power);
-      log_item_info.set_publish_time(item_info->publish_time);
-      log_item_info.set_item_type(item_info->item_type);
-      log_item_info.set_picture_num(item_info->picture_num);
-      log_item_info.set_click_count(item_info->click_count);
-      log_item_info.set_click_time(item_info->click_time);
-      log_item_info.set_category_id(item_info->category_id);
-      for (map_str_t::iterator iter = item_info->region_id.begin();
-          iter != item_info->region_id.end(); ++iter) {
-        KeyStr* pair = log_item_info.add_region_id();
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-      for (map_str_t::iterator iter = item_info->belongs_to.begin();
-          iter != item_info->belongs_to.end(); ++iter) {
-        KeyStr* pair = log_item_info.add_belongs_to();
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-      record.mutable_record()->PackFrom(log_item_info);
-
-      std::string serialize_item_info = record.SerializeAsString();
-      Status status = writeAheadLog(serialize_item_info);
+      Status status = queryItem(query.item_id(), item);
       if (!status.ok()) {
         return status;
       }
+
+      item_info.set_item_id(query.item_id());
+      item_info.set_power(item.power);
+      item_info.set_publish_time(item.publish_time);
+      item_info.set_item_type(item.item_type);
+      item_info.set_picture_num(item.picture_num);
+      item_info.set_click_count(item.click_count);
+      item_info.set_click_time(item.click_time);
+      item_info.set_category_id(item.category_id);
+
+      for (map_str_t::iterator iter = item.region_id.begin();
+          iter != item.region_id.end(); ++iter) {
+        proto::KeyStr* pair = item_info.add_region_id();
+
+        pair->set_key(iter->first);
+        pair->set_str(iter->second);
+      }
+
+      for (map_str_t::iterator iter = item.belongs_t.begin();
+          iter != item.belongs_to.end(); ++iter) {
+        proto::KeyStr* pair = item_info.add_belongs_to();
+
+        pair->set_key(iter->first);
+        pair->set_str(iter->second);
+      }
+
+      return Status::OK();
+    }
+
+    // 添加新闻数据
+    Status ItemTable::addItem(const Item& item)
+    {
+      std::string serialized_item;
+
+      serialized_item.append(kLogTypeItem);
+      if (!item.AppendToString(&serialized_item)) {
+        std::ostringstream oss;
+
+        oss<<"Serialize item"<<", item_id=0x"<<std::hex<<item.item_id();
+        return Status::Corruption(oss.str());
+      }
+
+      Status status = writeAheadLog(serialized_item);
+      if (!status.ok()) {
+        return status;
+      }
+      item_info_t* item_info = new item_info_t; 
+
+      item_info->item_id = item.item_id();
+      item_info->publish_time = item.publish_time();
+      item_info->power = item.power();
+      item_info->item_type = item.item_type();
+
+      if (item.category_size() > 0) {
+        item_info->category_id = item.category(0).category_id();
+      }
+
+      //for (int i = 0; i < item.zone_size(); 
+      for (int i = 0; i < item.category_size(); ++i) {
+        type_id_t id;
+
+        id.type_id_component.type = IDTYPE_CATEGORY;
+        id.type_id_component.id = item.category(i).category_id();
+        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
+      }
+
+      for (int i = 0; i < item.srp_size(); ++i) {
+        type_id_t id;
+
+        id.type_id_component.type = IDTYPE_SRP
+        id.type_id_component.id = item.srp(i).category_id();
+        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
+      }
+
+      for (int i = 0; i < item.category_size(); ++i) {
+        type_id_t id;
+
+        id.type_id_component.type = IDTYPE_CATEGORY;
+        id.type_id_component.id = item.category(i).category_id();
+        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
+      }
+     
+      return addItem(item_info);
+    }
+
+    // 用户操作状态更新
+    Status ItemTable::updateAction(const Action& action)
+    {
+      std::string serialized_action;
+
+      serialized_item.append(kLogTypeAction);
+      if (!action.AppendToString(&serialized_item)) {
+        std::ostringstream oss;
+
+        oss<<"Serialize action"<<", user_id=0x"<<action.user_id();
+        oss<<", item_id=0x"<<std::hex<<item.item_id();
+        return Status::Corruption(oss.str());
+      }
+
+      Status status = writeAheadLog(serialized_action);
+      if (!status.ok()) {
+        return status;
+      }
+      action_t user_action;
+      
+      return updateAction(user_action);
+    }
+
+    Status ItemTable::addItem(item_info_t* item_info)
+    {
+      int32_t ctime = time(NULL);
 
       // 判定待保留数据是否越界
       // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
@@ -203,21 +299,6 @@ namespace rsys {
 
     Status ItemTable::updateAction(const action_t& action)
     {
-      LogRecord record;
-      LogAction log_action;
-
-      log_action.set_item_id(action.item_id);
-      log_action.set_action(action.action);
-      log_action.set_action_time(action.action_time);
-      log_action.set_dislike_reason(action.dislike_reason);
-      record.mutable_record()->PackFrom(log_action);
-
-      std::string serialize_action = record.SerializeAsString();
-      Status status = writeAheadLog(serialize_action);
-      if (!status.ok()) {
-        return status;
-      }
-
       pthread_mutex_lock(&index_lock_);
       hash_map_t::iterator iter = item_index_->find(action.item_id);
 

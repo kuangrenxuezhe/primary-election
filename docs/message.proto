@@ -32,19 +32,15 @@ message Action {
 
 /////////////////////////////////////////////////
 // 文档
-message ItemCategory {
-  int32    category_id = 1; // 内容分类ID
-  string category_name = 2; // 内容分类
+message ItemTag {
+  int32      tag_id = 1; // 标签ID
+  string   tag_name = 2; // 标签名称
+  float   tag_power = 3; // 标签权重
 }
 
 message ItemWord {
   string word = 1; // 关键词
   int32 count = 2; // 关键词频率
-}
-
-message ItemSrp {
-  string srp_id = 1; // SRPID
-  float   power = 2; // SRP权重
 }
 
 enum ItemType {
@@ -78,10 +74,10 @@ message Item {
   int32                picture_num = 4;  // 图片数量
   float                      power = 5;  // 资讯权值
   ItemType               item_type = 6;  // 数据类型
-  repeated ItemCategory   category = 7;  // 文章所属分类
+  repeated ItemTag        category = 7;  // 文章所属分类信息
   repeated ItemWord           word = 8;  // 文章包含关键词
-  repeated ItemSrp             srp = 9;  // 文章所属SRP
-  repeated string        circle_id = 10; // 文章所属圈子ID
+  repeated ItemTag             srp = 9;  // 文章所属SRP信息
+  repeated ItemTag          circle = 10; // 文章所属圈子信息
   TopInfo                 top_info = 11; // 全局推荐信息
   repeated string             zone = 12; // 地域格式--省:市;省:市; 支持多级, 市可为空
   ItemSource           data_source = 13; // 数据来源 
@@ -182,16 +178,21 @@ message Category {
 }
 
 // 推荐 - Algorithm to CC(category)
-message AlgorithmCategory {
+message t {
   repeated int32 category = 1 [packed=true];
 }
 
 /////////////////////////////////////////////////
 // CC私有定义
-message Transfer {
-  int32 protocol_type = 1;
-  int32 sub_type = 2;
-  google.protobuf.Any protocol = 3;
+message TransferRequest {
+  int32           main_protocol = 1;
+  int32            sub_protocol = 2;
+  google.protobuf.Any  protocol = 3;
+}
+
+message TransferRespond {
+  int32            respond_code = 1;
+  google.protobuf.Any  protocol = 2;  
 }
 
 message HeartBeat {
