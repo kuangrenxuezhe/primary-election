@@ -1,13 +1,8 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
-#include <string.h>
-#include <iostream>
 
 int main( int argc, char* const argv[] )
 {
-  char p[] = "5_后";
-  char* p1 = strchr(p, '_');
-  fprintf(stdout, "strtok: %s", p1);
   return Catch::Session().run(argc, argv);
 }
 
