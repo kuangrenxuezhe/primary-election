@@ -33,19 +33,17 @@ namespace rsys {
       public:
         // 淘汰过期数据, 更新滑窗基准时间
         Status eliminate();
-        // 查询新闻数据信息, 需设置item_id
-        Status queryItem(const proto::ItemQuery& query, proto::ItemInfo& item_info);
-        // 添加新闻数据
+        // 添加新闻数据, 写ahead-log
         Status addItem(const Item& item);
-        // 用户操作状态更新
+        // 用户操作状态更新, 写ahead-log
         Status updateAction(const Action& action);
 
       public:
-        // 添加item, item_info由外部分配内存
+        // 添加item, item_info由外部分配内存, 且不写ahead-log
         Status addItem(item_info_t* item_info);
-        // 更新用户点击
+        // 更新用户点击, 且不写ahead-log
         Status updateAction(const action_t& action);
-        // 查询item, 需设置item_info.item_id
+        // 查询item 
         Status queryItem(uint64_t item_id, item_info_t& item_info);
         // 获取候选集合
         Status queryCandidateSet(const query_t& query, candidate_set_t& candset);

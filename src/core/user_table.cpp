@@ -141,6 +141,7 @@ namespace rsys {
             }
 
             id.type_id_component.type = type;
+            id.type_id_component.id = 0UL;
             if (user_action_.dislike_reason.length() > 2) {
               seperator = strchr(user_action_.dislike_reason.c_str(), '_');
               if (NULL != seperator) {
@@ -377,7 +378,7 @@ namespace rsys {
       std::string serialized_feedback;
 
       serialized_feedback.append(1, kLogTypeFeedback);
-      if (feedback.AppendToString(&serialized_feedback)) {
+      if (!feedback.AppendToString(&serialized_feedback)) {
         std::ostringstream oss;
 
         oss<<"Serialize recommend feedback";
@@ -404,7 +405,7 @@ namespace rsys {
       std::string serialized_action;
 
       serialized_action.append(1, kLogTypeAction);
-      if (action.AppendToString(&serialized_action)) {
+      if (!action.AppendToString(&serialized_action)) {
         std::ostringstream oss;
 
         oss<<"Serialize user action";
@@ -418,11 +419,7 @@ namespace rsys {
       }
       action_t user_action;
 
-      user_action.item_id = action.item_id();
-      user_action.action = action.action();
-      user_action.action_time = action.click_time();
-      user_action.dislike_reason = action.dislike();
-
+      glue::structed_action(action, user_action);
       status = updateAction(action.user_id(), user_action);
       if (!status.ok()) {
         return status;
@@ -543,6 +540,7 @@ namespace rsys {
       }
       user_info_t* user_info = new user_info_t;
 
+      glue::structed_user_info(log_user_info, *user_info);
       if (!level_table_->add(log_user_info.user_id(), user_info)) {
         std::ostringstream oss;
 
@@ -588,7 +586,7 @@ namespace rsys {
         proto::UserInfo log_user_info;
 
         log_user_info.set_user_id(iter.key());
-        glue::proto_userinfo(*user_info, log_user_info);
+        glue::proto_user_info(*user_info, log_user_info);
 
         std::string data = log_user_info.SerializeAsString();
         status = writer.write(data);

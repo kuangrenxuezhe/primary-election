@@ -39,12 +39,16 @@ namespace rsys {
 
       public:
         // 查询用户是否在用户表中
-        Status queryItemInfo(const proto::ItemQuery, ItemInfo& item_info);
+        Status queryItemInfo(const proto::ItemQuery& query, proto::ItemInfo& item_info);
         // 查询用户是否在用户表中
-        Status queryUserInfo(const proto::UserQuery, UserInfo& user_info);
+        Status queryUserInfo(const proto::UserQuery& query, proto::UserInfo& user_info);
+
+      protected:
+        Status lock(); // 单进程锁定
 
       private:
-        Options options_;
+        Options       options_;
+        FileWriter  singleton_; // 保证一个库目录只能一个进程打开
         UserTable* user_table_;
         ItemTable* item_table_;
     };

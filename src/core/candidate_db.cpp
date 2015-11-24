@@ -6,14 +6,25 @@
 
 namespace rsys {
   namespace news {
+    static const fver_t kSingletonVer(1,0);
+    static const std::string kSingletonName = "/._candb_lock_";
+
     Status CandidateDB::openDB(const Options& opts, CandidateDB** dbptr)
     {
-      *dbptr = new CandidateDB(opts);
+      CandidateDB* c_dbptr = new CandidateDB(opts);
+      
+      Status status = c_dbptr->lock();
+      if (!status.ok()) {
+        delete c_dbptr; 
+        return status;
+      }
+      *dbptr = c_dbptr;
+
       return (*dbptr)->reload();
     }
 
     CandidateDB::CandidateDB(const Options& opts)
-      : user_table_(NULL), item_table_(NULL)
+      : singleton_(opts.work_path + kSingletonName), user_table_(NULL), item_table_(NULL)
     {
       options_ = opts;
 
@@ -23,10 +34,27 @@ namespace rsys {
 
     CandidateDB::~CandidateDB() 
     {
+      singleton_.close();
       if (user_table_)
         delete user_table_;
       if (item_table_)
         delete item_table_;
+    }
+
+ // 单进程锁定
+    Status CandidateDB::lock()
+    {
+      Status status = singleton_.create();
+      if (!status.ok()) {
+        return status;
+      }
+
+      status = singleton_.lockfile();
+      if (!status.ok()) {
+        return status;
+      }
+
+      return Status::OK();
     }
 
     // 可异步方式，线程安全
@@ -101,7 +129,7 @@ namespace rsys {
     Status CandidateDB::updateAction(const Action& action, Action& updated)
     {
       Status status = user_table_->updateAction(action, updated);
-      if (status.ok()) {
+      if (!status.ok()) {
         return status;
       } 
       return item_table_->updateAction(action);
@@ -153,51 +181,32 @@ namespace rsys {
     }
 
     // 查询用户是否在用户表中
-    Status CandidateDB::queryUserInfo(const UserQuery& query, UserInfo& user_info)
+    Status CandidateDB::queryUserInfo(const proto::UserQuery& query, proto::UserInfo& user_info)
     {
       user_info_t user;
 
-      Status status = user_table_->queryUser(user_info.user_id(), &user);
+      Status status = user_table_->queryUser(query.user_id(), user);
       if (!status.ok()) {
         return status;
       }
+      user_info.set_user_id(query.user_id());
+      glue::proto_user_info(user, user_info);
 
-      user_info.set_ctime(user.ctime);
-      for (subscribe_t::iterator iter = user.subscribe.begin(); 
-          iter != user.subscribe.end(); ++iter) {
-        KeyStr* pair = user_info.add_subscribe();
-
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-      for (map_str_t::iterator iter = user.dislike.begin();
-          iter != user.dislike.end(); ++iter) {
-        KeyStr* pair = user_info.add_dislike();
-
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-      for (map_time_t::iterator iter = user.readed.begin();
-          iter != user.readed.end(); ++iter) {
-        KeyTime* pair = user_info.add_readed();
-
-        pair->set_key(iter->first);
-        pair->set_ctime(iter->second);
-      }
-      for (map_str_t::iterator iter = user.recommended.begin();
-          iter != user.recommended.end(); ++iter) {
-        KeyTime* pair = user_info.add_recommended();
-
-        pair->set_key(iter->first);
-        pair->set_ctime(iter->second);
-      }
       return Status::OK();
     }
 
     // 查询用户是否在用户表中
-    Status CandidateDB::queryItemInfo(const ItemQuery& query, ItemInfo& user_info)
+    Status CandidateDB::queryItemInfo(const proto::ItemQuery& query, proto::ItemInfo& user_info)
     {
-      return item_table_->queryItemInfo(query, user_info);
+      item_info_t item;
+      
+      Status status = item_table_->queryItem(query.item_id(), item);
+      if (!status.ok()) {
+        return status;
+      }
+      glue::proto_item_info(item, user_info);
+
+      return Status::OK();
     }
   } // namespace news
 } // namespace rsys

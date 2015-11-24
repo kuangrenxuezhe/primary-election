@@ -23,10 +23,6 @@ namespace rsys {
       Status status = writer_.create();
       if (!status.ok())
         return status;
-      
-      status = writer_.lockfile();
-      if (!status.ok())
-        return status;
 
       return writer_.writeMeta((char*)&ver, sizeof(fver_t));
     }

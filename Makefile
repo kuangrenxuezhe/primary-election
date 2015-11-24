@@ -9,10 +9,10 @@ ARFLAGS = rcs
 ifneq ($(strip $(ENABLE_DEBUG)), 1)
 		CFLAGS+= -g -w -O2
 else
-		CFLAGS+=-g -w -O0 -DDEBUG
+		CFLAGS+=-g -w -O0 -DDEBUG -std=c++11
 endif
 
-LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto
+LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure
 sources=util/status.cpp \
 				util/crc32c.cpp \
 				util/wal.cpp \
@@ -27,13 +27,15 @@ sources=util/status.cpp \
 				proto/service.pb.cc
 
 unittests=unittest.cpp \
-					util/file_test.cpp \
+					core/candidate_db_test.cpp
+
+					#util/file_test.cpp \
 					util/ahead_log_test.cpp \
 					util/table_file_test.cpp \
 					util/level_table_test.cpp \
 					util/table_base_test.cpp \
 					core/user_table_test.cpp \
-					core/item_table_test.cpp
+					core/item_table_test.cpp \
 
 temp=util/status.cpp \
 		 util/crc32c.cpp \
@@ -42,6 +44,7 @@ temp=util/status.cpp \
 		 util/wal.cpp \
 		 util/ahead_log.cpp \
 		 util/table_base.cpp \
+		 core/core_type.cpp \
 		 core/options.cpp \
 	   core/user_table.cpp \
 		 core/item_table.cpp \

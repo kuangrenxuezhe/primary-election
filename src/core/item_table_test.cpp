@@ -30,8 +30,7 @@ SCENARIO("测试item表", "[base]") {
         REQUIRE(cand_set.begin()->item_id == 1);
 
         item_info_t item_info;
-        item_info.item_id = 1;
-        status = table.queryItem(item_info);
+        status = table.queryItem(1, item_info);
         REQUIRE(item_info.publish_time == item->publish_time);
       }
     }
@@ -53,8 +52,7 @@ SCENARIO("测试item表", "[base]") {
 
       THEN("状态变化") {
         item_info_t item_info;
-        item_info.item_id = 1;
-        status = table.queryItem(item_info);
+        status = table.queryItem(1, item_info);
         REQUIRE(status.ok());
         REQUIRE(item_info.click_count == 1);
         REQUIRE(item_info.click_time != 1);
@@ -74,12 +72,13 @@ SCENARIO("测试item表", "[base]") {
 
       THEN("加载成功") {
         item_info_t item_info;
-        item_info.item_id = 1;
-        status = table.queryItem(item_info);
+        status = table.queryItem(1, item_info);
         REQUIRE(status.ok());
         REQUIRE(item_info.click_count == 1);
         REQUIRE(item_info.click_time != 1);
       }
+      remove("./wal-item.writing");
+      remove("./table-item.dat");
     }
   }
 }

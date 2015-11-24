@@ -152,5 +152,47 @@ SCENARIO("测试文件reader/writer", "[base]") {
       remove(filename.c_str());
     }
   }
+
+  GIVEN("给定一个已打开的文件") {
+    FileWriter writer("wal-test-lock");
+    Status status = writer.create();
+    REQUIRE(status.ok());
+    status = writer.lockfile();
+    REQUIRE(status.ok());
+
+    WHEN("当文件被lock") {
+      FileWriter rewriter("wal-test-lock");
+      Status status = rewriter.create();
+      REQUIRE(status.ok());
+      THEN("文件无法被再次lock") {
+        status = rewriter.lockfile();
+        REQUIRE(!status.ok());
+      }
+      rewriter.close();
+    }
+    writer.close();
+    remove("./wal-test-lock");
+  }
+
+  GIVEN("创建一个lock文件") {
+    FileWriter writer("wal-test-trylock");
+    Status status = writer.create();
+    REQUIRE(status.ok());
+    status = writer.lockfile();
+    REQUIRE(status.ok());
+    writer.close();
+
+    WHEN("当文件被再次打开") {
+      FileWriter rewriter("wal-test-trylock");
+      Status status = rewriter.create();
+      REQUIRE(status.ok());
+      THEN("文件再次lock正常") {
+        status = rewriter.lockfile();
+        REQUIRE(status.ok());
+      }
+      rewriter.close();
+    }
+    remove("./wal-test-trylock");
+  }
 }
 

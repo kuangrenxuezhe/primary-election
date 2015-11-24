@@ -178,7 +178,7 @@ message Category {
 }
 
 // 推荐 - Algorithm to CC(category)
-message t {
+message AlgorithmCategory {
   repeated int32 category = 1 [packed=true];
 }
 

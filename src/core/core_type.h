@@ -101,9 +101,14 @@ namespace rsys {
       void structed_action(const Action& proto, action_t& structed); 
       void structed_subscribe(const Subscribe& proto, map_str_t& structed);
       void structed_feedback(const Feedback& proto, id_set_t& structed);
-      void structed_userinfo(const proto::UserInfo& proto, user_info_t& structed);
-      void proto_userinfo(const user_info_t& structed, proto::UserInfo& proto);
-      //void protoed_action(const action_t& structure, Action& protoed);
+
+      void structed_user_info(const proto::UserInfo& proto, user_info_t& structed);
+      void proto_user_info(const user_info_t& structed, proto::UserInfo& proto);
+
+      void structed_item_info(const proto::ItemInfo& proto, item_info_t& structed);
+      void proto_item_info(const item_info_t& structed, proto::ItemInfo& proto);
+
+      void structed_item(const Item& proto, item_info_t& structed);
     } // namespace glue
   } // namespace news
 } // namespace rsys

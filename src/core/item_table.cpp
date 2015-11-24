@@ -100,50 +100,12 @@ namespace rsys {
       return (window_base_ + index) % window_size_;
     }
 
-    // 查询新闻数据信息, 需设置item_id
-    Status ItemTable::queryItem(const proto::ItemQuery& query, proto::ItemInfo& item_info)
-    {
-      item_info_t item;
-
-      Status status = queryItem(query.item_id(), item);
-      if (!status.ok()) {
-        return status;
-      }
-
-      item_info.set_item_id(query.item_id());
-      item_info.set_power(item.power);
-      item_info.set_publish_time(item.publish_time);
-      item_info.set_item_type(item.item_type);
-      item_info.set_picture_num(item.picture_num);
-      item_info.set_click_count(item.click_count);
-      item_info.set_click_time(item.click_time);
-      item_info.set_category_id(item.category_id);
-
-      for (map_str_t::iterator iter = item.region_id.begin();
-          iter != item.region_id.end(); ++iter) {
-        proto::KeyStr* pair = item_info.add_region_id();
-
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-
-      for (map_str_t::iterator iter = item.belongs_t.begin();
-          iter != item.belongs_to.end(); ++iter) {
-        proto::KeyStr* pair = item_info.add_belongs_to();
-
-        pair->set_key(iter->first);
-        pair->set_str(iter->second);
-      }
-
-      return Status::OK();
-    }
-
     // 添加新闻数据
     Status ItemTable::addItem(const Item& item)
     {
       std::string serialized_item;
 
-      serialized_item.append(kLogTypeItem);
+      serialized_item.append(1, kLogTypeItem);
       if (!item.AppendToString(&serialized_item)) {
         std::ostringstream oss;
 
@@ -157,40 +119,7 @@ namespace rsys {
       }
       item_info_t* item_info = new item_info_t; 
 
-      item_info->item_id = item.item_id();
-      item_info->publish_time = item.publish_time();
-      item_info->power = item.power();
-      item_info->item_type = item.item_type();
-
-      if (item.category_size() > 0) {
-        item_info->category_id = item.category(0).category_id();
-      }
-
-      //for (int i = 0; i < item.zone_size(); 
-      for (int i = 0; i < item.category_size(); ++i) {
-        type_id_t id;
-
-        id.type_id_component.type = IDTYPE_CATEGORY;
-        id.type_id_component.id = item.category(i).category_id();
-        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
-      }
-
-      for (int i = 0; i < item.srp_size(); ++i) {
-        type_id_t id;
-
-        id.type_id_component.type = IDTYPE_SRP
-        id.type_id_component.id = item.srp(i).category_id();
-        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
-      }
-
-      for (int i = 0; i < item.category_size(); ++i) {
-        type_id_t id;
-
-        id.type_id_component.type = IDTYPE_CATEGORY;
-        id.type_id_component.id = item.category(i).category_id();
-        item_info->belongs_to.insert(std::make_pair(id.type_id, item.category(i).category_name()));
-      }
-     
+      glue::structed_item(item, *item_info); 
       return addItem(item_info);
     }
 
@@ -199,12 +128,12 @@ namespace rsys {
     {
       std::string serialized_action;
 
-      serialized_item.append(kLogTypeAction);
-      if (!action.AppendToString(&serialized_item)) {
+      serialized_action.append(1, kLogTypeAction);
+      if (!action.AppendToString(&serialized_action)) {
         std::ostringstream oss;
 
         oss<<"Serialize action"<<", user_id=0x"<<action.user_id();
-        oss<<", item_id=0x"<<std::hex<<item.item_id();
+        oss<<", item_id=0x"<<std::hex<<action.item_id();
         return Status::Corruption(oss.str());
       }
 
@@ -214,6 +143,7 @@ namespace rsys {
       }
       action_t user_action;
       
+      glue::structed_action(action, user_action);
       return updateAction(user_action);
     }
 
@@ -224,7 +154,7 @@ namespace rsys {
       // 判定待保留数据是否越界
       // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
       if ((ctime - options_.item_hold_time) - window_time_ > kSecondPerHour) {
-        status = eliminate();
+        Status status = eliminate();
         if (!status.ok())
           return status;
       }
@@ -268,8 +198,6 @@ namespace rsys {
       item_index.index = index;
       item_index.item_info = item_info;
 
-      LogRecord record;
-
       pthread_mutex_lock(&index_lock_);
       hash_map_t::iterator iter = item_index_->find(item_info->item_id);
       if (iter == item_index_->end()) {
@@ -305,7 +233,7 @@ namespace rsys {
       if (iter == item_index_->end()) {
         std::ostringstream oss;
 
-        pthread_mutex_lock(&index_lock_);
+        pthread_mutex_unlock(&index_lock_);
         // 点击了已淘汰的数据则不记录用户点击
         oss<<"Not found item, id=0x"<<std::hex<<action.item_id;
         return Status::InvalidArgument(oss.str());
@@ -356,32 +284,15 @@ namespace rsys {
 
     Status ItemTable::loadData(const std::string& data)
     {
-      LogRecord record;
-      LogItemInfo log_item_info;
+      proto::ItemInfo log_item_info;
 
-      if (!record.ParseFromString(data)) {
-        return Status::Corruption("Parse item_info failed");
+      if (!log_item_info.ParseFromString(data)) {
+        return Status::Corruption("Parse item info");
       }
-      record.record().UnpackTo(&log_item_info);
-
       item_info_t* item_info = new item_info_t;
 
-      item_info->item_id = log_item_info.item_id();
-      item_info->click_count = log_item_info.click_count();
-      item_info->click_time = log_item_info.click_time();
-      item_info->publish_time = log_item_info.publish_time();
-      item_info->power = log_item_info.power();
-      item_info->item_type = log_item_info.item_type();
-      item_info->picture_num = log_item_info.picture_num();
-      item_info->category_id = log_item_info.category_id();
-      for (int i = 0; i < log_item_info.region_id_size(); ++i) {
-        const KeyStr& pair = log_item_info.region_id(i);
-        item_info->region_id.insert(std::make_pair(pair.key(), pair.str()));
-      }
-      for (int i = 0; i < log_item_info.belongs_to_size(); ++i) {
-        const KeyStr& pair = log_item_info.belongs_to(i);
-        item_info->belongs_to.insert(std::make_pair(pair.key(), pair.str()));
-      }
+      glue::structed_item_info(log_item_info, *item_info);
+
       int index = windowIndex(item_info->publish_time);
 
       addToList(item_window_[index], item_info);
@@ -404,33 +315,12 @@ namespace rsys {
         pthread_rwlock_rdlock(&window_lock_[index%kWindowLockSize]);
         item_list_t::iterator iter = item_window_[index].begin();
         for (; iter != item_window_[index].end(); ++iter) {
-          LogRecord record;
-          LogItemInfo log_item_info;
+          std::string data;
+          proto::ItemInfo log_item_info;
 
-          log_item_info.set_item_id((*iter)->item_id);
-          log_item_info.set_power((*iter)->power);
-          log_item_info.set_item_type((*iter)->item_type);
-          log_item_info.set_publish_time((*iter)->publish_time);
-          log_item_info.set_click_count((*iter)->click_count);
-          log_item_info.set_click_time((*iter)->click_time);
-          log_item_info.set_picture_num((*iter)->picture_num);
-          log_item_info.set_category_id((*iter)->category_id);
-          for (map_str_t::const_iterator citer = (*iter)->region_id.begin();
-              citer != (*iter)->region_id.end(); ++citer) {
-            KeyStr* pair = log_item_info.add_region_id();
-            pair->set_key(citer->first);
-            pair->set_str(citer->second);
-          }
-          for (map_str_t::const_iterator citer = (*iter)->belongs_to.begin();
-              citer != (*iter)->belongs_to.end(); ++citer) {
-            KeyStr* pair = log_item_info.add_belongs_to();
-            pair->set_key(citer->first);
-            pair->set_str(citer->second);
-          }
-          record.mutable_record()->PackFrom(log_item_info);
-
-          std::string serialized_data = record.SerializeAsString();
-          status = writer.write(serialized_data);
+          glue::proto_item_info(*(*iter), log_item_info);
+          data = log_item_info.SerializeAsString();
+          status = writer.write(data);
           if (!status.ok()) {
             pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
             writer.close();
@@ -445,15 +335,15 @@ namespace rsys {
     }
 
     // 查询item
-    Status ItemTable::queryItem(item_info_t& item_info)
+    Status ItemTable::queryItem(uint64_t item_id, item_info_t& item_info)
     {
       pthread_mutex_lock(&index_lock_);
-      hash_map_t::iterator iter = item_index_->find(item_info.item_id);
+      hash_map_t::iterator iter = item_index_->find(item_id);
       if (iter == item_index_->end()) {
         pthread_mutex_unlock(&index_lock_);
         std::ostringstream oss;
 
-        oss<<std::hex<<"item_id=0x"<<item_info.item_id;
+        oss<<std::hex<<"item_id=0x"<<item_id;
         return Status::NotFound(oss.str());
       }
       item_info.item_id = iter->second.item_info->item_id;

@@ -12,7 +12,7 @@ SCENARIO("测试User表", "[base]") {
     REQUIRE(status.ok());
 
     WHEN("添加用户信息") {
-      subscribe_t subscribe;
+      map_str_t subscribe;
       subscribe.insert(std::make_pair(1, "test"));
 
       Status status = table.updateUser(1, subscribe);
@@ -21,11 +21,11 @@ SCENARIO("测试User表", "[base]") {
         REQUIRE(table.findUser(1));
         REQUIRE(!table.findUser(2));
 
-        user_info_t* user_info = new user_info_t;
-        status = table.getUser(1, user_info);
+        user_info_t user_info;
+        status = table.queryUser(1, user_info);
         REQUIRE(status.ok());
-        REQUIRE(user_info->subscribe.size() == 1);
-        REQUIRE(user_info->subscribe[1] == std::string("test"));
+        REQUIRE(user_info.subscribe.size() == 1);
+        REQUIRE(user_info.subscribe[1] == std::string("test"));
       }
     }
     remove("./wal-user.writing");
@@ -37,7 +37,7 @@ SCENARIO("测试User表", "[base]") {
     Status status = table.loadTable();
     REQUIRE(status.ok());
 
-    subscribe_t subscribe;
+    map_str_t subscribe;
     subscribe.insert(std::make_pair(1, "test"));
 
     status = table.updateUser(1, subscribe);
@@ -52,15 +52,15 @@ SCENARIO("测试User表", "[base]") {
       REQUIRE(status.ok());
       
       THEN("状态已读列表变化") {
-        user_info_t* user_info = new user_info_t;
-        status = table.getUser(1, user_info);
+        user_info_t user_info;
+        status = table.queryUser(1, user_info);
         REQUIRE(status.ok());
 
-        REQUIRE(user_info->subscribe.size() == 1);
-        REQUIRE(user_info->subscribe[1] == std::string("test"));
+        REQUIRE(user_info.subscribe.size() == 1);
+        REQUIRE(user_info.subscribe[1] == std::string("test"));
 
-        REQUIRE(user_info->readed.size() == 1);
-        map_time_t::iterator iter = user_info->readed.begin();
+        REQUIRE(user_info.readed.size() == 1);
+        map_time_t::iterator iter = user_info.readed.begin();
         REQUIRE(iter->first == 1);
       }
     }
@@ -75,12 +75,12 @@ SCENARIO("测试User表", "[base]") {
       REQUIRE(status.ok());
 
       THEN("状态已读列表变化") {
-        user_info_t* user_info = new user_info_t;
-        status = table.getUser(1, user_info);
+        user_info_t user_info;
+        status = table.queryUser(1, user_info);
         REQUIRE(status.ok());
-        REQUIRE(user_info->dislike.size() == 1);
+        REQUIRE(user_info.dislike.size() == 1);
 
-        map_str_t::iterator iter = user_info->dislike.begin();
+        map_str_t::iterator iter = user_info.dislike.begin();
         REQUIRE(iter->second == click.dislike_reason);
       }
     }
@@ -89,14 +89,14 @@ SCENARIO("测试User表", "[base]") {
       id_set_t id_set;
       id_set.insert(1);
 
-      Status status = table.updateCandidateSet(1, id_set);
+      Status status = table.updateFeedback(1, id_set);
       REQUIRE(status.ok());
 
       THEN("候选集合列表变化") {
-        user_info_t* user_info = new user_info_t;
-        status = table.getUser(1, user_info);
+        user_info_t user_info;
+        status = table.queryUser(1, user_info);
         REQUIRE(status.ok());
-        REQUIRE(user_info->recommended.size() == 1);
+        REQUIRE(user_info.recommended.size() == 1);
       }
     }
     remove("./wal-user.writing");
@@ -108,7 +108,7 @@ SCENARIO("测试User表", "[base]") {
     Status status = table.loadTable();
     REQUIRE(status.ok());
 
-    subscribe_t subscribe;
+    map_str_t subscribe;
     subscribe.insert(std::make_pair(1, "test"));
 
     status = table.updateUser(1, subscribe);
@@ -141,7 +141,7 @@ SCENARIO("测试User表", "[base]") {
       id_set_t id_set;
       id_set.insert(2);
 
-      status = table.updateCandidateSet(1, id_set);
+      status = table.updateFeedback(1, id_set);
       REQUIRE(status.ok());
 
       THEN("已推荐数据被过滤掉") {
@@ -171,7 +171,7 @@ SCENARIO("测试User表", "[base]") {
     REQUIRE(status.ok()); 
 
     WHEN("添加新用户") {
-      subscribe_t subscribe;
+      map_str_t subscribe;
       subscribe.insert(std::make_pair(1, "test"));
 
       status = table.updateUser(1, subscribe);
@@ -191,13 +191,13 @@ SCENARIO("测试User表", "[base]") {
     REQUIRE(status.ok()); 
 
     WHEN("获取新用户") {
-      user_info_t* user_info = new user_info_t;
-      status = table.getUser(1, user_info);
+      user_info_t user_info;
+      status = table.queryUser(1, user_info);
       REQUIRE(status.ok());
 
       THEN("正常写入") {
-        REQUIRE(user_info->subscribe.size() == 1);
-        subscribe_t::iterator iter = user_info->subscribe.begin();
+        REQUIRE(user_info.subscribe.size() == 1);
+        map_str_t::iterator iter = user_info.subscribe.begin();
         REQUIRE(iter->first == 1);
         REQUIRE(iter->second == std::string("test"));
       }
@@ -213,7 +213,7 @@ SCENARIO("测试User表", "[base]") {
     Status status = table.loadTable();
     REQUIRE(status.ok()); 
     
-    subscribe_t subscribe;
+    map_str_t subscribe;
     status = table.updateUser(1, subscribe);
     REQUIRE(status.ok());
 
@@ -229,7 +229,7 @@ SCENARIO("测试User表", "[base]") {
 
     sleep(3);
 
-    subscribe_t subscribe1;
+    map_str_t subscribe1;
     status = table.updateUser(3, subscribe1);
     REQUIRE(status.ok());
 
