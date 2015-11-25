@@ -9,11 +9,13 @@
 #ifndef _CF_FRAMEWORK_MODULE_H_
 #define _CF_FRAMEWORK_MODULE_H_
 
-#include "util/UH_Define.h"
-#include "util/UC_Mem_Allocator_Recycle.h"
+#include "../code_library/platform_cross/UH_Define.h"
+#include "../code_library/platform_cross/UC_Mem_Allocator_Recycle.h"
 
-#include "framework/CF_framework_config.h"
-#include "framework/CF_framework_interface.h"
+#include "CF_framework_config.h"
+#include "CF_framework_interface.h"
+
+#include "CenterToModuleProtocol.pb.h"
 
 class CF_framework_module
 {
@@ -91,155 +93,100 @@ public:
         return retval;
     }
     
-    var_4 update_click(var_1* recv_buf, var_1* send_buf, var_4 send_max, var_4& send_len)
+    var_4 query_interface(const TransferRequest& t_request, TransferRespond* t_respond)
     {
-        send_len = 8;
-        *(var_4*)send_buf = 4;
-        *(var_4*)(send_buf + 4) = m_module->update_click(recv_buf);
-
-        return 0;
-    }
-    
-    var_4 update_document(var_1* recv_buf, var_1* send_buf, var_4 send_max, var_4& send_len)
-    {
-        send_len = 8;
-        *(var_4*)send_buf = 4;
-        *(var_4*)(send_buf + 4) = m_module->update_item(recv_buf);
+        var_4 ret_val = 0;
+        var_4 sub_protocol = t_request.sub_protocol();
         
-        return 0;
-    }
-    
-    var_4 update_circle(var_1* recv_buf, var_1* send_buf, var_4 send_max, var_4& send_len)
-    {
-        send_len = 8;
-        *(var_4*)send_buf = 4;
-        *(var_4*)(send_buf + 4) = m_module->update_user(recv_buf);
-
-        return 0;
-    }
-    
-    var_4 query(var_1* recv_buf, var_1* send_buf, var_4 send_max, var_4& send_len)
-    {
-        var_1* pos = recv_buf + 4;
+        // for candidate: candidate set, user status; for algoritm: algoritm, user category
         
-        if(m_module_type == 1)
+        if(sub_protocol == 1)  // for candidate: candidate set
         {
-            *(var_4*)send_buf = 0;
-            send_len = 4;
-
-            var_4 type = *(var_4*)pos;
-            pos += 4;
-            var_u8 uid = *(var_u8*)pos;
-            pos += 8;
-            
-            var_4 beg_time = 0;
-            var_4 end_time = 0;
-            
-            if(type == 1)
+            Recommend recommend;
+            if(t_request.protocol().UnpackTo(&recommend) == false)
             {
-                if(m_module->query_recommend(uid, *(var_4*)pos, beg_time, end_time, send_buf + 4, send_max - 4, send_len))
-                    return -1;
+                t_respond->set_respond_code(-1000);
+                return -1;
             }
-            else if(type == 2)
-            {
-                if(m_module->query_history(uid, send_buf + 4, send_max - 4, send_len))
-                    return -1;
-            }
-            else if(type == 3)
-            {
-                if(m_module->query_user(uid, send_buf + 4, send_max - 4, send_len))
-                    return -1;
-            }
-            else
-                assert(0);
             
-            *(var_4*)send_buf = send_len;
-            send_len += 4;
+            CandidateSet candidate_set;
+            if((ret_val = m_module->query_candidate_set(recommend, &candidate_set)))
+            {
+                t_respond->set_respond_code(ret_val);
+                return -1;
+            }
+            
+            t_respond->mutable_protocol()->PackFrom(candidate_set);
+            
+            return 0;
         }
-        else if(m_module_type == 2)
+        
+        if(sub_protocol == 2) // for candidate: user status
         {
-            var_4 type = *(var_4*)pos;
-            pos += 4;
-            var_u8 uid = *(var_u8*)pos;
-            pos += 8;
+            User user;
+            if(t_request.protocol().UnpackTo(&user) == false)
+            {
+                t_respond->set_respond_code(-1000);
+                return -2;
+            }
             
-            if(type == 1)
+            UserStatus user_status;
+            if((ret_val = m_module->query_user_status(user, &user_status)))
             {
-                var_4 recommend_num = *(var_4*)pos;
-                pos += 4;
-                var_u8* recommend_lst = (var_u8*)pos;
-                pos += recommend_num << 3;
-                var_4 history_num = *(var_4*)pos;
-                pos += 4;
-                var_u8* history_list = (var_u8*)pos;
-                pos += history_num << 3;
-                
-                send_len = recommend_num * 4 + 8;
-                if(send_max < send_len)
-                {
-                    *(var_4*)send_buf = 0;
-                    send_len = 4;
-                    
-                    return -1;
-                }
-                
-                var_f4* recommend_pwr = (var_f4*)(send_buf + 8);
-                
-                if(m_module->query_algorithm(uid, recommend_num, recommend_lst, recommend_pwr, history_num, history_list))
-                {
-                    *(var_4*)send_buf = 0;
-                    send_len = 4;
-                    
-                    return -1;
-                }
-                
-                *(var_4*)send_buf = recommend_num * 4 + 4;
-                *(var_4*)(send_buf + 4) = recommend_num;
+                t_respond->set_respond_code(ret_val);
+                return -2;
             }
-            else if(type == 2)
-            {
-                var_4  class_num = *(var_4*)pos;
-                var_4* class_info = (var_4*)(send_buf + 8);
-                
-                if(m_module->query_userclass(uid, class_num, class_info))
-                {
-                    *(var_4*)send_buf = 0;
-                    send_len = 4;
-                    
-                    return -1;
-                }
-                
-                send_len = class_num * 4 + 8;
-                
-                *(var_4*)send_buf = class_num * 4 + 4;
-                *(var_4*)(send_buf + 4) = class_num;
-            }
-            else
-                assert(0);
+            
+            t_respond->mutable_protocol()->PackFrom(user_status);
+            
+            return 0;
         }
-        else
-            assert(0);
         
-        return 0;
-    }
-    
-    var_4 update_push(var_1* recv_buf, var_1* send_buf, var_4 send_max, var_4& send_len)
-    {
-        send_len = 8;
-        *(var_4*)send_buf = 4;
-        
-        var_1* pos = recv_buf + 4;
-        
-        var_u8 uid = *(var_u8*)pos;
-        pos += 8;
-        var_4 push_num = *(var_4*)pos;
-        pos += 4;
-        var_u8* push_lst = (var_u8*)pos;
-        pos += push_num << 3;
+        if(sub_protocol == 3) // for algoritm: algoritm
+        {
+            CandidateSetBase candidate_set_base;
+            if(t_request.protocol().UnpackTo(&candidate_set_base) == false)
+            {
+                t_respond->set_respond_code(-1000);
+                return -3;
+            }
+            
+            AlgorithmPower algorithm_power;
+            if((ret_val = m_module->query_algorithm(candidate_set_base, &algorithm_power)))
+            {
+                t_respond->set_respond_code(ret_val);
+                return -3;
+            }
+            
+            t_respond->mutable_protocol()->PackFrom(algorithm_power);
+            
+            return 0;
+        }
 
-		*(var_4*)(send_buf + 4) = m_module->update_pushData(uid, push_num, push_lst);
+        if(sub_protocol == 4) // for algoritm: user category
+        {
+            Category category;
+            if(t_request.protocol().UnpackTo(&category) == false)
+            {
+                t_respond->set_respond_code(-1000);
+                return -4;
+            }
+            
+            AlgorithmCategory algorithm_category;
+            if((ret_val = m_module->query_user_category(category, &algorithm_category)))
+            {
+                t_respond->set_respond_code(ret_val);
+                return -4;
+            }
+            
+            t_respond->mutable_protocol()->PackFrom(algorithm_category);
 
-        return 0;
+            return 0;
+        }
+
+        t_respond->set_respond_code(-9000);
+        
+        return -9;
     }
     
     static CP_THREAD_T thread_work(var_vd* argv)
@@ -255,39 +202,121 @@ public:
         var_4  send_len = 0;
         var_1* send_buf = (var_1*)cc->m_mem_message.get_mem();
         assert(send_buf);
-
+        
         for(;;)
         {
             if(cc->recv_request(client, recv_buf, cc->m_cfg.md_message_size, recv_len))
-                continue;
-
-            var_4 request_type = *(var_4*)recv_buf;
-            
-            switch(request_type)
             {
-                case 1: // update_click
-                    cc->update_click(recv_buf, send_buf, cc->m_cfg.md_message_size, send_len);
-                    break;
+                printf("thread_work - recv_request failure\n");
+                continue;
+            }
+            
+            TransferRequest t_request;
+            if(t_request.ParseFromArray(recv_buf, recv_len) == false)
+            {
+                printf("thread_work - t_request.ParseFromArray failure\n");
+                continue;
+            }
+            
+            var_4 ret_val;
+            
+            TransferRespond t_respond;
+            t_respond.set_respond_code(0);
+            
+            switch(t_request.main_protocol())
+            {
+                case 1: // action
+                {
+                    Action action;
+                    if(t_request.protocol().UnpackTo(&action) == false)
+                    {
+                        t_respond.set_respond_code(-1000);
+                        break;
+                    }
                     
-                case 2: // update_document
-                    cc->update_document(recv_buf, send_buf, cc->m_cfg.md_message_size, send_len);
-                    break;
+                    if((ret_val = cc->m_module->update_action(action)))
+                    {
+                        t_respond.set_respond_code(ret_val);
+                        break;
+                    }
                     
-                case 3: // update_circle
-                    cc->update_circle(recv_buf, send_buf, cc->m_cfg.md_message_size, send_len);
-                    break;
+                    t_respond.mutable_protocol()->PackFrom(action);
                     
-                case 4: // query
-                    cc->query(recv_buf, send_buf, cc->m_cfg.md_message_size, send_len);
                     break;
-                
-                case 666: // update push
-                    cc->update_push(recv_buf, send_buf, cc->m_cfg.md_message_size, send_len);
-                    break;
+                }
+                case 2: // item
+                {
+                    Item item;
+                    if(t_request.protocol().UnpackTo(&item) == false)
+                    {
+                        t_respond.set_respond_code(-1000);
+                        break;
+                    }
                     
+                    if((ret_val = cc->m_module->update_item(item)))
+                    {
+                        t_respond.set_respond_code(ret_val);
+                        break;
+                    }
+                    
+                    break;
+                }
+                case 3: // subscribe
+                {
+                    Subscribe subscribe;
+                    if(t_request.protocol().UnpackTo(&subscribe) == false)
+                    {
+                        t_respond.set_respond_code(-1000);
+                        break;
+                    }
+                    
+                    if((ret_val = cc->m_module->update_subscribe(subscribe)))
+                    {
+                        t_respond.set_respond_code(ret_val);
+                        break;
+                    }
+                    
+                    break;
+                }
+                case 4: // for candidate: candidate set, user status; for algoritm: algoritm, user category
+                {
+                    cc->query_interface(t_request, &t_respond);
+                    break;
+                }
+                case 5: // feedback
+                {
+                    Feedback feedback;
+                    if(t_request.protocol().UnpackTo(&feedback) == false)
+                    {
+                        t_respond.set_respond_code(-1000);
+                        break;
+                    }
+                    
+                    if((ret_val = cc->m_module->update_feedback(feedback)))
+                    {
+                        t_respond.set_respond_code(ret_val);
+                        break;
+                    }
+                    
+                    break;;
+                }
                 default:
-                    assert(0);
+                {
+                    t_respond.set_respond_code(-9000);
                     break;
+                }
+            }
+            
+            var_4 size = t_respond.ByteSize();
+            if(4 + size > cc->m_cfg.md_message_size || t_respond.SerializeToArray(send_buf + 4, cc->m_cfg.md_message_size) == false)
+            {
+                send_len = 4;
+                *(var_4*)send_buf = 0;
+            }
+            else
+            {
+                send_len = 4 + size;
+                *(var_4*)send_buf = size;
             }
             
             cc->send_request(client, send_buf, send_len);
@@ -418,3 +447,6 @@ public:
 };
 
 #endif // _CF_FRAMEWORK_MODULE_H_
+
+// action.ByteSize();
+// action.SerializeToArray(<#void *data#>, <#int size#>)

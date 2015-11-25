@@ -116,10 +116,10 @@ message Recommend {
 
 // 推荐 - Candidate to CC(recommend)
 enum CandidateType {
-  CANDIDATE_TYPE_TOP    = 0;
-  CANDIDATE_TYPE_NORMAL = 1;
-  CANDIDATE_TYPE_ZONE   = 2;
-  CANDIDATE_TYPE_VIDEO  = 3;
+  CANDIDATE_TYPE_NORMAL = 0;
+  CANDIDATE_TYPE_ZONE   = 1;
+  CANDIDATE_TYPE_VIDEO  = 2;
+  CANDIDATE_TYPE_TOP    = 3;
 }
 
 message CandidateSetBase {
@@ -186,6 +186,7 @@ message AlgorithmCategory {
 // CC私有定义
 message TransferRequest {
   int32           main_protocol = 1;
+  // for candidate: candidate set, user status; for algoritm: algoritm, user category
   int32            sub_protocol = 2;
   google.protobuf.Any  protocol = 3;
 }
