@@ -39,15 +39,6 @@ namespace rsys {
         virtual var_4 query_candidate_set(const Recommend& recommend, CandidateSet* cs);
         virtual var_4 query_user_status(const User& user, UserStatus* us);
 
-      protected:
-        int parseUserAction(const char* buffer, int len, UserAction* user_action);
-        int parseItemInfo(const char* buffer, int len, ItemInfo* item_info);
-        int parseUserSubscribe(const char* buffer, int len, UserSubscribe* user_subscribe);
-
-        int serializeUserInfo(bool user_exist, char* buffer, int maxlen);
-        int serializeCandidateSet(const CandidateSet& candset, char* buffer, int maxlen);
-        int serializeUserHistory(const IdSet& id_set, char* buffer, int maxlen);
-
       private:
         CandidateDB* candidate_db_;
     };
