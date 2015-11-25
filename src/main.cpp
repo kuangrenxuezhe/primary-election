@@ -5,6 +5,7 @@
 //  Created by zhanghl on 14-9-3.
 //  Copyright (c) 2014 CrystalBall. All rights reserved.
 //
+#include "core/candidate_db.h"
 #include "service/service_glue.h"
 #include "framework/CF_framework_center.h"
 #include "framework/CF_framework_module.h"
@@ -24,21 +25,18 @@ enum ErrorLevel {
   LEVEL_E,        //可忽略
 };
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/file.h>
-
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <string>
-
+using namespace rsys::news;
 int main()
 {
-  rsys::news::ServiceGlue serv_glue;
+  Options opts; 
+  CandidateDB* candb;
+
+  Status status = CandidateDB::openDB(opts, &candb); 
+  if (!status.ok()) {
+    fprintf(stderr, "%s\n", status.toString().c_str());
+    return -1;
+  }
+  ServiceGlue serv_glue(candb);
 
   CF_framework_module cd_model;
   if(cd_model.init_framework((CF_framework_interface*)&serv_glue))
