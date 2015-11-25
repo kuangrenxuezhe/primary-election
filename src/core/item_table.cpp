@@ -153,7 +153,7 @@ namespace rsys {
 
       // 判定待保留数据是否越界
       // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
-      if ((ctime - options_.item_hold_time) - window_time_ > kSecondPerHour) {
+      if (((ctime - options_.item_hold_time) - window_time_) < kSecondPerHour) {
         Status status = eliminate();
         if (!status.ok())
           return status;
