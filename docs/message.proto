@@ -22,24 +22,24 @@ message Action {
   fixed64              item_id = 3; // 文档ID
   int32              stay_time = 4; // 停留时间,单位秒
   ActionType            action = 5; // 用户行为类型
-  string              location = 6; // 经纬度， 格式以英文逗号分割，按照先纬度（lat）后经度（lng）
-  string                srp_id = 7; // SRPID
+  bytes               location = 6; // 经纬度， 格式以英文逗号分割，按照先纬度（lat）后经度（lng）
+  bytes                 srp_id = 7; // SRPID
   int32           click_source = 8; // 点击来源，默认值0=其它, 1=推荐频道
-  string               dislike = 9; // 不喜欢原因, 包括：重复内容，内容质量差，来源:来源ID，广告，SRP词
-  string                  zone = 10;// 用户所在省市城市， 地域格式--省:市， 市可为空
+  bytes                dislike = 9; // 不喜欢原因, 包括：重复内容，内容质量差，来源:来源ID，广告，SRP词
+  bytes                   zone = 10;// 用户所在省市城市， 地域格式--省:市， 市可为空
   repeated fixed64  history_id = 11;// 用户点击历史文档ID, 历史记录不带本文档ID
 }
 
 /////////////////////////////////////////////////
 // 文档
 message ItemTag {
-  int32      tag_id = 1; // 标签ID
-  string   tag_name = 2; // 标签名称
-  float   tag_power = 3; // 标签权重
+  int32     tag_id = 1; // 标签ID
+  bytes   tag_name = 2; // 标签名称
+  float  tag_power = 3; // 标签权重
 }
 
 message ItemWord {
-  string word = 1; // 关键词
+  bytes word = 1; // 关键词
   int32 count = 2; // 关键词频率
 }
 
@@ -57,14 +57,14 @@ enum TopType {
 }
 
 message TopInfo {
-  TopType              top_type = 1; // 推荐方式
-  repeated string    top_srp_id = 2; // 文章所属SRPID
-  repeated string top_circle_id = 3; // 文章所属圈子ID
+  TopType             top_type = 1; // 推荐方式
+  repeated bytes    top_srp_id = 2; // 文章所属SRPID
+  repeated bytes top_circle_id = 3; // 文章所属圈子ID
 }
 
 message ItemSource {
   fixed64  source_id = 1; // 数据来源ID
-  string source_name = 2; // 数据来源
+  bytes  source_name = 2; // 数据来源
 }
 
 message Item {
@@ -79,16 +79,16 @@ message Item {
   repeated ItemTag             srp = 9;  // 文章所属SRP信息
   repeated ItemTag          circle = 10; // 文章所属圈子信息
   TopInfo                 top_info = 11; // 全局推荐信息
-  repeated string             zone = 12; // 地域格式--省:市;省:市; 支持多级, 市可为空
+  repeated bytes              zone = 12; // 地域格式--省:市;省:市; 支持多级, 市可为空
   ItemSource           data_source = 13; // 数据来源 
 }
 
 /////////////////////////////////////////////////
 // 订阅
 message Subscribe {
-  uint64             user_id = 1; // 用户ID
-  repeated string     srp_id = 2; // SRPID
-  repeated string  circle_id = 3; // 圈子id
+  uint64            user_id = 1; // 用户ID
+  repeated bytes     srp_id = 2; // SRPID
+  repeated bytes  circle_id = 3; // 圈子id
 }
 
 /////////////////////////////////////////////////
@@ -110,7 +110,7 @@ message Recommend {
   RecommendType  recommend_type = 4;
   int32                beg_time = 5; // 默认值0, 为非默认值时取beg_time之前的数据
   int32                end_time = 6; // 保留字段
-  string                   zone = 7; // 地域格式--省:市, 市可为空
+  bytes                    zone = 7; // 地域格式--省:市, 市可为空
   RecommendNetwork      network = 8; 
 }
 
@@ -197,5 +197,5 @@ message TransferRespond {
 }
 
 message HeartBeat {
-  string heartbeat = 1;
+  bytes heartbeat = 1;
 }
