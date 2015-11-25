@@ -3,6 +3,7 @@
 
 #include "core/candidate_db.h"
 #include "proto/service.pb.h"
+#include "proto/record.pb.h"
 #include "framework/CF_framework_interface.h"
 
 namespace rsys {
