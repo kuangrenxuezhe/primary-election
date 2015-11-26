@@ -53,6 +53,9 @@ namespace rsys {
         case kIOError:
           type = "IO error: ";
           break;
+        case kInvalidData:
+          type = "Invalid data: ";
+          break;
         default:
           snprintf(tmp, sizeof(tmp), "Unknown code(%d): ",
               static_cast<int>(code()));

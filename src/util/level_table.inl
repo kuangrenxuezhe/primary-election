@@ -204,7 +204,7 @@ namespace rsys {
             }
           }
         }
-        pthread_rwlock_wrlock(&level_lock_[0]);
+        pthread_rwlock_unlock(&level_lock_[0]);
         return updated;
       }
 
@@ -253,7 +253,7 @@ namespace rsys {
               erased = true;
           }
         }
-        pthread_rwlock_wrlock(&level_lock_[0]);
+        pthread_rwlock_unlock(&level_lock_[0]);
 
         return erased;
       }

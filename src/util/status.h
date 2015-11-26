@@ -16,15 +16,18 @@ namespace rsys {
         Status(const Status& s);
         void operator=(const Status& s);
 
+        // Return error status of an appropriate type.
         static Status OK() {
           return Status(); 
         }
-        // Return error status of an appropriate type.
-        static Status NotFound(const std::string& msg) {
-          return Status(kNotFound, msg);
+        static Status IOError(const std::string& msg) {
+          return Status(kIOError, msg);
         }
         static Status Corruption(const std::string& msg) {
           return Status(kCorruption, msg);
+        }
+        static Status NotFound(const std::string& msg) {
+          return Status(kNotFound, msg);
         }
         static Status NotSupported(const std::string& msg) {
           return Status(kNotSupported, msg);
@@ -32,32 +35,31 @@ namespace rsys {
         static Status InvalidArgument(const std::string& msg) {
           return Status(kInvalidArgument, msg);
         }
-        static Status IOError(const std::string& msg) {
-          return Status(kIOError, msg);
+        static Status InvalidData(const std::string& msg) {
+          return Status(kInvalidData, msg);
         }
 
-        // Returns true iff the status indicates success.
+        // Returns true iff the status indicates an appropriate type.
         bool ok() const { 
           return (state_ == NULL);
         }
-
-        // Returns true iff the status indicates a NotFound error.
-        bool isNotFound() const {
-          return code() == kNotFound; 
-        }
-
-        // Returns true iff the status indicates a Corruption error.
-        bool isCorruption() const {
-          return code() == kCorruption; 
-        }
-
-        // Returns true iff the status indicates an IOError.
         bool isIOError() const {
           return code() == kIOError; 
         }
-
+        bool isCorruption() const {
+          return code() == kCorruption; 
+        }
+        bool isNotFound() const {
+          return code() == kNotFound; 
+        }
+        bool isNotSupported() const {
+          return code() == kNotSupported;
+        }
         bool isInvalidArgument() const {
           return code() == kInvalidArgument; 
+        }
+        bool isInvalidData() const {
+          return code() == kInvalidData; 
         }
 
         // Return a string representation of this status suitable for printing.
@@ -74,11 +76,12 @@ namespace rsys {
 
         enum Code {
           kOk = 0,
-          kNotFound = 1,
+          kIOError = 1,
           kCorruption = 2,
-          kNotSupported = 3,
-          kInvalidArgument = 4,
-          kIOError = 5
+          kNotFound = 3,
+          kNotSupported = 4,
+          kInvalidArgument = 5,
+          kInvalidData = 6
         };
 
         Code code() const {
