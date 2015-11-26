@@ -11,7 +11,7 @@ namespace rsys {
     {
       work_path = ".";
       table_name = "level_table";
-      item_hold_time = 24 * 60 * 60;
+      item_hold_time = 7 * 24 * 60 * 60;
       user_hold_time = 3 * 7 * 24 * 60 * 60;
       max_table_level = 3;
       new_item_max_age = 2 * 24 * 60 * 60;
