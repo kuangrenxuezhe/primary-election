@@ -269,10 +269,15 @@ namespace rsys {
     Status UserTable::updateAction(uint64_t user_id, const action_t& user_action)
     {
       if (!level_table_->find(user_id)) {
-        std::ostringstream oss;
+        user_info_t* user_info = new user_info_t;
 
-        oss<<"user_id=0x"<<std::hex<<user_id;
-        return Status::NotFound(oss.str());
+        user_info->ctime = time(NULL);
+        if (!level_table_->add(user_id, user_info)) {
+          std::stringstream oss;
+
+          oss<<"Insert user, user_id=0x"<<std::hex<<user_id;
+          return Status::Corruption(oss.str());
+        }
       } 
       ActionUpdater updater(user_action);
 
