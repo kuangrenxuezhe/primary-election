@@ -1,0 +1,5 @@
+#忽略内容
+.*
+bin
+data
+deps
