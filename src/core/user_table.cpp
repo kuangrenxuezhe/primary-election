@@ -553,6 +553,7 @@ namespace rsys {
       if (!level_table_->add(log_user_info.user_id(), user_info)) {
         std::ostringstream oss;
 
+        delete user_info;
         oss<<"Insert level table: key=0x"<<std::hex<<log_user_info.user_id();
         return Status::Corruption(oss.str());
       }

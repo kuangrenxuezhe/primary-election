@@ -311,13 +311,13 @@ class KeyStr : public ::google::protobuf::Message {
   ::google::protobuf::uint64 key() const;
   void set_key(::google::protobuf::uint64 value);
 
-  // optional string str = 2;
+  // optional bytes str = 2;
   void clear_str();
   static const int kStrFieldNumber = 2;
   const ::std::string& str() const;
   void set_str(const ::std::string& value);
   void set_str(const char* value);
-  void set_str(const char* value, size_t size);
+  void set_str(const void* value, size_t size);
   ::std::string* mutable_str();
   ::std::string* release_str();
   void set_allocated_str(::std::string* str);
@@ -486,13 +486,13 @@ class KeyPair : public ::google::protobuf::Message {
   ::google::protobuf::uint64 key() const;
   void set_key(::google::protobuf::uint64 value);
 
-  // optional string name = 2;
+  // optional bytes name = 2;
   void clear_name();
   static const int kNameFieldNumber = 2;
   const ::std::string& name() const;
   void set_name(const ::std::string& value);
   void set_name(const char* value);
-  void set_name(const char* value, size_t size);
+  void set_name(const void* value, size_t size);
   ::std::string* mutable_name();
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
@@ -1080,7 +1080,7 @@ inline void KeyStr::set_key(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:proto.KeyStr.key)
 }
 
-// optional string str = 2;
+// optional bytes str = 2;
 inline void KeyStr::clear_str() {
   str_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1098,7 +1098,7 @@ inline void KeyStr::set_str(const char* value) {
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.KeyStr.str)
 }
-inline void KeyStr::set_str(const char* value, size_t size) {
+inline void KeyStr::set_str(const void* value, size_t size) {
   
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -1173,7 +1173,7 @@ inline void KeyPair::set_key(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:proto.KeyPair.key)
 }
 
-// optional string name = 2;
+// optional bytes name = 2;
 inline void KeyPair::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1191,7 +1191,7 @@ inline void KeyPair::set_name(const char* value) {
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.KeyPair.name)
 }
-inline void KeyPair::set_name(const char* value, size_t size) {
+inline void KeyPair::set_name(const void* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));

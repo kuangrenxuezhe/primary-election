@@ -279,9 +279,9 @@ void protobuf_AddDesc_record_2eproto() {
     "\n\014record.proto\022\005proto\"&\n\006Status\022\014\n\004code\030"
     "\001 \001(\005\022\016\n\006reason\030\002 \001(\t\"(\n\013Elimination\022\n\n\002"
     "id\030\001 \001(\006\022\r\n\005etime\030\002 \001(\005\"\"\n\006KeyStr\022\013\n\003key"
-    "\030\001 \001(\006\022\013\n\003str\030\002 \001(\t\"%\n\007KeyTime\022\013\n\003key\030\001 "
+    "\030\001 \001(\006\022\013\n\003str\030\002 \001(\014\"%\n\007KeyTime\022\013\n\003key\030\001 "
     "\001(\006\022\r\n\005ctime\030\002 \001(\005\"3\n\007KeyPair\022\013\n\003key\030\001 \001"
-    "(\006\022\014\n\004name\030\002 \001(\t\022\r\n\005power\030\003 \001(\002\"\034\n\tUserQ"
+    "(\006\022\014\n\004name\030\002 \001(\014\022\r\n\005power\030\003 \001(\002\"\034\n\tUserQ"
     "uery\022\017\n\007user_id\030\001 \001(\006\"\261\001\n\010UserInfo\022\017\n\007us"
     "er_id\030\001 \001(\006\022\r\n\005ctime\030\002 \001(\005\022 \n\tsubscribe\030"
     "\003 \003(\0132\r.proto.KeyStr\022\036\n\007dislike\030\004 \003(\0132\r."
@@ -1066,16 +1066,12 @@ bool KeyStr::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string str = 2;
+      // optional bytes str = 2;
       case 2: {
         if (tag == 18) {
          parse_str:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_str()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->str().data(), this->str().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "proto.KeyStr.str"));
         } else {
           goto handle_unusual;
         }
@@ -1112,13 +1108,9 @@ void KeyStr::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->key(), output);
   }
 
-  // optional string str = 2;
+  // optional bytes str = 2;
   if (this->str().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->str().data(), this->str().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "proto.KeyStr.str");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       2, this->str(), output);
   }
 
@@ -1133,14 +1125,10 @@ void KeyStr::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->key(), target);
   }
 
-  // optional string str = 2;
+  // optional bytes str = 2;
   if (this->str().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->str().data(), this->str().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "proto.KeyStr.str");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->str(), target);
   }
 
@@ -1156,10 +1144,10 @@ int KeyStr::ByteSize() const {
     total_size += 1 + 8;
   }
 
-  // optional string str = 2;
+  // optional bytes str = 2;
   if (this->str().size() > 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->str());
   }
 
@@ -1245,7 +1233,7 @@ void KeyStr::clear_key() {
   // @@protoc_insertion_point(field_set:proto.KeyStr.key)
 }
 
-// optional string str = 2;
+// optional bytes str = 2;
 void KeyStr::clear_str() {
   str_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1263,7 +1251,7 @@ void KeyStr::clear_str() {
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.KeyStr.str)
 }
- void KeyStr::set_str(const char* value, size_t size) {
+ void KeyStr::set_str(const void* value, size_t size) {
   
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -1679,16 +1667,12 @@ bool KeyPair::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string name = 2;
+      // optional bytes name = 2;
       case 2: {
         if (tag == 18) {
          parse_name:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_name()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->name().data(), this->name().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "proto.KeyPair.name"));
         } else {
           goto handle_unusual;
         }
@@ -1740,13 +1724,9 @@ void KeyPair::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->key(), output);
   }
 
-  // optional string name = 2;
+  // optional bytes name = 2;
   if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "proto.KeyPair.name");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       2, this->name(), output);
   }
 
@@ -1766,14 +1746,10 @@ void KeyPair::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->key(), target);
   }
 
-  // optional string name = 2;
+  // optional bytes name = 2;
   if (this->name().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "proto.KeyPair.name");
     target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->name(), target);
   }
 
@@ -1794,10 +1770,10 @@ int KeyPair::ByteSize() const {
     total_size += 1 + 8;
   }
 
-  // optional string name = 2;
+  // optional bytes name = 2;
   if (this->name().size() > 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->name());
   }
 
@@ -1892,7 +1868,7 @@ void KeyPair::clear_key() {
   // @@protoc_insertion_point(field_set:proto.KeyPair.key)
 }
 
-// optional string name = 2;
+// optional bytes name = 2;
 void KeyPair::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1910,7 +1886,7 @@ void KeyPair::clear_name() {
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:proto.KeyPair.name)
 }
- void KeyPair::set_name(const char* value, size_t size) {
+ void KeyPair::set_name(const void* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));

@@ -173,16 +173,16 @@ inline bool RecommendNetwork_Parse(
     RecommendNetwork_descriptor(), name, value);
 }
 enum CandidateType {
-  CANDIDATE_TYPE_TOP = 0,
-  CANDIDATE_TYPE_NORMAL = 1,
-  CANDIDATE_TYPE_ZONE = 2,
-  CANDIDATE_TYPE_VIDEO = 3,
+  CANDIDATE_TYPE_NORMAL = 0,
+  CANDIDATE_TYPE_ZONE = 1,
+  CANDIDATE_TYPE_VIDEO = 2,
+  CANDIDATE_TYPE_TOP = 3,
   CandidateType_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
   CandidateType_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
 };
 bool CandidateType_IsValid(int value);
-const CandidateType CandidateType_MIN = CANDIDATE_TYPE_TOP;
-const CandidateType CandidateType_MAX = CANDIDATE_TYPE_VIDEO;
+const CandidateType CandidateType_MIN = CANDIDATE_TYPE_NORMAL;
+const CandidateType CandidateType_MAX = CANDIDATE_TYPE_TOP;
 const int CandidateType_ARRAYSIZE = CandidateType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CandidateType_descriptor();
@@ -283,24 +283,24 @@ class Action : public ::google::protobuf::Message {
   ::ActionType action() const;
   void set_action(::ActionType value);
 
-  // optional string location = 6;
+  // optional bytes location = 6;
   void clear_location();
   static const int kLocationFieldNumber = 6;
   const ::std::string& location() const;
   void set_location(const ::std::string& value);
   void set_location(const char* value);
-  void set_location(const char* value, size_t size);
+  void set_location(const void* value, size_t size);
   ::std::string* mutable_location();
   ::std::string* release_location();
   void set_allocated_location(::std::string* location);
 
-  // optional string srp_id = 7;
+  // optional bytes srp_id = 7;
   void clear_srp_id();
   static const int kSrpIdFieldNumber = 7;
   const ::std::string& srp_id() const;
   void set_srp_id(const ::std::string& value);
   void set_srp_id(const char* value);
-  void set_srp_id(const char* value, size_t size);
+  void set_srp_id(const void* value, size_t size);
   ::std::string* mutable_srp_id();
   ::std::string* release_srp_id();
   void set_allocated_srp_id(::std::string* srp_id);
@@ -311,24 +311,24 @@ class Action : public ::google::protobuf::Message {
   ::google::protobuf::int32 click_source() const;
   void set_click_source(::google::protobuf::int32 value);
 
-  // optional string dislike = 9;
+  // optional bytes dislike = 9;
   void clear_dislike();
   static const int kDislikeFieldNumber = 9;
   const ::std::string& dislike() const;
   void set_dislike(const ::std::string& value);
   void set_dislike(const char* value);
-  void set_dislike(const char* value, size_t size);
+  void set_dislike(const void* value, size_t size);
   ::std::string* mutable_dislike();
   ::std::string* release_dislike();
   void set_allocated_dislike(::std::string* dislike);
 
-  // optional string zone = 10;
+  // optional bytes zone = 10;
   void clear_zone();
   static const int kZoneFieldNumber = 10;
   const ::std::string& zone() const;
   void set_zone(const ::std::string& value);
   void set_zone(const char* value);
-  void set_zone(const char* value, size_t size);
+  void set_zone(const void* value, size_t size);
   ::std::string* mutable_zone();
   ::std::string* release_zone();
   void set_allocated_zone(::std::string* zone);
@@ -434,13 +434,13 @@ class ItemTag : public ::google::protobuf::Message {
   ::google::protobuf::int32 tag_id() const;
   void set_tag_id(::google::protobuf::int32 value);
 
-  // optional string tag_name = 2;
+  // optional bytes tag_name = 2;
   void clear_tag_name();
   static const int kTagNameFieldNumber = 2;
   const ::std::string& tag_name() const;
   void set_tag_name(const ::std::string& value);
   void set_tag_name(const char* value);
-  void set_tag_name(const char* value, size_t size);
+  void set_tag_name(const void* value, size_t size);
   ::std::string* mutable_tag_name();
   ::std::string* release_tag_name();
   void set_allocated_tag_name(::std::string* tag_name);
@@ -525,13 +525,13 @@ class ItemWord : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string word = 1;
+  // optional bytes word = 1;
   void clear_word();
   static const int kWordFieldNumber = 1;
   const ::std::string& word() const;
   void set_word(const ::std::string& value);
   void set_word(const char* value);
-  void set_word(const char* value, size_t size);
+  void set_word(const void* value, size_t size);
   ::std::string* mutable_word();
   ::std::string* release_word();
   void set_allocated_word(::std::string* word);
@@ -621,7 +621,7 @@ class TopInfo : public ::google::protobuf::Message {
   ::TopType top_type() const;
   void set_top_type(::TopType value);
 
-  // repeated string top_srp_id = 2;
+  // repeated bytes top_srp_id = 2;
   int top_srp_id_size() const;
   void clear_top_srp_id();
   static const int kTopSrpIdFieldNumber = 2;
@@ -629,15 +629,15 @@ class TopInfo : public ::google::protobuf::Message {
   ::std::string* mutable_top_srp_id(int index);
   void set_top_srp_id(int index, const ::std::string& value);
   void set_top_srp_id(int index, const char* value);
-  void set_top_srp_id(int index, const char* value, size_t size);
+  void set_top_srp_id(int index, const void* value, size_t size);
   ::std::string* add_top_srp_id();
   void add_top_srp_id(const ::std::string& value);
   void add_top_srp_id(const char* value);
-  void add_top_srp_id(const char* value, size_t size);
+  void add_top_srp_id(const void* value, size_t size);
   const ::google::protobuf::RepeatedPtrField< ::std::string>& top_srp_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_top_srp_id();
 
-  // repeated string top_circle_id = 3;
+  // repeated bytes top_circle_id = 3;
   int top_circle_id_size() const;
   void clear_top_circle_id();
   static const int kTopCircleIdFieldNumber = 3;
@@ -645,11 +645,11 @@ class TopInfo : public ::google::protobuf::Message {
   ::std::string* mutable_top_circle_id(int index);
   void set_top_circle_id(int index, const ::std::string& value);
   void set_top_circle_id(int index, const char* value);
-  void set_top_circle_id(int index, const char* value, size_t size);
+  void set_top_circle_id(int index, const void* value, size_t size);
   ::std::string* add_top_circle_id();
   void add_top_circle_id(const ::std::string& value);
   void add_top_circle_id(const char* value);
-  void add_top_circle_id(const char* value, size_t size);
+  void add_top_circle_id(const void* value, size_t size);
   const ::google::protobuf::RepeatedPtrField< ::std::string>& top_circle_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_top_circle_id();
 
@@ -733,13 +733,13 @@ class ItemSource : public ::google::protobuf::Message {
   ::google::protobuf::uint64 source_id() const;
   void set_source_id(::google::protobuf::uint64 value);
 
-  // optional string source_name = 2;
+  // optional bytes source_name = 2;
   void clear_source_name();
   static const int kSourceNameFieldNumber = 2;
   const ::std::string& source_name() const;
   void set_source_name(const ::std::string& value);
   void set_source_name(const char* value);
-  void set_source_name(const char* value, size_t size);
+  void set_source_name(const void* value, size_t size);
   ::std::string* mutable_source_name();
   ::std::string* release_source_name();
   void set_allocated_source_name(::std::string* source_name);
@@ -910,7 +910,7 @@ class Item : public ::google::protobuf::Message {
   ::TopInfo* release_top_info();
   void set_allocated_top_info(::TopInfo* top_info);
 
-  // repeated string zone = 12;
+  // repeated bytes zone = 12;
   int zone_size() const;
   void clear_zone();
   static const int kZoneFieldNumber = 12;
@@ -918,11 +918,11 @@ class Item : public ::google::protobuf::Message {
   ::std::string* mutable_zone(int index);
   void set_zone(int index, const ::std::string& value);
   void set_zone(int index, const char* value);
-  void set_zone(int index, const char* value, size_t size);
+  void set_zone(int index, const void* value, size_t size);
   ::std::string* add_zone();
   void add_zone(const ::std::string& value);
   void add_zone(const char* value);
-  void add_zone(const char* value, size_t size);
+  void add_zone(const void* value, size_t size);
   const ::google::protobuf::RepeatedPtrField< ::std::string>& zone() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_zone();
 
@@ -1025,7 +1025,7 @@ class Subscribe : public ::google::protobuf::Message {
   ::google::protobuf::uint64 user_id() const;
   void set_user_id(::google::protobuf::uint64 value);
 
-  // repeated string srp_id = 2;
+  // repeated bytes srp_id = 2;
   int srp_id_size() const;
   void clear_srp_id();
   static const int kSrpIdFieldNumber = 2;
@@ -1033,15 +1033,15 @@ class Subscribe : public ::google::protobuf::Message {
   ::std::string* mutable_srp_id(int index);
   void set_srp_id(int index, const ::std::string& value);
   void set_srp_id(int index, const char* value);
-  void set_srp_id(int index, const char* value, size_t size);
+  void set_srp_id(int index, const void* value, size_t size);
   ::std::string* add_srp_id();
   void add_srp_id(const ::std::string& value);
   void add_srp_id(const char* value);
-  void add_srp_id(const char* value, size_t size);
+  void add_srp_id(const void* value, size_t size);
   const ::google::protobuf::RepeatedPtrField< ::std::string>& srp_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_srp_id();
 
-  // repeated string circle_id = 3;
+  // repeated bytes circle_id = 3;
   int circle_id_size() const;
   void clear_circle_id();
   static const int kCircleIdFieldNumber = 3;
@@ -1049,11 +1049,11 @@ class Subscribe : public ::google::protobuf::Message {
   ::std::string* mutable_circle_id(int index);
   void set_circle_id(int index, const ::std::string& value);
   void set_circle_id(int index, const char* value);
-  void set_circle_id(int index, const char* value, size_t size);
+  void set_circle_id(int index, const void* value, size_t size);
   ::std::string* add_circle_id();
   void add_circle_id(const ::std::string& value);
   void add_circle_id(const char* value);
-  void add_circle_id(const char* value, size_t size);
+  void add_circle_id(const void* value, size_t size);
   const ::google::protobuf::RepeatedPtrField< ::std::string>& circle_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_circle_id();
 
@@ -1167,13 +1167,13 @@ class Recommend : public ::google::protobuf::Message {
   ::google::protobuf::int32 end_time() const;
   void set_end_time(::google::protobuf::int32 value);
 
-  // optional string zone = 7;
+  // optional bytes zone = 7;
   void clear_zone();
   static const int kZoneFieldNumber = 7;
   const ::std::string& zone() const;
   void set_zone(const ::std::string& value);
   void set_zone(const char* value);
-  void set_zone(const char* value, size_t size);
+  void set_zone(const void* value, size_t size);
   ::std::string* mutable_zone();
   ::std::string* release_zone();
   void set_allocated_zone(::std::string* zone);
@@ -2363,13 +2363,13 @@ class HeartBeat : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string heartbeat = 1;
+  // optional bytes heartbeat = 1;
   void clear_heartbeat();
   static const int kHeartbeatFieldNumber = 1;
   const ::std::string& heartbeat() const;
   void set_heartbeat(const ::std::string& value);
   void set_heartbeat(const char* value);
-  void set_heartbeat(const char* value, size_t size);
+  void set_heartbeat(const void* value, size_t size);
   ::std::string* mutable_heartbeat();
   ::std::string* release_heartbeat();
   void set_allocated_heartbeat(::std::string* heartbeat);
@@ -2466,7 +2466,7 @@ inline void Action::set_action(::ActionType value) {
   // @@protoc_insertion_point(field_set:Action.action)
 }
 
-// optional string location = 6;
+// optional bytes location = 6;
 inline void Action::clear_location() {
   location_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2484,7 +2484,7 @@ inline void Action::set_location(const char* value) {
   location_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:Action.location)
 }
-inline void Action::set_location(const char* value, size_t size) {
+inline void Action::set_location(const void* value, size_t size) {
   
   location_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2509,7 +2509,7 @@ inline void Action::set_allocated_location(::std::string* location) {
   // @@protoc_insertion_point(field_set_allocated:Action.location)
 }
 
-// optional string srp_id = 7;
+// optional bytes srp_id = 7;
 inline void Action::clear_srp_id() {
   srp_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2527,7 +2527,7 @@ inline void Action::set_srp_id(const char* value) {
   srp_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:Action.srp_id)
 }
-inline void Action::set_srp_id(const char* value, size_t size) {
+inline void Action::set_srp_id(const void* value, size_t size) {
   
   srp_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2566,7 +2566,7 @@ inline void Action::set_click_source(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:Action.click_source)
 }
 
-// optional string dislike = 9;
+// optional bytes dislike = 9;
 inline void Action::clear_dislike() {
   dislike_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2584,7 +2584,7 @@ inline void Action::set_dislike(const char* value) {
   dislike_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:Action.dislike)
 }
-inline void Action::set_dislike(const char* value, size_t size) {
+inline void Action::set_dislike(const void* value, size_t size) {
   
   dislike_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2609,7 +2609,7 @@ inline void Action::set_allocated_dislike(::std::string* dislike) {
   // @@protoc_insertion_point(field_set_allocated:Action.dislike)
 }
 
-// optional string zone = 10;
+// optional bytes zone = 10;
 inline void Action::clear_zone() {
   zone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2627,7 +2627,7 @@ inline void Action::set_zone(const char* value) {
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:Action.zone)
 }
-inline void Action::set_zone(const char* value, size_t size) {
+inline void Action::set_zone(const void* value, size_t size) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2700,7 +2700,7 @@ inline void ItemTag::set_tag_id(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:ItemTag.tag_id)
 }
 
-// optional string tag_name = 2;
+// optional bytes tag_name = 2;
 inline void ItemTag::clear_tag_name() {
   tag_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2718,7 +2718,7 @@ inline void ItemTag::set_tag_name(const char* value) {
   tag_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ItemTag.tag_name)
 }
-inline void ItemTag::set_tag_name(const char* value, size_t size) {
+inline void ItemTag::set_tag_name(const void* value, size_t size) {
   
   tag_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2761,7 +2761,7 @@ inline void ItemTag::set_tag_power(float value) {
 
 // ItemWord
 
-// optional string word = 1;
+// optional bytes word = 1;
 inline void ItemWord::clear_word() {
   word_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2779,7 +2779,7 @@ inline void ItemWord::set_word(const char* value) {
   word_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ItemWord.word)
 }
-inline void ItemWord::set_word(const char* value, size_t size) {
+inline void ItemWord::set_word(const void* value, size_t size) {
   
   word_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -2836,7 +2836,7 @@ inline void TopInfo::set_top_type(::TopType value) {
   // @@protoc_insertion_point(field_set:TopInfo.top_type)
 }
 
-// repeated string top_srp_id = 2;
+// repeated bytes top_srp_id = 2;
 inline int TopInfo::top_srp_id_size() const {
   return top_srp_id_.size();
 }
@@ -2859,7 +2859,7 @@ inline void TopInfo::set_top_srp_id(int index, const char* value) {
   top_srp_id_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:TopInfo.top_srp_id)
 }
-inline void TopInfo::set_top_srp_id(int index, const char* value, size_t size) {
+inline void TopInfo::set_top_srp_id(int index, const void* value, size_t size) {
   top_srp_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:TopInfo.top_srp_id)
@@ -2875,7 +2875,7 @@ inline void TopInfo::add_top_srp_id(const char* value) {
   top_srp_id_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:TopInfo.top_srp_id)
 }
-inline void TopInfo::add_top_srp_id(const char* value, size_t size) {
+inline void TopInfo::add_top_srp_id(const void* value, size_t size) {
   top_srp_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:TopInfo.top_srp_id)
 }
@@ -2890,7 +2890,7 @@ TopInfo::mutable_top_srp_id() {
   return &top_srp_id_;
 }
 
-// repeated string top_circle_id = 3;
+// repeated bytes top_circle_id = 3;
 inline int TopInfo::top_circle_id_size() const {
   return top_circle_id_.size();
 }
@@ -2913,7 +2913,7 @@ inline void TopInfo::set_top_circle_id(int index, const char* value) {
   top_circle_id_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:TopInfo.top_circle_id)
 }
-inline void TopInfo::set_top_circle_id(int index, const char* value, size_t size) {
+inline void TopInfo::set_top_circle_id(int index, const void* value, size_t size) {
   top_circle_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:TopInfo.top_circle_id)
@@ -2929,7 +2929,7 @@ inline void TopInfo::add_top_circle_id(const char* value) {
   top_circle_id_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:TopInfo.top_circle_id)
 }
-inline void TopInfo::add_top_circle_id(const char* value, size_t size) {
+inline void TopInfo::add_top_circle_id(const void* value, size_t size) {
   top_circle_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:TopInfo.top_circle_id)
 }
@@ -2962,7 +2962,7 @@ inline void ItemSource::set_source_id(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:ItemSource.source_id)
 }
 
-// optional string source_name = 2;
+// optional bytes source_name = 2;
 inline void ItemSource::clear_source_name() {
   source_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -2980,7 +2980,7 @@ inline void ItemSource::set_source_name(const char* value) {
   source_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:ItemSource.source_name)
 }
-inline void ItemSource::set_source_name(const char* value, size_t size) {
+inline void ItemSource::set_source_name(const void* value, size_t size) {
   
   source_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -3250,7 +3250,7 @@ inline void Item::set_allocated_top_info(::TopInfo* top_info) {
   // @@protoc_insertion_point(field_set_allocated:Item.top_info)
 }
 
-// repeated string zone = 12;
+// repeated bytes zone = 12;
 inline int Item::zone_size() const {
   return zone_.size();
 }
@@ -3273,7 +3273,7 @@ inline void Item::set_zone(int index, const char* value) {
   zone_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:Item.zone)
 }
-inline void Item::set_zone(int index, const char* value, size_t size) {
+inline void Item::set_zone(int index, const void* value, size_t size) {
   zone_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:Item.zone)
@@ -3289,7 +3289,7 @@ inline void Item::add_zone(const char* value) {
   zone_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:Item.zone)
 }
-inline void Item::add_zone(const char* value, size_t size) {
+inline void Item::add_zone(const void* value, size_t size) {
   zone_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:Item.zone)
 }
@@ -3359,7 +3359,7 @@ inline void Subscribe::set_user_id(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:Subscribe.user_id)
 }
 
-// repeated string srp_id = 2;
+// repeated bytes srp_id = 2;
 inline int Subscribe::srp_id_size() const {
   return srp_id_.size();
 }
@@ -3382,7 +3382,7 @@ inline void Subscribe::set_srp_id(int index, const char* value) {
   srp_id_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:Subscribe.srp_id)
 }
-inline void Subscribe::set_srp_id(int index, const char* value, size_t size) {
+inline void Subscribe::set_srp_id(int index, const void* value, size_t size) {
   srp_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:Subscribe.srp_id)
@@ -3398,7 +3398,7 @@ inline void Subscribe::add_srp_id(const char* value) {
   srp_id_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:Subscribe.srp_id)
 }
-inline void Subscribe::add_srp_id(const char* value, size_t size) {
+inline void Subscribe::add_srp_id(const void* value, size_t size) {
   srp_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:Subscribe.srp_id)
 }
@@ -3413,7 +3413,7 @@ Subscribe::mutable_srp_id() {
   return &srp_id_;
 }
 
-// repeated string circle_id = 3;
+// repeated bytes circle_id = 3;
 inline int Subscribe::circle_id_size() const {
   return circle_id_.size();
 }
@@ -3436,7 +3436,7 @@ inline void Subscribe::set_circle_id(int index, const char* value) {
   circle_id_.Mutable(index)->assign(value);
   // @@protoc_insertion_point(field_set_char:Subscribe.circle_id)
 }
-inline void Subscribe::set_circle_id(int index, const char* value, size_t size) {
+inline void Subscribe::set_circle_id(int index, const void* value, size_t size) {
   circle_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_set_pointer:Subscribe.circle_id)
@@ -3452,7 +3452,7 @@ inline void Subscribe::add_circle_id(const char* value) {
   circle_id_.Add()->assign(value);
   // @@protoc_insertion_point(field_add_char:Subscribe.circle_id)
 }
-inline void Subscribe::add_circle_id(const char* value, size_t size) {
+inline void Subscribe::add_circle_id(const void* value, size_t size) {
   circle_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
   // @@protoc_insertion_point(field_add_pointer:Subscribe.circle_id)
 }
@@ -3555,7 +3555,7 @@ inline void Recommend::set_end_time(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:Recommend.end_time)
 }
 
-// optional string zone = 7;
+// optional bytes zone = 7;
 inline void Recommend::clear_zone() {
   zone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -3573,7 +3573,7 @@ inline void Recommend::set_zone(const char* value) {
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:Recommend.zone)
 }
-inline void Recommend::set_zone(const char* value, size_t size) {
+inline void Recommend::set_zone(const void* value, size_t size) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
@@ -4252,7 +4252,7 @@ inline void TransferRespond::set_allocated_protocol(::google::protobuf::Any* pro
 
 // HeartBeat
 
-// optional string heartbeat = 1;
+// optional bytes heartbeat = 1;
 inline void HeartBeat::clear_heartbeat() {
   heartbeat_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -4270,7 +4270,7 @@ inline void HeartBeat::set_heartbeat(const char* value) {
   heartbeat_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:HeartBeat.heartbeat)
 }
-inline void HeartBeat::set_heartbeat(const char* value, size_t size) {
+inline void HeartBeat::set_heartbeat(const void* value, size_t size) {
   
   heartbeat_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
