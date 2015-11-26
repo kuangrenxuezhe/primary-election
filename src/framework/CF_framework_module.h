@@ -311,7 +311,7 @@ public:
             if(4 + size > cc->m_cfg.md_message_size || t_respond.SerializeToArray(send_buf + 4, cc->m_cfg.md_message_size) == false)
             {
                 send_len = 4;
-                *(var_4*)send_buf = 0;
+                *(var_4*)send_buf = -1;
             }
             else
             {
