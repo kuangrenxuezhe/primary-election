@@ -56,6 +56,10 @@ namespace rsys {
           return code() == kIOError; 
         }
 
+        bool isInvalidArgument() const {
+          return code() == kInvalidArgument; 
+        }
+
         // Return a string representation of this status suitable for printing.
         // Returns the string "OK" for success.
         std::string toString() const;

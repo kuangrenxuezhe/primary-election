@@ -163,9 +163,9 @@ namespace rsys {
       if (item_info->publish_time < ctime - options_.new_item_max_age) {
         std::ostringstream oss;
 
-        oss<<"Item too old, id="<<std::hex<<item_info->item_id;
+        oss<<"Item too old, id=0x"<<std::hex<<item_info->item_id;
         oss<<", publish_time="<<timeToString(item_info->publish_time);
-        oss<<", new_item_max_age="<<options_.new_item_max_age;
+        oss<<", new_item_max_age="<<std::dec<<options_.new_item_max_age;
         return Status::InvalidArgument(oss.str());
       }
       int index = windowIndex(item_info->publish_time);

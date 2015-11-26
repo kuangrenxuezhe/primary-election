@@ -33,6 +33,8 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isInvalidArgument())
+        return 0;
       return -1;
     }
 
