@@ -264,19 +264,28 @@ namespace rsys {
       if (level_table_)
         delete level_table_;
     }
-    
+
+    // 添加user, user_info由外部分配内存, 且不写ahead-log
+    Status UserTable::addUser(uint64_t user_id, user_info_t* user_info)
+    {
+      user_info->ctime = time(NULL);
+      if (!level_table_->add(user_id, user_info)) {
+        std::stringstream oss;
+
+        oss<<"Insert user, user_id=0x"<<std::hex<<user_id;
+        return Status::Corruption(oss.str());
+      }
+      return Status::OK();
+    }
+
     // 增量更新已读新闻
     Status UserTable::updateAction(uint64_t user_id, const action_t& user_action)
     {
       if (!level_table_->find(user_id)) {
         user_info_t* user_info = new user_info_t;
-
-        user_info->ctime = time(NULL);
-        if (!level_table_->add(user_id, user_info)) {
-          std::stringstream oss;
-
-          oss<<"Insert user, user_id=0x"<<std::hex<<user_id;
-          return Status::Corruption(oss.str());
+        Status status = addUser(user_id, user_info);
+        if (!status.ok()) {
+          return status;
         }
       } 
       ActionUpdater updater(user_action);
@@ -471,16 +480,11 @@ namespace rsys {
     {
       if (!level_table_->find(user_id)) {
         user_info_t* user_info = new user_info_t;
-
-        user_info->ctime = time(NULL);
         user_info->subscribe = subscribe;
-        if (level_table_->add(user_id, user_info)) {
-          return Status::OK();
-        } else {
-          std::stringstream oss;
 
-          oss<<"Insert user, user_id=0x"<<std::hex<<user_id;
-          return Status::Corruption(oss.str());
+        Status status = addUser(user_id, user_info);
+        if (!status.ok()) {
+          return status;
         }
       } 
       UserUpdater updater(subscribe);

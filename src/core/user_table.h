@@ -40,7 +40,7 @@ namespace rsys {
         // 查询用户是否存在
         bool findUser(uint64_t user_id);
         // 添加user, user_info由外部分配内存, 且不写ahead-log
-        Status addUser(user_info_t* user_info);
+        Status addUser(uint64_t user_id, user_info_t* user_info);
         // 获取用户信息
         Status queryUser(uint64_t user_id, user_info_t& user_info);
         // 获取用户的阅读历史

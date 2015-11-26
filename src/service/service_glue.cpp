@@ -22,7 +22,7 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      return -1;
+      return 0;
     }
 
     var_4 ServiceGlue::update_item(const Item& item)
@@ -35,7 +35,7 @@ namespace rsys {
 
       if (status.isInvalidArgument())
         return 0;
-      return -1;
+      return 0;
     }
 
     var_4 ServiceGlue::update_subscribe(const Subscribe& subscribe)
@@ -46,7 +46,7 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      return -1;
+      return 0;
     }
 
     var_4 ServiceGlue::update_feedback(const Feedback& feedback)
@@ -57,7 +57,7 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      return -1;
+      return 0;
     }
 
     var_4 ServiceGlue::query_candidate_set(const Recommend& recommend, CandidateSet* cs)
@@ -68,7 +68,7 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      return -1;
+      return 0;
     }
 
     var_4 ServiceGlue::query_user_status(const User& user, UserStatus* us)
@@ -83,7 +83,7 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      return -1;
+      return 0;
     }
   }; // namespace news
 }; // namespace rsys
