@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "util/util.h"
-#include "util/crc32c.h"
+#include "util.h"
+#include "crc32c.h"
 #include "glog/logging.h"
 
 #include "proto/record.pb.h"

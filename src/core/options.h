@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <string>
-#include "util/status.h"
+#include "status.h"
 
 namespace rsys {
   namespace news {

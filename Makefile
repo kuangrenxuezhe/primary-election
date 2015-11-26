@@ -4,69 +4,60 @@ ifneq ($(strip $(enable_debug)),)
 endif
 ENABLE_DEBUG?=0
 
-INCLUDES=-I./src -I./deps/include -L./deps/lib
-ARFLAGS = rcs
+GCC_VERSION=$(shell g++ -dumpversion)
+
+INCLUDES+=-I./src -I./deps/include  -I./rsys-util/src
+CFLAGS+=-L./deps/lib
 ifneq ($(strip $(ENABLE_DEBUG)), 1)
 		CFLAGS+= -g -w -O2
 else
-		CFLAGS+=-g -w -O0 -DDEBUG -std=c++11
+		CFLAGS+= -g -w -O0 -DDEBUG
+endif
+
+ifeq ($(GCC_VERSION), "4.8")
+	CFLAGS+= -std=c++11
+else
+	CFLAGS+= -std=c++0x
 endif
 
 LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure
-sources=util/status.cpp \
-				util/crc32c.cpp \
-				util/wal.cpp \
-				util/file.cpp \
-				util/level_file.cpp \
-				util/ahead_log.cpp \
-				core/options.cpp \
-				core/item_table.cpp \
-				core/user_table.cpp \
-				core/candidate_db.cpp \
-				proto/record.pb.cc \
-				proto/service.pb.cc
+
+utils=status.cpp \
+			crc32c.cpp \
+			wal.cpp \
+			file.cpp \
+			table_file.cpp \
+			ahead_log.cpp \
+			table_base.cpp
+
+sources=core/core_type.cpp \
+		    core/options.cpp \
+	      core/user_table.cpp \
+		    core/item_table.cpp \
+		    core/candidate_db.cpp \
+				service/service_glue.cpp \
+				service/service_grpc.cpp \
+		    proto/record.pb.cc \
+		    proto/message.pb.cc \
+		    proto/service.pb.cc \
+		    proto/service.grpc.pb.cc
 
 unittests=unittest.cpp \
-					core/candidate_db_test.cpp
-
-					#util/file_test.cpp \
-					util/ahead_log_test.cpp \
-					util/table_file_test.cpp \
-					util/level_table_test.cpp \
-					util/table_base_test.cpp \
 					core/user_table_test.cpp \
 					core/item_table_test.cpp \
+					core/candidate_db_test.cpp
 
-temp=util/status.cpp \
-		 util/crc32c.cpp \
-		 util/file.cpp \
-		 util/table_file.cpp \
-		 util/wal.cpp \
-		 util/ahead_log.cpp \
-		 util/table_base.cpp \
-		 core/core_type.cpp \
-		 core/options.cpp \
-	   core/user_table.cpp \
-		 core/item_table.cpp \
-		 core/candidate_db.cpp \
-		 proto/record.pb.cc \
-		 proto/message.pb.cc \
-		 proto/service.pb.cc \
-		 proto/service.grpc.pb.cc
-
-#SOURCES=$(addprefix ./src/, $(sources))
-SOURCES=$(addprefix ./src/, $(temp))
+UTILS=$(addprefix ./rsys-util/src/, $(utils))
+SOURCES=$(addprefix ./src/, $(sources))
 UNITTESTS=$(addprefix ./src/, $(unittests))
 
-all: unittest 
+all: candb unittest 
 
-#main: libcandset
-	#protoc -I./deps/include -I./docs --cpp_out=./src/proto ./docs/record.proto ./docs/news_rsys.proto 
-#	g++ $(CFLAGS) -o bin/primary_election main.cpp $(INCLUDES) $(LIBS) -lcandset
+candb:
+	g++ $(CFLAGS) -o bin/candb ./src/main.cpp $(SOURCES) $(UTILS) $(INCLUDES) $(LIBS)
 
 unittest: 
-	g++ $(CFLAGS) -o bin/unittest $(SOURCES) $(UNITTESTS) $(INCLUDES) $(LIBS)
-	#g++ $(CFLAGS) -o bin/unittest $(SOURCES) ./src/unittest.cpp $(INCLUDES) $(LIBS)
+	g++ $(CFLAGS) -o bin/unittest $(SOURCES) $(UTILS) $(UNITTESTS) $(INCLUDES) $(LIBS)
 
 clean:
-	rm -f bin/primary_election 
+	rm -f bin/candb bin/unittest

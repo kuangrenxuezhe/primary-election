@@ -1,7 +1,7 @@
 #ifndef RSYS_NEWS_CANDIDATE_DB_H
 #define RSYS_NEWS_CANDIDATE_DB_H
 
-#include "util/status.h"
+#include "status.h"
 #include "core/options.h"
 #include "core/user_table.h"
 #include "core/item_table.h"

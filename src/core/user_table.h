@@ -6,11 +6,11 @@
 
 #include <map>
 
+#include "status.h"
+#include "table_base.h"
+#include "level_table.h"
 #include "core/core_type.h"
 #include "core/options.h"
-#include "util/status.h"
-#include "util/table_base.h"
-#include "util/level_table.h"
 #include "proto/record.pb.h"
 #include "proto/message.pb.h"
 

@@ -1,8 +1,8 @@
 #include "core/item_table.h"
-#include "util/buffer.h"
 
-#include "util/util.h"
-#include "util/crc32c.h"
+#include "buffer.h"
+#include "util.h"
+#include "crc32c.h"
 #include "glog/logging.h"
 #include "proto/record.pb.h"
 #include "proto/service.pb.h"

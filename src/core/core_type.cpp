@@ -1,5 +1,5 @@
 #include "core/core_type.h"
-#include "util/util.h"
+#include "util.h"
 
 namespace rsys {
   namespace news {

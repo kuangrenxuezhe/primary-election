@@ -1,6 +1,6 @@
 #include "service/service_glue.h"
 
-#include "util/status.h"
+#include "status.h"
 #include "glog/logging.h"
 
 namespace rsys {

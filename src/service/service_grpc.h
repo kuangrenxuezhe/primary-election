@@ -7,7 +7,7 @@
 namespace rsys {
   namespace news {
     // 实现GRPC接口
-    class ServiceGrpc final: public PrimaryElection::Service {
+    class ServiceGrpc final: public proto::PrimaryElection::Service {
       public:
         ServiceGrpc(CandidateDB* canddiate_db);
         virtual ~ServiceGrpc();

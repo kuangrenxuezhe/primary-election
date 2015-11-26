@@ -5,10 +5,10 @@
 #include <set>
 #include <list>
 
+#include "status.h"
+#include "table_base.h"
 #include "core/options.h"
 #include "core/core_type.h"
-#include "util/status.h"
-#include "util/table_base.h"
 #include "proto/service.pb.h"
 #include "sparsehash/dense_hash_map"
 
