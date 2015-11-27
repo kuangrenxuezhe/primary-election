@@ -314,6 +314,7 @@ namespace rsys {
           cand.publish_time = (*iter)->publish_time;
           cand.picture_num = (*iter)->picture_num;
           cand.category_id = (*iter)->category_id;
+          cand.item_type = (*iter)->item_type;
           candset.push_back(cand);
         }
         pthread_rwlock_unlock(&window_lock_[i%kWindowLockSize]);

@@ -84,6 +84,7 @@ namespace rsys {
       int32_t publish_time;
       int32_t  category_id;
       int32_t  picture_num;
+      int32_t    item_type;
     };
     typedef struct candidate_ candidate_t;
 
