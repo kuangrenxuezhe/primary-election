@@ -195,7 +195,8 @@ namespace rsys {
       }
 
       // 若新添加数据两天以前的数据则丢弃 
-      if (item_info->publish_time < ctime - options_.new_item_max_age) {
+      if (item_info->publish_time < ctime - options_.new_item_max_age
+          || item_info->publish_time < window_time_) {
         std::ostringstream oss;
 
         oss<<"Item too old, id=0x"<<std::hex<<item_info->item_id;
