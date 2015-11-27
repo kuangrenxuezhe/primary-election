@@ -51,9 +51,9 @@ UTILS=$(addprefix ./rsys-util/src/, $(utils))
 SOURCES=$(addprefix ./src/, $(sources))
 UNITTESTS=$(addprefix ./src/, $(unittests))
 
-all: candb unittest 
+all: main unittest 
 
-candb:
+main:
 	g++ $(CFLAGS) -o bin/candb ./src/main.cpp $(SOURCES) $(UTILS) $(INCLUDES) $(LIBS)
 
 unittest: 

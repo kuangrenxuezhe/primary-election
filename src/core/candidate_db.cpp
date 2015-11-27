@@ -1,8 +1,6 @@
 #include "core/candidate_db.h"
-
 #include "core/core_type.h"
 #include "glog/logging.h"
-#include "proto/record.pb.h"
 
 namespace rsys {
   namespace news {
@@ -66,7 +64,6 @@ namespace rsys {
       }
       status = user_table_->flushTable();
       if (!status.ok()) {
-        LOG(ERROR)<<status.toString();
         return status;
       }
 
@@ -76,7 +73,6 @@ namespace rsys {
       }
       status = item_table_->flushTable();
       if (!status.ok()) {
-        LOG(ERROR)<<status.toString();
         return status;
       }
 
@@ -87,13 +83,11 @@ namespace rsys {
     {
       Status status = user_table_->loadTable();
       if (!status.ok()) {
-        LOG(ERROR)<<status.toString();
         return status;
       }
 
       status = item_table_->loadTable();
       if (!status.ok()) {
-        LOG(ERROR)<<status.toString();
         return status;
       }
 
@@ -135,28 +129,32 @@ namespace rsys {
       return item_table_->updateAction(action);
     }
 
-    Status CandidateDB::queryCandidateSet(const Recommend& query, CandidateSet& cset)
+    Status CandidateDB::queryCandidateSet(const Recommend& recmd, CandidateSet& cset)
     {
-      query_t table_query;
+      query_t query;
       candidate_set_t candidate_set;
 
-      table_query.request_num = query.request_num();
-      table_query.start_time = query.beg_time();
-      table_query.end_time = query.end_time();
-      table_query.network = query.network();
-
-      Status status = item_table_->queryCandidateSet(table_query, candidate_set);
+      glue::structed_query(recmd, query);
+      // 修正时间
+      if (recmd.beg_time() <= 0) {
+        query.end_time = time(NULL);
+        query.start_time = query.end_time - options_.interval_recommendation;
+      } else {
+        query.end_time = recmd.beg_time();
+        query.start_time = query.end_time - options_.item_hold_time;
+      }
+      Status status = item_table_->queryCandidateSet(query, candidate_set);
       if (!status.ok()) {
         return status;
       }
 
-      status = user_table_->filterCandidateSet(query.user_id(), candidate_set);
+      status = user_table_->filterCandidateSet(recmd.user_id(), candidate_set);
       if (!status.ok()) {
         return status;
       }
       id_set_t history_set;
 
-      status = user_table_->queryHistory(query.user_id(), history_set);
+      status = user_table_->queryHistory(recmd.user_id(), history_set);
       if (!status.ok()) {
         return status;
       }
@@ -165,7 +163,7 @@ namespace rsys {
           iter != history_set.end(); ++iter) {
         cset.mutable_base()->add_history_id(*iter);
       }
-      cset.mutable_base()->set_user_id(query.user_id());
+      cset.mutable_base()->set_user_id(recmd.user_id());
 
       candidate_set_t::iterator iter = candidate_set.begin();
       for (; iter != candidate_set.end(); ++iter) {

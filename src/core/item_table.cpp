@@ -249,10 +249,17 @@ namespace rsys {
 
     Status ItemTable::queryCandidateSet(const query_t& query, candidate_set_t& candset)
     {
+      if (query.end_time < window_time_)
+        return Status::OK();
+
+      int32_t start_time = query.start_time;
+      if (query.start_time < window_time_)
+        start_time = window_time_;
+
       // 由于添加item和淘汰item是并行的
       // 有可能在添加一瞬间window_time发生变更,使得插入的item有可能后移
       // 通过时间校正因子来弥补item后移,可能造成数据丢失的问题
-      int start_index = windowIndex(query.start_time);
+      int start_index = windowIndex(start_time);
       int end_index = windowIndex(query.end_time + kTimeFactor) + 1;
 
       for (int i = start_index; i < end_index; ++i) {

@@ -22,6 +22,8 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
 
@@ -33,8 +35,8 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
-      if (status.isInvalidArgument())
-        return 0;
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
 
@@ -46,6 +48,8 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
 
@@ -57,17 +61,21 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
 
     var_4 ServiceGlue::query_candidate_set(const Recommend& recommend, CandidateSet* cs)
     {
-       Status status = candidate_db_->queryCandidateSet(recommend, *cs);
+      Status status = candidate_db_->queryCandidateSet(recommend, *cs);
       if (status.ok()) {
         return 0;
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
 
@@ -83,6 +91,8 @@ namespace rsys {
       }
       LOG(ERROR)<<status.toString();
 
+      if (status.isCorruption() || status.isIOError())
+        return -1;
       return 0;
     }
   }; // namespace news

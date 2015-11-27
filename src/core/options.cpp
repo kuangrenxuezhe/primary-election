@@ -9,12 +9,15 @@ namespace rsys {
 
     Options::Options()
     {
+      rpc_port = 6200;
+      monitor_port = 16200;
       work_path = ".";
       table_name = "level_table";
       item_hold_time = 7 * 24 * 60 * 60;
       user_hold_time = 3 * 7 * 24 * 60 * 60;
       max_table_level = 3;
       new_item_max_age = 2 * 24 * 60 * 60;
+      interval_recommendation = 1 * 24 * 60 * 60;
       log_expired_days = 7 * 24 * 60 * 60; 
       flush_timer = "23/day";
     }
@@ -25,6 +28,11 @@ namespace rsys {
 
       try {
         parser.readFile(conf.c_str());
+
+        if (!parser.lookupValue("rpc_port", opts.rpc_port))
+          opts.rpc_port = 6200;
+        if (!parser.lookupValue("monitor_port", opts.monitor_port))
+          opts.monitor_port = 16200;
         if (!parser.lookupValue("work_path", opts.work_path))
           opts.work_path = ".";
         if (!parser.lookupValue("table_name", opts.table_name))
@@ -44,13 +52,15 @@ namespace rsys {
       }
       catch(const FileIOException &oex) {
         std::ostringstream oss;
+
         oss<<oex.what()<<", file="<<conf;
         return Status::IOError(oss.str());
       }
       catch(const ParseException &pex) {
         std::ostringstream oss;
+
         oss<<pex.getError()<<", at "<<conf<<":"<<pex.getLine();
-        return Status::InvalidArgument(oss.str());
+        return Status::Corruption(oss.str());
       }
       return Status::OK();
     }

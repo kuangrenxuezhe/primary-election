@@ -109,7 +109,7 @@ void protobuf_AssignDesc_record_2eproto() {
   KeyTime_descriptor_ = file->message_type(3);
   static const int KeyTime_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyTime, key_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyTime, ctime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(KeyTime, last_modified_),
   };
   KeyTime_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -157,7 +157,7 @@ void protobuf_AssignDesc_record_2eproto() {
   UserInfo_descriptor_ = file->message_type(6);
   static const int UserInfo_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, user_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, ctime_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, last_modified_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, subscribe_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, dislike_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UserInfo, readed_),
@@ -279,25 +279,25 @@ void protobuf_AddDesc_record_2eproto() {
     "\n\014record.proto\022\005proto\"&\n\006Status\022\014\n\004code\030"
     "\001 \001(\005\022\016\n\006reason\030\002 \001(\t\"(\n\013Elimination\022\n\n\002"
     "id\030\001 \001(\006\022\r\n\005etime\030\002 \001(\005\"\"\n\006KeyStr\022\013\n\003key"
-    "\030\001 \001(\006\022\013\n\003str\030\002 \001(\014\"%\n\007KeyTime\022\013\n\003key\030\001 "
-    "\001(\006\022\r\n\005ctime\030\002 \001(\005\"3\n\007KeyPair\022\013\n\003key\030\001 \001"
-    "(\006\022\014\n\004name\030\002 \001(\014\022\r\n\005power\030\003 \001(\002\"\034\n\tUserQ"
-    "uery\022\017\n\007user_id\030\001 \001(\006\"\261\001\n\010UserInfo\022\017\n\007us"
-    "er_id\030\001 \001(\006\022\r\n\005ctime\030\002 \001(\005\022 \n\tsubscribe\030"
-    "\003 \003(\0132\r.proto.KeyStr\022\036\n\007dislike\030\004 \003(\0132\r."
-    "proto.KeyStr\022\036\n\006readed\030\005 \003(\0132\016.proto.Key"
-    "Time\022#\n\013recommended\030\006 \003(\0132\016.proto.KeyTim"
-    "e\"\034\n\tItemQuery\022\017\n\007item_id\030\001 \001(\006\"\355\001\n\010Item"
-    "Info\022\017\n\007item_id\030\001 \001(\006\022\r\n\005power\030\002 \001(\002\022\024\n\014"
-    "publish_time\030\003 \001(\005\022\021\n\titem_type\030\004 \001(\005\022\023\n"
-    "\013picture_num\030\005 \001(\005\022\023\n\013click_count\030\006 \001(\005\022"
-    "\022\n\nclick_time\030\007 \001(\005\022\023\n\013category_id\030\010 \001(\005"
-    "\022!\n\tregion_id\030\t \003(\0132\016.proto.KeyPair\022\"\n\nb"
-    "elongs_to\030\n \003(\0132\016.proto.KeyPair*\202\001\n\004Code"
-    "\022\013\n\007CODE_OK\020\000\022\022\n\016CODE_NOT_FOUND\020\001\022\023\n\017COD"
-    "E_CORRUPTION\020\002\022\026\n\022CODE_NOT_SUPPORTED\020\003\022\031"
-    "\n\025CODE_INVALID_ARGUMENT\020\004\022\021\n\rCODE_IO_ERR"
-    "OR\020\005b\006proto3", 852);
+    "\030\001 \001(\006\022\013\n\003str\030\002 \001(\014\"-\n\007KeyTime\022\013\n\003key\030\001 "
+    "\001(\006\022\025\n\rlast_modified\030\002 \001(\005\"3\n\007KeyPair\022\013\n"
+    "\003key\030\001 \001(\006\022\014\n\004name\030\002 \001(\014\022\r\n\005power\030\003 \001(\002\""
+    "\034\n\tUserQuery\022\017\n\007user_id\030\001 \001(\006\"\271\001\n\010UserIn"
+    "fo\022\017\n\007user_id\030\001 \001(\006\022\025\n\rlast_modified\030\002 \001"
+    "(\005\022 \n\tsubscribe\030\003 \003(\0132\r.proto.KeyStr\022\036\n\007"
+    "dislike\030\004 \003(\0132\r.proto.KeyStr\022\036\n\006readed\030\005"
+    " \003(\0132\016.proto.KeyTime\022#\n\013recommended\030\006 \003("
+    "\0132\016.proto.KeyTime\"\034\n\tItemQuery\022\017\n\007item_i"
+    "d\030\001 \001(\006\"\355\001\n\010ItemInfo\022\017\n\007item_id\030\001 \001(\006\022\r\n"
+    "\005power\030\002 \001(\002\022\024\n\014publish_time\030\003 \001(\005\022\021\n\tit"
+    "em_type\030\004 \001(\005\022\023\n\013picture_num\030\005 \001(\005\022\023\n\013cl"
+    "ick_count\030\006 \001(\005\022\022\n\nclick_time\030\007 \001(\005\022\023\n\013c"
+    "ategory_id\030\010 \001(\005\022!\n\tregion_id\030\t \003(\0132\016.pr"
+    "oto.KeyPair\022\"\n\nbelongs_to\030\n \003(\0132\016.proto."
+    "KeyPair*\202\001\n\004Code\022\013\n\007CODE_OK\020\000\022\022\n\016CODE_NO"
+    "T_FOUND\020\001\022\023\n\017CODE_CORRUPTION\020\002\022\026\n\022CODE_N"
+    "OT_SUPPORTED\020\003\022\031\n\025CODE_INVALID_ARGUMENT\020"
+    "\004\022\021\n\rCODE_IO_ERROR\020\005b\006proto3", 868);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "record.proto", &protobuf_RegisterTypes);
   Status::default_instance_ = new Status();
@@ -1282,7 +1282,7 @@ void KeyStr::clear_str() {
 
 #ifndef _MSC_VER
 const int KeyTime::kKeyFieldNumber;
-const int KeyTime::kCtimeFieldNumber;
+const int KeyTime::kLastModifiedFieldNumber;
 #endif  // !_MSC_VER
 
 KeyTime::KeyTime()
@@ -1307,7 +1307,7 @@ void KeyTime::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
   key_ = GOOGLE_ULONGLONG(0);
-  ctime_ = 0;
+  last_modified_ = 0;
 }
 
 KeyTime::~KeyTime() {
@@ -1354,7 +1354,7 @@ void KeyTime::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  ZR_(key_, ctime_);
+  ZR_(key_, last_modified_);
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -1381,17 +1381,17 @@ bool KeyTime::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_ctime;
+        if (input->ExpectTag(16)) goto parse_last_modified;
         break;
       }
 
-      // optional int32 ctime = 2;
+      // optional int32 last_modified = 2;
       case 2: {
         if (tag == 16) {
-         parse_ctime:
+         parse_last_modified:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &ctime_)));
+                 input, &last_modified_)));
 
         } else {
           goto handle_unusual;
@@ -1429,9 +1429,9 @@ void KeyTime::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->key(), output);
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->ctime(), output);
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->last_modified(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:proto.KeyTime)
@@ -1445,9 +1445,9 @@ void KeyTime::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->key(), target);
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->ctime(), target);
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->last_modified(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:proto.KeyTime)
@@ -1462,11 +1462,11 @@ int KeyTime::ByteSize() const {
     total_size += 1 + 8;
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->ctime());
+        this->last_modified());
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -1492,8 +1492,8 @@ void KeyTime::MergeFrom(const KeyTime& from) {
   if (from.key() != 0) {
     set_key(from.key());
   }
-  if (from.ctime() != 0) {
-    set_ctime(from.ctime());
+  if (from.last_modified() != 0) {
+    set_last_modified(from.last_modified());
   }
 }
 
@@ -1520,7 +1520,7 @@ void KeyTime::Swap(KeyTime* other) {
 }
 void KeyTime::InternalSwap(KeyTime* other) {
   std::swap(key_, other->key_);
-  std::swap(ctime_, other->ctime_);
+  std::swap(last_modified_, other->last_modified_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -1550,18 +1550,18 @@ void KeyTime::clear_key() {
   // @@protoc_insertion_point(field_set:proto.KeyTime.key)
 }
 
-// optional int32 ctime = 2;
-void KeyTime::clear_ctime() {
-  ctime_ = 0;
+// optional int32 last_modified = 2;
+void KeyTime::clear_last_modified() {
+  last_modified_ = 0;
 }
- ::google::protobuf::int32 KeyTime::ctime() const {
-  // @@protoc_insertion_point(field_get:proto.KeyTime.ctime)
-  return ctime_;
+ ::google::protobuf::int32 KeyTime::last_modified() const {
+  // @@protoc_insertion_point(field_get:proto.KeyTime.last_modified)
+  return last_modified_;
 }
- void KeyTime::set_ctime(::google::protobuf::int32 value) {
+ void KeyTime::set_last_modified(::google::protobuf::int32 value) {
   
-  ctime_ = value;
-  // @@protoc_insertion_point(field_set:proto.KeyTime.ctime)
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:proto.KeyTime.last_modified)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2155,7 +2155,7 @@ void UserQuery::clear_user_id() {
 
 #ifndef _MSC_VER
 const int UserInfo::kUserIdFieldNumber;
-const int UserInfo::kCtimeFieldNumber;
+const int UserInfo::kLastModifiedFieldNumber;
 const int UserInfo::kSubscribeFieldNumber;
 const int UserInfo::kDislikeFieldNumber;
 const int UserInfo::kReadedFieldNumber;
@@ -2184,7 +2184,7 @@ void UserInfo::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
   user_id_ = GOOGLE_ULONGLONG(0);
-  ctime_ = 0;
+  last_modified_ = 0;
 }
 
 UserInfo::~UserInfo() {
@@ -2224,7 +2224,7 @@ UserInfo* UserInfo::New(::google::protobuf::Arena* arena) const {
 
 void UserInfo::Clear() {
   user_id_ = GOOGLE_ULONGLONG(0);
-  ctime_ = 0;
+  last_modified_ = 0;
   subscribe_.Clear();
   dislike_.Clear();
   readed_.Clear();
@@ -2251,17 +2251,17 @@ bool UserInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(16)) goto parse_ctime;
+        if (input->ExpectTag(16)) goto parse_last_modified;
         break;
       }
 
-      // optional int32 ctime = 2;
+      // optional int32 last_modified = 2;
       case 2: {
         if (tag == 16) {
-         parse_ctime:
+         parse_last_modified:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &ctime_)));
+                 input, &last_modified_)));
 
         } else {
           goto handle_unusual;
@@ -2364,9 +2364,9 @@ void UserInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->user_id(), output);
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->ctime(), output);
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->last_modified(), output);
   }
 
   // repeated .proto.KeyStr subscribe = 3;
@@ -2404,9 +2404,9 @@ void UserInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->user_id(), target);
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->ctime(), target);
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->last_modified(), target);
   }
 
   // repeated .proto.KeyStr subscribe = 3;
@@ -2449,11 +2449,11 @@ int UserInfo::ByteSize() const {
     total_size += 1 + 8;
   }
 
-  // optional int32 ctime = 2;
-  if (this->ctime() != 0) {
+  // optional int32 last_modified = 2;
+  if (this->last_modified() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->ctime());
+        this->last_modified());
   }
 
   // repeated .proto.KeyStr subscribe = 3;
@@ -2515,8 +2515,8 @@ void UserInfo::MergeFrom(const UserInfo& from) {
   if (from.user_id() != 0) {
     set_user_id(from.user_id());
   }
-  if (from.ctime() != 0) {
-    set_ctime(from.ctime());
+  if (from.last_modified() != 0) {
+    set_last_modified(from.last_modified());
   }
 }
 
@@ -2543,7 +2543,7 @@ void UserInfo::Swap(UserInfo* other) {
 }
 void UserInfo::InternalSwap(UserInfo* other) {
   std::swap(user_id_, other->user_id_);
-  std::swap(ctime_, other->ctime_);
+  std::swap(last_modified_, other->last_modified_);
   subscribe_.UnsafeArenaSwap(&other->subscribe_);
   dislike_.UnsafeArenaSwap(&other->dislike_);
   readed_.UnsafeArenaSwap(&other->readed_);
@@ -2577,18 +2577,18 @@ void UserInfo::clear_user_id() {
   // @@protoc_insertion_point(field_set:proto.UserInfo.user_id)
 }
 
-// optional int32 ctime = 2;
-void UserInfo::clear_ctime() {
-  ctime_ = 0;
+// optional int32 last_modified = 2;
+void UserInfo::clear_last_modified() {
+  last_modified_ = 0;
 }
- ::google::protobuf::int32 UserInfo::ctime() const {
-  // @@protoc_insertion_point(field_get:proto.UserInfo.ctime)
-  return ctime_;
+ ::google::protobuf::int32 UserInfo::last_modified() const {
+  // @@protoc_insertion_point(field_get:proto.UserInfo.last_modified)
+  return last_modified_;
 }
- void UserInfo::set_ctime(::google::protobuf::int32 value) {
+ void UserInfo::set_last_modified(::google::protobuf::int32 value) {
   
-  ctime_ = value;
-  // @@protoc_insertion_point(field_set:proto.UserInfo.ctime)
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:proto.UserInfo.last_modified)
 }
 
 // repeated .proto.KeyStr subscribe = 3;

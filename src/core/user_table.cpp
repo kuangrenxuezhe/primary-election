@@ -5,8 +5,8 @@
 
 #include "util.h"
 #include "crc32c.h"
+#include "ahead_log.h"
 #include "glog/logging.h"
-
 #include "proto/record.pb.h"
 #include "proto/service.pb.h"
 
@@ -22,79 +22,79 @@ namespace rsys {
 
     class UserAheadLog: public AheadLog {
       public:
-        UserAheadLog(UserTable* user_table, const std::string& path, 
-            const fver_t& fver): AheadLog(path, kUserAheadLog, fver), user_table_(user_table) {
+        UserAheadLog(UserTable* user_table, const std::string& path)
+          : AheadLog(path, kUserAheadLog, kUserFver), user_table_(user_table) {
         }
 
       public:
-        // ahead log滚存触发器
         virtual Status trigger() {
           if (user_table_->level_table_->deepen())
             return Status::OK();
           return Status::Corruption("Deepen user table");
         }
 
-        // 处理数据回滚
         virtual Status rollback(const std::string& data) {
-          // 数据大小至少一个字节，表示类型
-          if (data.length() <= 1) {
+          if (data.length() <= 1) { // 数据大小至少一个字节，表示类型
             return Status::Corruption("Invalid user info data");
           }
           const char* c_data = data.c_str();
 
           if (kLogTypeAction == data[0]) {
             Action log_action;
-            action_t action;
 
             if (!log_action.ParseFromArray(c_data + 1, data.length() - 1)) {
               return Status::Corruption("Parse user action");
             }
-            glue::structed_action(log_action, action);
+            action_t action;
 
+            glue::structed_action(log_action, action);
             Status status = user_table_->updateAction(log_action.user_id(), action);
             if (status.ok()) {
               return status;
             }
           } else if (kLogTypeSubscribe == data[0]) {
             Subscribe log_subscribe;
-            map_str_t subscribe;
 
             if (!log_subscribe.ParseFromArray(c_data + 1, data.length() - 1)) {
               return Status::Corruption("Parse user subscribe");
             }
+            map_str_t subscribe;
+
             glue::structed_subscribe(log_subscribe, subscribe);
-            
             Status status = user_table_->updateUser(log_subscribe.user_id(), subscribe);
             if (status.ok()) {
               return status;
             }
           } else if (kLogTypeFeedback == data[0]) {
             Feedback log_feedback;
-            id_set_t feedback;
 
             if (!log_feedback.ParseFromArray(c_data + 1, data.length() - 1)) {
               return Status::Corruption("Parse recommend feedback");
             }
+            id_set_t feedback;
+
             glue::structed_feedback(log_feedback, feedback);
- 
             Status status = user_table_->updateFeedback(log_feedback.user_id(), feedback);
             if (status.ok()) {
               return status;
             }
           }
-          return Status::InvalidArgument("Invalid data");
+          std::ostringstream oss;
+
+          oss<<"Invalid user data type, type="<<data[0];
+          return Status::InvalidData(oss.str());
         }
 
       private:
         UserTable* user_table_; 
     };
 
-    class UpdaterBase: public LevelTable<uint64_t, user_info_t>::Updater {
+    class UpdaterBase: public UserTable::level_table_t::Updater {
       public:
         virtual user_info_t* clone(user_info_t* value) {
           user_info_t* user_info = new user_info_t();
 
-          user_info->ctime = value->ctime;
+          user_info->last_modified = value->last_modified;
           user_info->subscribe = user_info->subscribe;
           user_info->dislike = user_info->dislike;
           user_info->readed = user_info->readed;
@@ -178,12 +178,12 @@ namespace rsys {
         const id_set_t& id_set_;
     };
 
-    class UserFetcher: public LevelTable<uint64_t, user_info_t>::Getter {
+    class UserFetcher: public UserTable::level_table_t::Getter {
       public:
         UserFetcher(user_info_t& user_info)
           : user_info_(user_info) { }
         virtual bool copy(user_info_t* user_info) {
-          user_info_.ctime = user_info->ctime;
+          user_info_.last_modified = user_info->last_modified;
           user_info_.subscribe = user_info->subscribe;
           user_info_.dislike = user_info->dislike;
           user_info_.readed = user_info->readed;
@@ -241,9 +241,9 @@ namespace rsys {
         candidate_set_t& cand_set_;
     };
 
-    class EliminateUpdater: public UpdaterBase {
+    class EliminationUpdater: public UpdaterBase {
       public:
-        EliminateUpdater() {
+        EliminationUpdater() {
         }
         virtual bool update(user_info_t* user_info) {
           user_info->readed.clear();
@@ -268,7 +268,7 @@ namespace rsys {
     // 添加user, user_info由外部分配内存, 且不写ahead-log
     Status UserTable::addUser(uint64_t user_id, user_info_t* user_info)
     {
-      user_info->ctime = time(NULL);
+      user_info->last_modified = time(NULL);
       if (!level_table_->add(user_id, user_info)) {
         std::stringstream oss;
 
@@ -320,42 +320,45 @@ namespace rsys {
       return Status::Corruption(oss.str());
     }
 
-    bool UserTable::isObsolete(const user_info_t* user_info)
+    bool UserTable::isObsolete(int32_t last_modified, int32_t ctime)
     {
-      int32_t ctime = time(NULL);
-      if (ctime - user_info->ctime > options_.user_hold_time)
-        return true;
-      return false;
+      return last_modified < ctime - options_.user_hold_time ? true:false;
     }
 
     // 淘汰用户，包括已读，不喜欢和推荐信息
     Status UserTable::eliminate()
     {
+      level_table_t::Iterator iter = level_table_->snapshot();
+      if (!iter.valid()) {
+        return Status::Corruption("Table depth not enough");
+      }
+      int32_t ctime = time(NULL); 
       Status status = Status::OK();
-      LevelTable<uint64_t, user_info_t>::Iterator iter = level_table_->snapshot();
       for (; iter.hasNext(); iter.next()) {
         const user_info_t* user_info = iter.value();
 
         // 用户是否过期
-        if (isObsolete(user_info)) {
-          if (user_info->dislike.size() == 0) {
-            // 若用户没有不喜欢信息则直接删除
-            if (!level_table_->erase(iter.key())) {
-              std::ostringstream oss;
+        if (!isObsolete(user_info->last_modified, ctime)) {
+          continue;
+        }
 
-              oss<<"Eliminate user failed: id="<<std::hex<<iter.key();
-              status = Status::Corruption(oss.str());
-            }
-          } else {
-            EliminateUpdater updater;
+        if (user_info->dislike.size() == 0) {
+          // 若用户没有不喜欢信息则直接删除
+          if (!level_table_->erase(iter.key())) {
+            std::ostringstream oss;
 
-            // 若用户有点击过不喜欢信息则只淘汰已读和推荐结果
-            if (!level_table_->update(iter.key(), updater)) {
-              std::ostringstream oss;
+            oss<<"Eliminate user, user_id=0x"<<std::hex<<iter.key();
+            status = Status::Corruption(oss.str());
+          }
+        } else {
+          EliminationUpdater elimination;
 
-              oss<<"Eliminate user failed: id="<<std::hex<<iter.key();
-              status = Status::Corruption(oss.str());
-            }
+          // 若用户有点击过不喜欢信息则只淘汰已读和推荐结果
+          if (!level_table_->update(iter.key(), elimination)) {
+            std::ostringstream oss;
+
+            oss<<"Eliminate user readed&recommendation, user_id=0x"<<std::hex<<iter.key();
+            status = Status::Corruption(oss.str());
           }
         }
       }
@@ -537,7 +540,7 @@ namespace rsys {
     }
 
     inline AheadLog* UserTable::createAheadLog() {
-      return new UserAheadLog(this, options_.work_path, kUserFver);
+      return new UserAheadLog(this, options_.work_path);
     }
 
     Status UserTable::loadData(const std::string& data) 
@@ -570,12 +573,6 @@ namespace rsys {
 
     Status UserTable::dumpToFile(const std::string& temp_name) 
     {
-      if (level_table_->depth() >= kMinLevel) {
-        if (!level_table_->merge()) {
-          return Status::Corruption("Table merge failed");
-        }
-      }
-
       level_table_t::Iterator iter = level_table_->snapshot();
       if (!iter.valid()) {
         return Status::Corruption("Table depth not enough");

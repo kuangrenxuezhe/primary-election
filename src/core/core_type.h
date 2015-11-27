@@ -28,8 +28,8 @@ namespace rsys {
       IDTYPE_CATEGORY      = 5,
       IDTYPE_CIRCLE        = 6,
       IDTYPE_SRP           = 7,
-      IDTYPE_PROVINCE      = 8,
-      IDTYPE_CITY          = 9,
+      IDTYPE_CITY          = 8,  // 城市值要小于省份，便于排序时排在前面
+      IDTYPE_PROVINCE      = 9,
     };
     typedef enum id_type_ id_type_t;
 
@@ -56,7 +56,7 @@ namespace rsys {
     typedef struct action_ action_t;
 
     struct user_info_ {
-      int32_t          ctime; // 用户最后活跃时间
+      int32_t  last_modified; // 用户最后活跃时间
       map_str_t    subscribe; // 用户订阅的SRP&圈子
       map_str_t      dislike; // 不喜欢新闻集合
       map_time_t      readed; // 已阅新闻集合
@@ -88,10 +88,11 @@ namespace rsys {
     typedef struct candidate_ candidate_t;
 
     struct query_ {
-      int    request_num;
-      int32_t start_time;
-      int32_t   end_time;
-      int        network;
+      int       request_num;
+      int32_t    start_time;
+      int32_t      end_time;
+      int           network;
+      uint64_t region_id[2];
     };
     typedef struct query_ query_t;
 
@@ -109,6 +110,7 @@ namespace rsys {
       void proto_item_info(const item_info_t& structed, proto::ItemInfo& proto);
 
       void structed_item(const Item& proto, item_info_t& structed);
+      void structed_query(const Recommend& proto, query_t& structed);
     } // namespace glue
   } // namespace news
 } // namespace rsys

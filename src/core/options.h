@@ -8,6 +8,10 @@
 namespace rsys {
   namespace news {
     struct Options {
+      // GRPC服务端口，默认：6200
+      int rpc_port;
+      // 服务监控端口，默认：16200
+      int monitor_port;
       // 数据保存目录, 默认当前目录
       std::string    work_path;
       // 表名, 默认："level_table"
@@ -21,6 +25,8 @@ namespace rsys {
       // 新增数据可接受的过期时间
       // 超过过期时间则丢弃, 默认：2天
       int32_t new_item_max_age;
+      // 默认推荐时间, 默认：1天
+      int32_t interval_recommendation;
       // LOG文件过期天数, 单位秒，默认：7天
       int32_t log_expired_days; 
       // 周期性flush，格式：NN/Gap

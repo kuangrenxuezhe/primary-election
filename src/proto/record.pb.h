@@ -401,11 +401,11 @@ class KeyTime : public ::google::protobuf::Message {
   ::google::protobuf::uint64 key() const;
   void set_key(::google::protobuf::uint64 value);
 
-  // optional int32 ctime = 2;
-  void clear_ctime();
-  static const int kCtimeFieldNumber = 2;
-  ::google::protobuf::int32 ctime() const;
-  void set_ctime(::google::protobuf::int32 value);
+  // optional int32 last_modified = 2;
+  void clear_last_modified();
+  static const int kLastModifiedFieldNumber = 2;
+  ::google::protobuf::int32 last_modified() const;
+  void set_last_modified(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:proto.KeyTime)
  private:
@@ -413,7 +413,7 @@ class KeyTime : public ::google::protobuf::Message {
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
   ::google::protobuf::uint64 key_;
-  ::google::protobuf::int32 ctime_;
+  ::google::protobuf::int32 last_modified_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_record_2eproto();
   friend void protobuf_AssignDesc_record_2eproto();
@@ -661,11 +661,11 @@ class UserInfo : public ::google::protobuf::Message {
   ::google::protobuf::uint64 user_id() const;
   void set_user_id(::google::protobuf::uint64 value);
 
-  // optional int32 ctime = 2;
-  void clear_ctime();
-  static const int kCtimeFieldNumber = 2;
-  ::google::protobuf::int32 ctime() const;
-  void set_ctime(::google::protobuf::int32 value);
+  // optional int32 last_modified = 2;
+  void clear_last_modified();
+  static const int kLastModifiedFieldNumber = 2;
+  ::google::protobuf::int32 last_modified() const;
+  void set_last_modified(::google::protobuf::int32 value);
 
   // repeated .proto.KeyStr subscribe = 3;
   int subscribe_size() const;
@@ -725,7 +725,7 @@ class UserInfo : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::proto::KeyStr > dislike_;
   ::google::protobuf::RepeatedPtrField< ::proto::KeyTime > readed_;
   ::google::protobuf::RepeatedPtrField< ::proto::KeyTime > recommended_;
-  ::google::protobuf::int32 ctime_;
+  ::google::protobuf::int32 last_modified_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_record_2eproto();
   friend void protobuf_AssignDesc_record_2eproto();
@@ -1141,18 +1141,18 @@ inline void KeyTime::set_key(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:proto.KeyTime.key)
 }
 
-// optional int32 ctime = 2;
-inline void KeyTime::clear_ctime() {
-  ctime_ = 0;
+// optional int32 last_modified = 2;
+inline void KeyTime::clear_last_modified() {
+  last_modified_ = 0;
 }
-inline ::google::protobuf::int32 KeyTime::ctime() const {
-  // @@protoc_insertion_point(field_get:proto.KeyTime.ctime)
-  return ctime_;
+inline ::google::protobuf::int32 KeyTime::last_modified() const {
+  // @@protoc_insertion_point(field_get:proto.KeyTime.last_modified)
+  return last_modified_;
 }
-inline void KeyTime::set_ctime(::google::protobuf::int32 value) {
+inline void KeyTime::set_last_modified(::google::protobuf::int32 value) {
   
-  ctime_ = value;
-  // @@protoc_insertion_point(field_set:proto.KeyTime.ctime)
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:proto.KeyTime.last_modified)
 }
 
 // -------------------------------------------------------------------
@@ -1266,18 +1266,18 @@ inline void UserInfo::set_user_id(::google::protobuf::uint64 value) {
   // @@protoc_insertion_point(field_set:proto.UserInfo.user_id)
 }
 
-// optional int32 ctime = 2;
-inline void UserInfo::clear_ctime() {
-  ctime_ = 0;
+// optional int32 last_modified = 2;
+inline void UserInfo::clear_last_modified() {
+  last_modified_ = 0;
 }
-inline ::google::protobuf::int32 UserInfo::ctime() const {
-  // @@protoc_insertion_point(field_get:proto.UserInfo.ctime)
-  return ctime_;
+inline ::google::protobuf::int32 UserInfo::last_modified() const {
+  // @@protoc_insertion_point(field_get:proto.UserInfo.last_modified)
+  return last_modified_;
 }
-inline void UserInfo::set_ctime(::google::protobuf::int32 value) {
+inline void UserInfo::set_last_modified(::google::protobuf::int32 value) {
   
-  ctime_ = value;
-  // @@protoc_insertion_point(field_set:proto.UserInfo.ctime)
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:proto.UserInfo.last_modified)
 }
 
 // repeated .proto.KeyStr subscribe = 3;

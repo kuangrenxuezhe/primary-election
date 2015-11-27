@@ -16,8 +16,6 @@
 
 namespace rsys {
   namespace news {
-   
-    class UserAheadLog;
     class UserTable: public TableBase {
       public:
         typedef LevelTable<uint64_t, user_info_t> level_table_t;
@@ -55,14 +53,14 @@ namespace rsys {
         Status filterCandidateSet(uint64_t user_id, candidate_set_t& candset);
 
       protected:
-        bool isObsolete(const user_info_t* user_info);
-
-      protected:
         virtual AheadLog* createAheadLog();
         virtual Status loadData(const std::string& data);
         virtual Status onLoadComplete();
         virtual Status dumpToFile(const std::string& name);
-        
+
+      protected:
+        bool isObsolete(int32_t last_modified, int32_t ctime);
+
       private:
         Options            options_;
         level_table_t* level_table_;        

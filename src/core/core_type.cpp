@@ -39,7 +39,7 @@ namespace rsys {
 
       void glue::structed_user_info(const proto::UserInfo& proto, user_info_t& structed)
       {
-        structed.ctime = proto.ctime();
+        structed.last_modified = proto.last_modified();
         for (int i = 0; i < proto.subscribe_size(); ++i) {
           const proto::KeyStr& pair = proto.subscribe(i);
           structed.subscribe.insert(std::make_pair(pair.key(), pair.str()));
@@ -50,17 +50,17 @@ namespace rsys {
         }
         for (int i = 0; i < proto.readed_size(); ++i) {
           const proto::KeyTime& pair  = proto.readed(i);
-          structed.readed.insert(std::make_pair(pair.key(), pair.ctime()));
+          structed.readed.insert(std::make_pair(pair.key(), pair.last_modified()));
         }
         for (int i = 0; i < proto.recommended_size(); ++i) {
           const proto::KeyTime& pair  = proto.recommended(i);
-          structed.recommended.insert(std::make_pair(pair.key(), pair.ctime()));
+          structed.recommended.insert(std::make_pair(pair.key(), pair.last_modified()));
         }
       }
 
       void glue::proto_user_info(const user_info_t& structed, proto::UserInfo& proto)
       {
-        proto.set_ctime(structed.ctime);
+        proto.set_last_modified(structed.last_modified);
         for (map_str_t::const_iterator citer = structed.subscribe.begin();
             citer != structed.subscribe.end(); ++citer) {
           proto::KeyStr* pair = proto.add_subscribe();
@@ -80,14 +80,14 @@ namespace rsys {
           proto::KeyTime* pair = proto.add_readed();
 
           pair->set_key(citer->first);
-          pair->set_ctime(citer->second);
+          pair->set_last_modified(citer->second);
         }
         for (map_time_t::const_iterator citer = structed.recommended.begin();
             citer != structed.recommended.end(); ++citer) {
           proto::KeyTime* pair = proto.add_recommended();
 
           pair->set_key(citer->first);
-          pair->set_ctime(citer->second);
+          pair->set_last_modified(citer->second);
         }
       }
 
@@ -191,6 +191,14 @@ namespace rsys {
           pair_t value = std::make_pair(proto.circle(i).tag_name(), proto.circle(i).tag_power());
           structed.belongs_to.insert(std::make_pair(id.type_id, value));
         }
+      }
+
+      void glue::structed_query(const Recommend& proto, query_t& structed)
+      {
+        structed.request_num = proto.request_num();
+        structed.start_time = proto.beg_time();
+        structed.end_time = proto.end_time();
+        structed.network = proto.network();
       }
   } // namespace news
 } // namespace rsys
