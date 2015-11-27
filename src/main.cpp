@@ -31,7 +31,13 @@ int main()
   Options opts; 
   CandidateDB* candb;
 
-  Status status = CandidateDB::openDB(opts, &candb); 
+  Status status = Options::fromConf("candb.conf", opts);
+  if (!status.ok()) {
+    fprintf(stderr, "%s\n", status.toString().c_str());
+    return -1;
+  }
+
+  status = CandidateDB::openDB(opts, &candb); 
   if (!status.ok()) {
     fprintf(stderr, "%s\n", status.toString().c_str());
     return -1;
@@ -45,7 +51,7 @@ int main()
   printf("candidate starting successfully"); 
 
   CP_SOCKET_T lis_sock;
-  var_4 ret = cp_listen_socket(lis_sock, 6001);
+  var_4 ret = cp_listen_socket(lis_sock, opts.monitor_port);
   if (ret) {   
     printf("listen monitor error\n");
     return -2; 
