@@ -155,6 +155,10 @@ namespace rsys {
         structed.item_id = proto.item_id();
         structed.publish_time = proto.publish_time();
         structed.power = proto.power();
+        if (proto.item_type() == ITEM_TYPE_VIDEO)
+          structed.item_type = CANDIDATE_TYPE_VIDEO;
+        else
+          structed.item_type = CANDIDATE_TYPE_NORMAL;
         structed.item_type = proto.item_type();
         structed.picture_num = proto.picture_num();
 
