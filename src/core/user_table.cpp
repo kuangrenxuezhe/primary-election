@@ -507,7 +507,7 @@ namespace rsys {
         std::ostringstream oss;
 
         oss << "Obsolete user: " << std::hex << user_id;
-        return Status::InvalidArgument(oss.str());
+        return Status::NotFound(oss.str());
       } 
       HistoryFetcher fetcher(id_set);
 

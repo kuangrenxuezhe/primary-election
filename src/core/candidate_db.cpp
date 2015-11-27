@@ -155,7 +155,7 @@ namespace rsys {
       id_set_t history_set;
 
       status = user_table_->queryHistory(recmd.user_id(), history_set);
-      if (!status.ok()) {
+      if (!status.ok() && !status.isNotFound()) {
         return status;
       }
 
