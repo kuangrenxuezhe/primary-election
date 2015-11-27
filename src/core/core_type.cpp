@@ -158,6 +158,7 @@ namespace rsys {
         structed.item_type = proto.item_type();
         structed.picture_num = proto.picture_num();
 
+        structed.category_id = 0;
         if (proto.category_size() > 0) {
           structed.category_id = proto.category(0).tag_id();
         }
