@@ -74,7 +74,8 @@ namespace rsys {
     };
 
     ItemTable::ItemTable(const Options& opts)
-      : TableBase(opts.work_path, kItemTable, kItemFver), item_window_(NULL), window_lock_(NULL), item_index_(NULL)
+      : TableBase(opts.work_path, kItemTable, kItemFver)
+      , item_window_(NULL), window_lock_(NULL), item_index_(NULL)
     {
       options_ = opts;
 

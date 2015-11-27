@@ -523,10 +523,11 @@ namespace rsys {
     Status UserTable::filterCandidateSet(uint64_t user_id, candidate_set_t& candset)
     {
       if (!level_table_->find(user_id)) {
-        std::ostringstream oss;
-
-        oss << "Obsolete user: " << std::hex << user_id;
-        return Status::NotFound(oss.str());
+        user_info_t* user_info = new user_info_t;
+        Status status = addUser(user_id, user_info);
+        if (!status.ok()) {
+          return status;
+        }
       } 
       CandidateFilter filter(candset);
 
