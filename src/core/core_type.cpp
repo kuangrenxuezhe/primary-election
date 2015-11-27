@@ -159,7 +159,6 @@ namespace rsys {
           structed.item_type = CANDIDATE_TYPE_VIDEO;
         else
           structed.item_type = CANDIDATE_TYPE_NORMAL;
-        structed.item_type = proto.item_type();
         structed.picture_num = proto.picture_num();
 
         structed.category_id = 0;
