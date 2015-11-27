@@ -149,7 +149,7 @@ namespace rsys {
       }
 
       status = user_table_->filterCandidateSet(recmd.user_id(), candidate_set);
-      if (!status.ok()) {
+      if (!status.ok() && !status.isNotFound()) {
         return status;
       }
       id_set_t history_set;
