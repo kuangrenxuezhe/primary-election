@@ -42,7 +42,7 @@ namespace rsys {
         // 添加item, item_info由外部分配内存, 且不写ahead-log
         Status addItem(item_info_t* item_info);
         // 更新用户点击, 且不写ahead-log
-        Status updateAction(const action_t& action);
+        Status updateAction(uint64_t item_id, const action_t& action);
         // 查询item 
         Status queryItem(uint64_t item_id, item_info_t& item_info);
         // 获取候选集合

@@ -12,30 +12,65 @@
 namespace rsys {
   namespace news {
     static const fver_t kItemFver(1, 0);
-    static const std::string kItemAheadLog = "wal-item";
-    static const std::string kItemTable = "table-item.dat";
-
-    static const int32_t kSecondPerHour = 3600;
-    static const int32_t kWindowLockSize = 32;
-
-    // 时间校正因子
-    static const int32_t kTimeFactor = 2*60;
 
     static const char kLogTypeItem   = 'I';
     static const char kLogTypeAction = 'A';
 
+    static const int32_t kSecondPerHour = 3600;
+    static const int32_t kWindowLockSize = 32;
+    // 时间校正因子
+    static const int32_t kTimeFactor = 2*60;
+
+    static const std::string kItemAheadLog = "wal-item";
+    static const std::string kItemTable = "table-item.dat";
+
     class ItemAheadLog: public AheadLog {
       public:
-        ItemAheadLog(const std::string& path, const fver_t& fver)
-          : AheadLog(path, kItemAheadLog, fver) {
+        ItemAheadLog(ItemTable* item_table, const std::string& path)
+          : AheadLog(path, kItemAheadLog, kItemFver), item_table_(item_table) {
           }
         ~ItemAheadLog() {
         }
 
       public:
         virtual Status rollback(const std::string& data) {
+          if (data.length() <= 1) { // 数据大小至少一个字节，表示类型
+            return Status::Corruption("Invalid user info data");
+          }
+          const char* c_data = data.c_str();
+
+          if (kLogTypeAction == data[0]) {
+            Action log_action;
+
+            if (!log_action.ParseFromArray(c_data + 1, data.length() - 1)) {
+              return Status::Corruption("Parse item action");
+            }
+            action_t action;
+
+            glue::structed_action(log_action, action);
+            Status status = item_table_->updateAction(log_action.user_id(), action);
+            if (status.ok()) {
+              return status;
+            }
+          } else if (kLogTypeItem == data[0]) {
+            Item log_item;
+
+            if (!log_item.ParseFromArray(c_data + 1, data.length() -1 )) {
+              return Status::Corruption("Parse item");
+            }
+            item_info_t* item_info = new item_info_t;
+
+            glue::structed_item(log_item, *item_info);
+            Status status = item_table_->addItem(item_info);
+            if (status.ok()) {
+              return status;
+            }
+          }
+ 
           return Status::OK();
         }
+      private:
+        ItemTable* item_table_;
     };
 
     ItemTable::ItemTable(const Options& opts)
@@ -144,7 +179,7 @@ namespace rsys {
       action_t user_action;
       
       glue::structed_action(action, user_action);
-      return updateAction(user_action);
+      return updateAction(action.item_id(), user_action);
     }
 
     Status ItemTable::addItem(item_info_t* item_info)
@@ -225,17 +260,17 @@ namespace rsys {
       return status;
     }
 
-    Status ItemTable::updateAction(const action_t& action)
+    Status ItemTable::updateAction(uint64_t item_id, const action_t& action)
     {
       pthread_mutex_lock(&index_lock_);
-      hash_map_t::iterator iter = item_index_->find(action.item_id);
+      hash_map_t::iterator iter = item_index_->find(item_id);
 
       if (iter == item_index_->end()) {
         std::ostringstream oss;
 
         pthread_mutex_unlock(&index_lock_);
         // 点击了已淘汰的数据则不记录用户点击
-        oss<<"Not found item, id=0x"<<std::hex<<action.item_id;
+        oss<<"Not found item, id=0x"<<std::hex<<item_id;
         return Status::InvalidArgument(oss.str());
       } 
       pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
@@ -286,7 +321,7 @@ namespace rsys {
 
     AheadLog* ItemTable::createAheadLog() 
     {
-      return new ItemAheadLog(options_.work_path, kItemFver);
+      return new ItemAheadLog(this, options_.work_path);
     }
 
     Status ItemTable::loadData(const std::string& data)

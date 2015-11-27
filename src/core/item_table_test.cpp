@@ -47,7 +47,7 @@ SCENARIO("测试item表", "[base]") {
       action_t action;
 
       action.item_id = 1;
-      status = table.updateAction(action);
+      status = table.updateAction(1, action);
       REQUIRE(status.ok());
 
       THEN("状态变化") {
