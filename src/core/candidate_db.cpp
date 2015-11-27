@@ -170,7 +170,7 @@ namespace rsys {
         cset.mutable_base()->add_item_id(iter->item_id);
         cset.mutable_payload()->add_power(iter->power);
         cset.mutable_payload()->add_publish_time(iter->publish_time);
-        cset.mutable_payload()->add_type(iter->item_type);
+        cset.mutable_payload()->add_type((CandidateType)iter->item_type);
         cset.mutable_payload()->add_picture_num(iter->picture_num);
         cset.mutable_payload()->add_category_id(iter->category_id);
       }
