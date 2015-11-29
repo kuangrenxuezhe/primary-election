@@ -1,4 +1,7 @@
 #include "core/candidate_db.h"
+#include <sys/time.h>
+#include "util.h"
+#include "duration.h"
 #include "core/core_type.h"
 #include "glog/logging.h"
 
@@ -7,10 +10,22 @@ namespace rsys {
     static const fver_t kSingletonVer(1,0);
     static const std::string kSingletonName = "/._candb_lock_";
 
+    class DurationLogger: public AutoDuration {
+      public:
+        template<typename... Args>
+          DurationLogger(Duration::Unit unit, Args... args)
+          : AutoDuration(unit, args...) {
+          }
+
+        virtual ~DurationLogger() {
+          LOG(INFO) << info() << ", used: " << duration().count() << "ms";
+        }
+    };
     Status CandidateDB::openDB(const Options& opts, CandidateDB** dbptr)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "OpenDB");
       CandidateDB* c_dbptr = new CandidateDB(opts);
-      
+
       Status status = c_dbptr->lock();
       if (!status.ok()) {
         delete c_dbptr; 
@@ -32,14 +47,16 @@ namespace rsys {
 
     CandidateDB::~CandidateDB() 
     {
+      singleton_.unlock();
       singleton_.close();
       if (user_table_)
         delete user_table_;
       if (item_table_)
         delete item_table_;
+      LOG(INFO) << "CloseDB";
     }
 
- // 单进程锁定
+    // 单进程锁定
     Status CandidateDB::lock()
     {
       Status status = singleton_.create();
@@ -47,7 +64,7 @@ namespace rsys {
         return status;
       }
 
-      status = singleton_.lockfile();
+      status = singleton_.lock();
       if (!status.ok()) {
         return status;
       }
@@ -58,6 +75,7 @@ namespace rsys {
     // 可异步方式，线程安全
     Status CandidateDB::flush()
     {
+      DurationLogger duration(Duration::kMilliSeconds, "Flush");
       Status status = user_table_->eliminate();
       if (!status.ok()) {
         LOG(WARNING)<<status.toString();
@@ -67,10 +85,6 @@ namespace rsys {
         return status;
       }
 
-      status = item_table_->eliminate();
-      if (!status.ok()) {
-        LOG(WARNING)<<status.toString();
-      }
       status = item_table_->flushTable();
       if (!status.ok()) {
         return status;
@@ -81,6 +95,7 @@ namespace rsys {
 
     Status CandidateDB::reload()
     {
+      DurationLogger duration(Duration::kMilliSeconds, "Reload");
       Status status = user_table_->loadTable();
       if (!status.ok()) {
         return status;
@@ -96,32 +111,35 @@ namespace rsys {
 
     Status CandidateDB::findUser(const User& user)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "FindUser: user_id=", user.user_id());
+
       if (user_table_->findUser(user.user_id())) {
         return Status::OK();
       }
-      std::ostringstream oss;
-
-      oss<<"user_id="<<std::hex<<user.user_id();
-      return Status::NotFound(oss.str());
+      return Status::NotFound("user_id=", user.user_id());
     }
 
     Status CandidateDB::addItem(const Item& item)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "AddItem: item_id=", item.item_id());
       return item_table_->addItem(item);
     }
 
     Status CandidateDB::updateSubscribe(const Subscribe& subscribe)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "UpdateSubscribe: user_id=", subscribe.user_id());
       return user_table_->updateSubscribe(subscribe);
     }
 
     Status CandidateDB::updateFeedback(const Feedback& feedback)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "UpdateFeedback: user_id=", feedback.user_id());
       return user_table_->updateFeedback(feedback);
     }
 
     Status CandidateDB::updateAction(const Action& action, Action& updated)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "UpdateAction: user_id=", action.user_id(), ", item_id=", action.item_id());
       Status status = user_table_->updateAction(action, updated);
       if (!status.ok()) {
         return status;
@@ -131,6 +149,7 @@ namespace rsys {
 
     Status CandidateDB::queryCandidateSet(const Recommend& recmd, CandidateSet& cset)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "QueryCandidateSet: ", recmd.user_id());
       query_t query;
       candidate_set_t candidate_set;
 
@@ -143,7 +162,26 @@ namespace rsys {
         query.end_time = recmd.beg_time();
         query.start_time = query.end_time - options_.item_hold_time;
       }
-      Status status = item_table_->queryCandidateSet(query, candidate_set);
+      uint64_t region_id[2];
+      Status status = Status::OK();
+
+      if (!glue::zone_to_region_id(recmd.zone().c_str(), region_id)) {
+        query.region_id = kInvalidRegionID;
+        status = item_table_->queryCandidateSet(query, candidate_set);
+      } else {
+        query.region_id = region_id[1];
+        status = item_table_->queryCandidateSet(query, candidate_set);
+        if (!status.ok()) {
+          return status;
+        }
+        // 对于直辖市只处理城市，因为省份和城市是相同的
+        if (candidate_set.size() <= 0 && region_id[0] != region_id[1])  {
+          // 若城市不存在结果则回退到省份
+          query.region_id = region_id[0];
+          status = item_table_->queryCandidateSet(query, candidate_set);
+        }
+      }
+
       if (!status.ok()) {
         return status;
       }
@@ -159,14 +197,25 @@ namespace rsys {
         return status;
       }
 
+      cset.mutable_base()->mutable_history_id()->Reserve(history_set.size());
       for (id_set_t::iterator iter = history_set.begin(); 
           iter != history_set.end(); ++iter) {
         cset.mutable_base()->add_history_id(*iter);
       }
       cset.mutable_base()->set_user_id(recmd.user_id());
 
+      int total = candidate_set.size();
+      if (recmd.request_num() < (int)candidate_set.size())
+        total = recmd.request_num();
+
+      cset.mutable_base()->mutable_item_id()->Reserve(total);
+      cset.mutable_payload()->mutable_power()->Reserve(total);
+      cset.mutable_payload()->mutable_publish_time()->Reserve(total);
+      cset.mutable_payload()->mutable_category_id()->Reserve(total);
+      cset.mutable_payload()->mutable_picture_num()->Reserve(total);
+      cset.mutable_payload()->mutable_type()->Reserve(total);
       candidate_set_t::iterator iter = candidate_set.begin();
-      for (; iter != candidate_set.end(); ++iter) {
+      for (int i = 0; iter != candidate_set.end() && i < total; ++iter, ++i) {
         cset.mutable_base()->add_item_id(iter->item_id);
         cset.mutable_payload()->add_power(iter->power);
         cset.mutable_payload()->add_publish_time(iter->publish_time);
@@ -181,6 +230,7 @@ namespace rsys {
     // 查询用户是否在用户表中
     Status CandidateDB::queryUserInfo(const proto::UserQuery& query, proto::UserInfo& user_info)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "QueryUserInfo: user_id=", query.user_id());
       user_info_t user;
 
       Status status = user_table_->queryUser(query.user_id(), user);
@@ -196,8 +246,9 @@ namespace rsys {
     // 查询用户是否在用户表中
     Status CandidateDB::queryItemInfo(const proto::ItemQuery& query, proto::ItemInfo& user_info)
     {
+      DurationLogger duration(Duration::kMilliSeconds, "QueryItemInfo: item_id=", query.item_id());
       item_info_t item;
-      
+
       Status status = item_table_->queryItem(query.item_id(), item);
       if (!status.ok()) {
         return status;

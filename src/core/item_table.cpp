@@ -7,8 +7,6 @@
 #include "proto/record.pb.h"
 #include "proto/service.pb.h"
 
-#include <sstream>
-
 namespace rsys {
   namespace news {
     static const fver_t kItemFver(1, 0);
@@ -49,7 +47,7 @@ namespace rsys {
 
             glue::structed_action(log_action, action);
             Status status = item_table_->updateAction(log_action.user_id(), action);
-            if (status.ok()) {
+            if (!status.ok()) {
               return status;
             }
           } else if (kLogTypeItem == data[0]) {
@@ -58,11 +56,17 @@ namespace rsys {
             if (!log_item.ParseFromArray(c_data + 1, data.length() -1 )) {
               return Status::Corruption("Parse item");
             }
+
+            if (item_table_->isObsolete(log_item.publish_time())) {
+              return Status::InvalidData("Obsolete item, item_id=", log_item.item_id(), 
+                  ", publish_time=", timeToString(log_item.publish_time()));
+            }
             item_info_t* item_info = new item_info_t;
 
             glue::structed_item(log_item, *item_info);
             Status status = item_table_->addItem(item_info);
-            if (status.ok()) {
+            if (!status.ok()) {
+              delete item_info;
               return status;
             }
           }
@@ -78,6 +82,9 @@ namespace rsys {
       , item_window_(NULL), window_lock_(NULL), item_index_(NULL)
     {
       options_ = opts;
+
+      if (opts.new_item_max_age > opts.item_hold_time)
+        options_.new_item_max_age = opts.item_hold_time;
 
       //补足一个对齐位置
       window_size_ = opts.item_hold_time/kSecondPerHour + 1; 
@@ -105,7 +112,7 @@ namespace rsys {
       delete item_index_;
       pthread_mutex_destroy(&index_lock_);
     }
-    
+
     // 淘汰item数据
     Status ItemTable::eliminate()
     {
@@ -129,6 +136,11 @@ namespace rsys {
       return Status::OK();
     }
 
+    bool ItemTable::isObsolete(int32_t publish_time) 
+    {
+      return publish_time < window_time_ ? true:false;
+    }
+
     // 计算存储在滑窗内的物理位置
     int ItemTable::windowIndex(int32_t ctime)
     {
@@ -143,10 +155,7 @@ namespace rsys {
 
       serialized_item.append(1, kLogTypeItem);
       if (!item.AppendToString(&serialized_item)) {
-        std::ostringstream oss;
-
-        oss<<"Serialize item"<<", item_id=0x"<<std::hex<<item.item_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Serialize item, item_id=", item.item_id());
       }
 
       Status status = writeAheadLog(serialized_item);
@@ -156,7 +165,12 @@ namespace rsys {
       item_info_t* item_info = new item_info_t; 
 
       glue::structed_item(item, *item_info); 
-      return addItem(item_info);
+      status = addItem(item_info);
+      if (!status.ok()) {
+        delete item_info;
+        return status;
+      }
+      return Status::OK();
     }
 
     // 用户操作状态更新
@@ -166,11 +180,8 @@ namespace rsys {
 
       serialized_action.append(1, kLogTypeAction);
       if (!action.AppendToString(&serialized_action)) {
-        std::ostringstream oss;
-
-        oss<<"Serialize action"<<", user_id=0x"<<action.user_id();
-        oss<<", item_id=0x"<<std::hex<<action.item_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Serialize action, user_id=", action.user_id(), 
+            ", item_id=", action.item_id());
       }
 
       Status status = writeAheadLog(serialized_action);
@@ -185,27 +196,31 @@ namespace rsys {
 
     Status ItemTable::addItem(item_info_t* item_info)
     {
-      int32_t ctime = time(NULL);
+      int32_t ctime = time(NULL) + kSecondPerHour;
 
-      // 判定待保留数据是否越界
+      // 判定待保留数据是否越上界
       // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
-      if (((ctime - options_.item_hold_time) - window_time_) < kSecondPerHour) {
+      if ((ctime - (window_time_ + options_.item_hold_time)) > kSecondPerHour) {
         Status status = eliminate();
-        if (!status.ok())
+        if (!status.ok()) {
           return status;
+        }
       }
 
       // 若新添加数据两天以前的数据则丢弃 
-      if (item_info->publish_time < ctime - options_.new_item_max_age
-          || item_info->publish_time < window_time_) {
-        std::ostringstream oss;
-
-        oss<<"Item too old, id=0x"<<std::hex<<item_info->item_id;
-        oss<<", publish_time="<<timeToString(item_info->publish_time);
-        oss<<", new_item_max_age="<<std::dec<<options_.new_item_max_age;
-        return Status::InvalidArgument(oss.str());
+      if (item_info->publish_time < ctime - options_.new_item_max_age) {
+        return Status::InvalidData("Item too old, id=", item_info->item_id, ", publish_time=", 
+            timeToString(item_info->publish_time), ", new_item_max_age=", options_.new_item_max_age);
       }
+
+      if (item_info->publish_time > ctime) {
+        return Status::InvalidData("Item ahead of time, id=", item_info->item_id, ", publish_time=", 
+            timeToString(item_info->publish_time));
+      }
+      assert(item_info->publish_time >= window_time_);
+
       int index = windowIndex(item_info->publish_time);
+      assert(index >= 0);
 
       pthread_rwlock_wrlock(&window_lock_[index%kWindowLockSize]);
       addToList(item_window_[index], item_info);
@@ -216,9 +231,11 @@ namespace rsys {
 
     void ItemTable::addToList(item_list_t& item_list, item_info_t* item_info)
     {
+      // 按照时间倒序排序，访问时时间倒序访问，这样在获取时间区段内
+      // 指定数量的数据后可以提前终止
       item_list_t::iterator iter = item_list.begin();
       for (; iter != item_list.end(); ++iter) {
-        if (item_info->publish_time > (*iter)->publish_time)
+        if (item_info->publish_time < (*iter)->publish_time)
           continue;
         item_list.insert(iter, item_info);
         break;
@@ -230,7 +247,6 @@ namespace rsys {
     Status ItemTable::addItemIndex(int index, item_info_t* item_info)
     {
       item_index_t item_index;
-      Status status = Status::OK();
 
       item_index.index = index;
       item_index.item_info = item_info;
@@ -239,10 +255,8 @@ namespace rsys {
       hash_map_t::iterator iter = item_index_->find(item_info->item_id);
       if (iter == item_index_->end()) {
         if (!item_index_->insert(std::make_pair(item_info->item_id, item_index)).second) {
-          std::ostringstream oss;
-
-          oss<<"Insert item failed, id="<<std::hex<<item_info->item_id;
-          status = Status::Corruption(oss.str());
+          pthread_mutex_unlock(&index_lock_);
+          return Status::Corruption("Insert item failed, id=", item_info->item_id);
         }
       } else {
         // 删除已插入的item
@@ -250,38 +264,42 @@ namespace rsys {
         item_list_t::iterator iter_list = item_window_[index].begin();
         for (; iter_list != item_window_[index].end(); ++iter_list) {
           if (iter->second.item_info == *iter_list) {
+            delete iter->second.item_info;
             item_window_[index].erase(iter_list);
             break;
           }
         }
+        assert(iter_list != item_window_[index].end());
         pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
         iter->second.item_info = item_info;
       }
       pthread_mutex_unlock(&index_lock_);
 
-      return status;
+      return Status::OK();
     }
 
     Status ItemTable::updateAction(uint64_t item_id, const action_t& action)
     {
       pthread_mutex_lock(&index_lock_);
       hash_map_t::iterator iter = item_index_->find(item_id);
-
       if (iter == item_index_->end()) {
-        std::ostringstream oss;
-
         pthread_mutex_unlock(&index_lock_);
         // 点击了已淘汰的数据则不记录用户点击
-        oss<<"Not found item, id=0x"<<std::hex<<item_id;
-        return Status::InvalidArgument(oss.str());
+        return Status::NotFound("Not found item, id=", item_id);
       } 
       pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
       iter->second.item_info->click_count++;
-      iter->second.item_info->click_time = time(NULL);
+      if (action.action_time > iter->second.item_info->click_time)
+        iter->second.item_info->click_time = action.action_time;
       pthread_rwlock_unlock(&window_lock_[iter->second.index%kWindowLockSize]);
-
       pthread_mutex_unlock(&index_lock_);
+
       return Status::OK();
+    }
+
+    bool ItemTable::isBelongsTo(uint64_t region_id, const map_pair_t& regions)
+    {
+      return regions.find(region_id) == regions.end() ? false:true;
     }
 
     Status ItemTable::queryCandidateSet(const query_t& query, candidate_set_t& candset)
@@ -297,15 +315,27 @@ namespace rsys {
       // 有可能在添加一瞬间window_time发生变更,使得插入的item有可能后移
       // 通过时间校正因子来弥补item后移,可能造成数据丢失的问题
       int start_index = windowIndex(start_time);
-      int end_index = windowIndex(query.end_time + kTimeFactor) + 1;
+      int end_index = windowIndex(query.end_time + kTimeFactor);
 
-      for (int i = start_index; i < end_index; ++i) {
-        pthread_rwlock_wrlock(&window_lock_[i%kWindowLockSize]);
+      assert(start_index >= 0 && start_index < end_index);
+      for (int i = end_index; i >= start_index; --i) {
+        pthread_rwlock_rdlock(&window_lock_[i%kWindowLockSize]);
         item_list_t::iterator iter = item_window_[i].begin();
         for (; iter != item_window_[i].end(); ++iter) {
           if ((*iter)->publish_time < query.start_time
               || (*iter)->publish_time > query.end_time) {
             continue;
+          }
+
+          if (query.network == RECOMMEND_NETWORK_MOBILE) {
+            // 移动网络状态下不推荐视频
+            if ((*iter)->item_type == CANDIDATE_TYPE_VIDEO)
+              continue;
+          }
+
+          if (query.region_id != kInvalidRegionID) {
+            if (!isBelongsTo(query.region_id, (*iter)->region_id))
+              continue;
           }
           candidate_t cand;
 
@@ -315,6 +345,8 @@ namespace rsys {
           cand.picture_num = (*iter)->picture_num;
           cand.category_id = (*iter)->category_id;
           cand.item_type = (*iter)->item_type;
+          cand.belongs_to = (*iter)->belongs_to;
+
           candset.push_back(cand);
         }
         pthread_rwlock_unlock(&window_lock_[i%kWindowLockSize]);
@@ -334,14 +366,22 @@ namespace rsys {
       if (!log_item_info.ParseFromString(data)) {
         return Status::Corruption("Parse item info");
       }
+
+      if (isObsolete(log_item_info.publish_time())) {
+        return Status::InvalidData("Obsolete item, item_id=", log_item_info.item_id(), 
+            ", publish_time=", timeToString(log_item_info.publish_time()));
+      }
       item_info_t* item_info = new item_info_t;
 
       glue::structed_item_info(log_item_info, *item_info);
-
       int index = windowIndex(item_info->publish_time);
 
       addToList(item_window_[index], item_info);
-      return addItemIndex(index, item_info);  
+      Status status = addItemIndex(index, item_info);  
+      if (!status.ok()) {
+        delete item_info;
+      }
+      return status;
     }
 
     Status ItemTable::dumpToFile(const std::string& temp_name)
@@ -386,22 +426,9 @@ namespace rsys {
       hash_map_t::iterator iter = item_index_->find(item_id);
       if (iter == item_index_->end()) {
         pthread_mutex_unlock(&index_lock_);
-        std::ostringstream oss;
-
-        oss<<std::hex<<"item_id=0x"<<item_id;
-        return Status::NotFound(oss.str());
+        return Status::NotFound("item_id=", item_id);
       }
-      item_info.item_id = iter->second.item_info->item_id;
-      item_info.click_count = iter->second.item_info->click_count;
-      item_info.click_time = iter->second.item_info->click_time;
-      item_info.publish_time = iter->second.item_info->publish_time;
-      item_info.power = iter->second.item_info->power;
-      item_info.item_type = iter->second.item_info->item_type;
-      item_info.picture_num = iter->second.item_info->picture_num;
-      item_info.category_id = iter->second.item_info->category_id;
-      item_info.region_id = iter->second.item_info->region_id;
-      item_info.belongs_to = iter->second.item_info->belongs_to;
-
+      item_info = *iter->second.item_info;
       pthread_mutex_unlock(&index_lock_);
       return Status::OK();
     }

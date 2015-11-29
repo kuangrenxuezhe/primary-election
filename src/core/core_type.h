@@ -13,6 +13,8 @@
 
 namespace rsys {
   namespace news {
+    static const uint64_t kInvalidRegionID = 0UL;
+
     typedef std::pair<std::string, float> pair_t;
     typedef std::set<uint64_t>                id_set_t;
     typedef std::map<uint64_t, int32_t>     map_time_t;
@@ -79,12 +81,13 @@ namespace rsys {
     typedef struct item_info_ item_info_t;
 
     struct candidate_ {
-      uint64_t     item_id;
-      float          power;
-      int32_t publish_time;
-      int32_t  category_id;
-      int32_t  picture_num;
-      int32_t    item_type;
+      uint64_t      item_id;
+      float           power;
+      int32_t  publish_time;
+      int32_t   category_id;
+      int32_t   picture_num;
+      int32_t     item_type;
+      map_pair_t belongs_to;
     };
     typedef struct candidate_ candidate_t;
 
@@ -93,7 +96,7 @@ namespace rsys {
       int32_t    start_time;
       int32_t      end_time;
       int           network;
-      uint64_t region_id[2];
+      uint64_t    region_id;
     };
     typedef struct query_ query_t;
 
@@ -111,6 +114,9 @@ namespace rsys {
       void proto_item_info(const item_info_t& structed, proto::ItemInfo& proto);
 
       void structed_item(const Item& proto, item_info_t& structed);
+
+      bool zone_to_region_id(const char* zone, uint64_t region_id[2]);
+      // zone在外部来转换
       void structed_query(const Recommend& proto, query_t& structed);
     } // namespace glue
   } // namespace news

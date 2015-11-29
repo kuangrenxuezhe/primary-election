@@ -48,10 +48,7 @@ namespace rsys {
             action_t action;
 
             glue::structed_action(log_action, action);
-            Status status = user_table_->updateAction(log_action.user_id(), action);
-            if (status.ok()) {
-              return status;
-            }
+            return user_table_->updateAction(log_action.user_id(), action);
           } else if (kLogTypeSubscribe == data[0]) {
             Subscribe log_subscribe;
 
@@ -61,10 +58,7 @@ namespace rsys {
             map_str_t subscribe;
 
             glue::structed_subscribe(log_subscribe, subscribe);
-            Status status = user_table_->updateUser(log_subscribe.user_id(), subscribe);
-            if (status.ok()) {
-              return status;
-            }
+            return user_table_->updateUser(log_subscribe.user_id(), subscribe);
           } else if (kLogTypeFeedback == data[0]) {
             Feedback log_feedback;
 
@@ -74,15 +68,9 @@ namespace rsys {
             id_set_t feedback;
 
             glue::structed_feedback(log_feedback, feedback);
-            Status status = user_table_->updateFeedback(log_feedback.user_id(), feedback);
-            if (status.ok()) {
-              return status;
-            }
+            return user_table_->updateFeedback(log_feedback.user_id(), feedback);
           }
-          std::ostringstream oss;
-
-          oss<<"Invalid user data type, type="<<data[0];
-          return Status::InvalidData(oss.str());
+          return Status::InvalidData("Invalid user data type, type=", data[0]);
         }
 
       private:
@@ -92,15 +80,7 @@ namespace rsys {
     class UpdaterBase: public UserTable::level_table_t::Updater {
       public:
         virtual user_info_t* clone(user_info_t* value) {
-          user_info_t* user_info = new user_info_t();
-
-          user_info->last_modified = value->last_modified;
-          user_info->subscribe = user_info->subscribe;
-          user_info->dislike = user_info->dislike;
-          user_info->readed = user_info->readed;
-          user_info->recommended = user_info->recommended;
-
-          return user_info;
+          return new user_info_t(*value);
         }
     };
 
@@ -183,27 +163,22 @@ namespace rsys {
         UserFetcher(user_info_t& user_info)
           : user_info_(user_info) { }
         virtual bool copy(user_info_t* user_info) {
-          user_info_.last_modified = user_info->last_modified;
-          user_info_.subscribe = user_info->subscribe;
-          user_info_.dislike = user_info->dislike;
-          user_info_.readed = user_info->readed;
-          user_info_.recommended = user_info->recommended;
+          user_info_ = *user_info;
           return true;
         }
       private:
         user_info_t& user_info_;
     };
 
-    class HistoryFetcher: public UpdaterBase {
+    class HistoryFetcher: public UserTable::level_table_t::Getter {
       public:
         HistoryFetcher(id_set_t& id_set)
           : id_set_(id_set) {
           }
 
-        virtual bool update(user_info_t* user_info) {
+        virtual bool copy(user_info_t* user_info) {
           map_time_t::iterator iter = user_info->readed.begin();
           for (; iter != user_info->readed.end(); ++iter) {
-            //TODO: 添加过期判定
             id_set_.insert(iter->first);
           }
           return true;
@@ -212,12 +187,12 @@ namespace rsys {
         id_set_t& id_set_;
     };
 
-    class CandidateFilter: public UpdaterBase {
+    class CandidateFilter: public UserTable::level_table_t::Getter {
       public:
         CandidateFilter(candidate_set_t& cand_set)
-          : cand_set_(cand_set) {
-          }
-        virtual bool update(user_info_t* user_info) {
+          : cand_set_(cand_set) { }
+
+        virtual bool copy(user_info_t* user_info) {
           candidate_set_t::iterator iter = cand_set_.begin();
 
           while(iter != cand_set_.end()) {
@@ -229,11 +204,16 @@ namespace rsys {
               cand_set_.erase(iter++);
               continue;
             }
-            if (user_info->dislike.find(iter->item_id) != user_info->dislike.end()) {
-              cand_set_.erase(iter++);
-              continue;
+            bool is_dislike = false;
+            map_pair_t::iterator iter_find = iter->belongs_to.begin();
+
+            for (; iter_find != iter->belongs_to.end(); ++iter_find) {
+              if (user_info->dislike.find(iter_find->first) != user_info->dislike.end()) {
+                is_dislike = true;
+                break;
+              }
             }
-            ++iter;
+            is_dislike ? cand_set_.erase(iter++): iter++;
           }
           return true;
         }
@@ -269,13 +249,10 @@ namespace rsys {
     Status UserTable::addUser(uint64_t user_id, user_info_t* user_info)
     {
       user_info->last_modified = time(NULL);
-      if (!level_table_->add(user_id, user_info)) {
-        std::stringstream oss;
-
-        oss<<"Insert user, user_id=0x"<<std::hex<<user_id;
-        return Status::Corruption(oss.str());
+      if (level_table_->add(user_id, user_info)) {
+        return Status::OK();
       }
-      return Status::OK();
+      return Status::Corruption("Insert user, user_id=", user_id);
     }
 
     // 增量更新已读新闻
@@ -285,6 +262,7 @@ namespace rsys {
         user_info_t* user_info = new user_info_t;
         Status status = addUser(user_id, user_info);
         if (!status.ok()) {
+          delete user_info;
           return status;
         }
       } 
@@ -293,31 +271,21 @@ namespace rsys {
       if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
-      std::stringstream oss;
-
-      oss<<"Update user action, user_id=0x"<<std::hex<<user_id;
-      oss<<", item_id="<<user_action.item_id;
-      return Status::Corruption(oss.str());
+      return Status::Corruption("Update user action, user_id=", user_id, ", item_id=", user_action.item_id);
     }
 
     // 增量更新已推荐新闻
     Status UserTable::updateFeedback(uint64_t user_id, const id_set_t& id_set)
     {
       if (!level_table_->find(user_id)) {
-        std::ostringstream oss;
-
-        oss<<"user_id=0x"<<std::hex<<user_id;
-        return Status::NotFound(oss.str());
+        return Status::NotFound("Update feedback, user_id=", user_id);
       } 
       CandidateUpdater updater(id_set);
 
       if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
-      std::stringstream oss;
-
-      oss<<"Update recommend feedback, user_id=0x"<<std::hex<<user_id;
-      return Status::Corruption(oss.str());
+      return Status::Corruption("Update feedback, user_id=", user_id);
     }
 
     bool UserTable::isObsolete(int32_t last_modified, int32_t ctime)
@@ -334,6 +302,7 @@ namespace rsys {
       }
       int32_t ctime = time(NULL); 
       Status status = Status::OK();
+
       for (; iter.hasNext(); iter.next()) {
         const user_info_t* user_info = iter.value();
 
@@ -345,20 +314,14 @@ namespace rsys {
         if (user_info->dislike.size() == 0) {
           // 若用户没有不喜欢信息则直接删除
           if (!level_table_->erase(iter.key())) {
-            std::ostringstream oss;
-
-            oss<<"Eliminate user, user_id=0x"<<std::hex<<iter.key();
-            status = Status::Corruption(oss.str());
+            status = Status::Corruption("Eliminate user, user_id=", iter.key());
           }
         } else {
           EliminationUpdater elimination;
 
           // 若用户有点击过不喜欢信息则只淘汰已读和推荐结果
           if (!level_table_->update(iter.key(), elimination)) {
-            std::ostringstream oss;
-
-            oss<<"Eliminate user readed&recommendation, user_id=0x"<<std::hex<<iter.key();
-            status = Status::Corruption(oss.str());
+            status = Status::Corruption("Eliminate user readed&recommendation, user_id=", iter.key());
           }
         }
       }
@@ -372,11 +335,7 @@ namespace rsys {
 
       serialized_subscribe.append(1, kLogTypeSubscribe);
       if (!subscribe.AppendToString(&serialized_subscribe)) {
-        std::ostringstream oss;
-
-        oss<<"Serialize user subscribe";
-        oss<<", user_id=0x"<<std::hex<<subscribe.user_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Serialize user subscribe, user_id=", subscribe.user_id());
       }
 
       Status status = writeAheadLog(serialized_subscribe);
@@ -396,11 +355,7 @@ namespace rsys {
 
       serialized_feedback.append(1, kLogTypeFeedback);
       if (!feedback.AppendToString(&serialized_feedback)) {
-        std::ostringstream oss;
-
-        oss<<"Serialize recommend feedback";
-        oss<<", user_id=0x"<<std::hex<<feedback.user_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Serialize recommend feedback, user_id=", feedback.user_id());
       }
 
       Status status = writeAheadLog(serialized_feedback);
@@ -423,11 +378,7 @@ namespace rsys {
 
       serialized_action.append(1, kLogTypeAction);
       if (!action.AppendToString(&serialized_action)) {
-        std::ostringstream oss;
-
-        oss<<"Serialize user action";
-        oss<<", user_id=0x"<<std::hex<<action.user_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Serialize user action, user_id=", action.user_id());
       }
 
       Status status = writeAheadLog(serialized_action);
@@ -454,6 +405,7 @@ namespace rsys {
         history_set.erase(iter);
       }
 
+      updated.mutable_history_id()->Reserve(history_set.size());
       for (iter = history_set.begin(); iter != history_set.end(); ++iter) {
         updated.add_history_id(*iter);
       }
@@ -473,10 +425,7 @@ namespace rsys {
       if (level_table_->get(user_id, fetcher)) {
         return Status::OK();
       }
-      std::stringstream oss;
-
-      oss<<"user_id=0x"<<std::hex<<user_id;
-      return Status::NotFound(oss.str());
+      return Status::NotFound("Query user, user_id=", user_id);
     }
 
     Status UserTable::updateUser(uint64_t user_id, const map_str_t& subscribe)
@@ -487,6 +436,7 @@ namespace rsys {
 
         Status status = addUser(user_id, user_info);
         if (!status.ok()) {
+          delete user_info;
           return status;
         }
       } 
@@ -495,29 +445,21 @@ namespace rsys {
       if (level_table_->update(user_id, updater)) {
         return Status::OK();
       }
-      std::stringstream oss;
-
-      oss<<"Update user, user_id=0x"<<std::hex<<user_id;
-      return Status::Corruption(oss.str());
+      return Status::Corruption("Update user, user_id=", user_id);
     }
 
     Status UserTable::queryHistory(uint64_t user_id, id_set_t& id_set)
     {
       if (!level_table_->find(user_id)) {
-        std::ostringstream oss;
-
-        oss << "Obsolete user: " << std::hex << user_id;
-        return Status::NotFound(oss.str());
+        return Status::NotFound("Obsolete user: ", user_id);
       } 
       HistoryFetcher fetcher(id_set);
 
-      if (level_table_->update(user_id, fetcher)) {
+      if (level_table_->get(user_id, fetcher)) {
         return Status::OK();
       }
-      std::stringstream oss;
 
-      oss << "Cann`t fetch user history: user_id=" << user_id;
-      return Status::InvalidArgument(oss.str());
+      return Status::NotFound("User history, user_id=", user_id);
     }
 
     Status UserTable::filterCandidateSet(uint64_t user_id, candidate_set_t& candset)
@@ -526,18 +468,16 @@ namespace rsys {
         user_info_t* user_info = new user_info_t;
         Status status = addUser(user_id, user_info);
         if (!status.ok()) {
-          return status;
+          delete user_info;
         }
+        return status;
       } 
       CandidateFilter filter(candset);
 
-      if (level_table_->update(user_id, filter)) {
+      if (level_table_->get(user_id, filter)) {
         return Status::OK();
       }
-      std::stringstream oss;
-
-      oss << "Cann`t filter candidate set: user_id=" << user_id;
-      return Status::InvalidArgument(oss.str());
+      return Status::NotFound("Filter candidate set, user_id=", user_id);
     }
 
     inline AheadLog* UserTable::createAheadLog() {
@@ -555,11 +495,8 @@ namespace rsys {
 
       glue::structed_user_info(log_user_info, *user_info);
       if (!level_table_->add(log_user_info.user_id(), user_info)) {
-        std::ostringstream oss;
-
         delete user_info;
-        oss<<"Insert level table: key=0x"<<std::hex<<log_user_info.user_id();
-        return Status::Corruption(oss.str());
+        return Status::Corruption("Insert level table: key=", log_user_info.user_id());
       }
       return Status::OK();
     }

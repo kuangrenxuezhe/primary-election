@@ -1,6 +1,4 @@
 #include "core/options.h"
-
-#include <sstream>
 #include "libconfig.hh"
 
 namespace rsys {
@@ -51,16 +49,10 @@ namespace rsys {
           opts.flush_timer = "23/day";
       }
       catch(const FileIOException &oex) {
-        std::ostringstream oss;
-
-        oss<<oex.what()<<", file="<<conf;
-        return Status::IOError(oss.str());
+        return Status::IOError(oex.what(), ", file=", conf);
       }
       catch(const ParseException &pex) {
-        std::ostringstream oss;
-
-        oss<<pex.getError()<<", at "<<conf<<":"<<pex.getLine();
-        return Status::Corruption(oss.str());
+        return Status::Corruption(pex.getError(), ", at ", conf, ":", pex.getLine());
       }
       return Status::OK();
     }

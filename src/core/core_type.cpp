@@ -1,5 +1,6 @@
 #include "core/core_type.h"
 #include "util.h"
+#include "glog/logging.h"
 
 namespace rsys {
   namespace news {
@@ -61,6 +62,8 @@ namespace rsys {
       void glue::proto_user_info(const user_info_t& structed, proto::UserInfo& proto)
       {
         proto.set_last_modified(structed.last_modified);
+
+        proto.mutable_subscribe()->Reserve(structed.subscribe.size());
         for (map_str_t::const_iterator citer = structed.subscribe.begin();
             citer != structed.subscribe.end(); ++citer) {
           proto::KeyStr* pair = proto.add_subscribe();
@@ -68,6 +71,8 @@ namespace rsys {
           pair->set_key(citer->first);
           pair->set_str(citer->second);
         }
+
+        proto.mutable_dislike()->Reserve(structed.dislike.size());
         for (map_str_t::const_iterator citer = structed.dislike.begin();
             citer != structed.dislike.end(); ++citer) {
           proto::KeyStr* pair = proto.add_dislike();
@@ -75,6 +80,8 @@ namespace rsys {
           pair->set_key(citer->first);
           pair->set_str(citer->second);
         }
+
+        proto.mutable_readed()->Reserve(structed.readed.size());
         for (map_time_t::const_iterator citer = structed.readed.begin();
             citer != structed.readed.end(); ++citer) {
           proto::KeyTime* pair = proto.add_readed();
@@ -82,6 +89,8 @@ namespace rsys {
           pair->set_key(citer->first);
           pair->set_last_modified(citer->second);
         }
+
+        proto.mutable_recommended()->Reserve(structed.recommended.size());
         for (map_time_t::const_iterator citer = structed.recommended.begin();
             citer != structed.recommended.end(); ++citer) {
           proto::KeyTime* pair = proto.add_recommended();
@@ -128,6 +137,7 @@ namespace rsys {
         proto.set_click_time(structed.click_time);
         proto.set_category_id(structed.category_id);
 
+        proto.mutable_region_id()->Reserve(structed.region_id.size());
         for (map_pair_t::const_iterator iter = structed.region_id.begin();
             iter != structed.region_id.end(); ++iter) {
           proto::KeyPair* pair = proto.add_region_id();
@@ -137,6 +147,7 @@ namespace rsys {
           pair->set_power(iter->second.second);
         }
 
+        proto.mutable_belongs_to()->Reserve(structed.belongs_to.size());
         for (map_pair_t::const_iterator iter = structed.belongs_to.begin();
             iter != structed.belongs_to.end(); ++iter) {
           proto::KeyPair* pair = proto.add_belongs_to();
@@ -195,6 +206,39 @@ namespace rsys {
           pair_t value = std::make_pair(proto.circle(i).tag_name(), proto.circle(i).tag_power());
           structed.belongs_to.insert(std::make_pair(id.type_id, value));
         }
+
+        for (int i = 0; i < proto.zone_size(); ++i) {
+          uint64_t region_id[2];
+
+          if (!zone_to_region_id(proto.zone(i).c_str(), region_id)) {
+            LOG(WARNING) << "Invalid region: " << proto.zone(i);
+          } else {
+            pair_t pair = std::make_pair(proto.zone(i), 1.0f);
+            structed.region_id.insert(std::make_pair(region_id[0], pair));
+            structed.region_id.insert(std::make_pair(region_id[1], pair));
+          }
+        }
+      }
+
+      // 地域格式--省:市
+      bool glue::zone_to_region_id(const char* zone, uint64_t region_id[2])
+      {
+        const char* seperator = strchr(zone, ':'); 
+        if (NULL == seperator) {
+          return false;
+        }
+        type_id_t id;
+
+        id.type_id_component.type = IDTYPE_PROVINCE;
+        id.type_id_component.id = makeID(zone, seperator - zone);
+        region_id[0] = id.type_id;
+
+        seperator++;
+
+        id.type_id_component.type = IDTYPE_CITY;
+        id.type_id_component.id = makeID(seperator, strlen(seperator));
+        region_id[1] = id.type_id;
+        return true;
       }
 
       void glue::structed_query(const Recommend& proto, query_t& structed)

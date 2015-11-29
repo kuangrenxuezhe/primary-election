@@ -183,6 +183,218 @@ SCENARIO("CandidateDB测试", "[base]") {
       }
     }
     delete candb;
+    remove("./wal-item.writing");
+    remove("./wal-user.writing");
   }
+}
+
+TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
+  Options opts;
+  CandidateDB* candb;
+  Status status = CandidateDB::openDB(opts, &candb);
+  if (!status.ok())
+    FAIL(status.toString()); 
+
+  SECTION("findUser") {
+    User user;
+    user.set_user_id(1);
+    Status status = candb->findUser(user);
+    if (!status.isNotFound())
+      FAIL(status.toString());
+
+    user.set_user_id(2);
+    status = candb->findUser(user);
+    if (!status.isNotFound())
+      FAIL(status.toString());
+
+    user.set_user_id(3);
+    status = candb->findUser(user);
+    if (!status.isNotFound())
+      FAIL(status.toString());
+    
+    Subscribe subscribe;
+    subscribe.set_user_id(1);
+    status = candb->updateSubscribe(subscribe);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    Action action;
+    action.set_user_id(2);
+    action.set_item_id(1);
+    status = candb->updateAction(action, action);
+    if (!status.isNotFound()) // item没有添加
+      FAIL(status.toString());
+
+    Recommend query;
+    query.set_user_id(3);
+    CandidateSet candset;
+    status = candb->queryCandidateSet(query, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    user.set_user_id(1);
+    status = candb->findUser(user);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    user.set_user_id(2);
+    status = candb->findUser(user);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    user.set_user_id(3);
+    status = candb->findUser(user);
+    if (!status.ok())
+      FAIL(status.toString());
+  }
+
+  SECTION("addItem") {
+    Item item;
+    item.set_item_id(1);
+    item.set_publish_time(time(NULL));
+    Status status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(2);
+    item.set_publish_time(time(NULL) - opts.item_hold_time);
+    status = candb->addItem(item);
+    if (!status.isInvalidData())
+      FAIL(status.toString());
+
+    item.set_item_id(3);
+    item.set_publish_time(time(NULL) + 3601);
+    status = candb->addItem(item);
+    if (!status.isInvalidData())
+      FAIL(status.toString());
+  }
+  SECTION("updateSubscribe") {
+    Subscribe subscribe;
+    subscribe.set_user_id(10);
+    status = candb->updateSubscribe(subscribe);
+    if (!status.ok())
+      FAIL(status.toString());
+    User user;
+    user.set_user_id(10);
+    status = candb->findUser(user);
+    if (!status.ok())
+      FAIL(status.toString());
+  }
+  SECTION("updateAction") {
+    Item item;
+    item.set_item_id(21);
+    item.set_publish_time(time(NULL));
+    Status status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    Action action;
+    action.set_user_id(20);
+    action.set_item_id(21);
+    action.set_action(ACTION_TYPE_CLICK);
+    status = candb->updateAction(action, action);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(action.history_id_size() == 0);
+
+    item.set_item_id(22);
+    item.set_publish_time(time(NULL));
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    action.Clear();
+    action.set_user_id(20);
+    action.set_item_id(22);
+    action.set_action(ACTION_TYPE_CLICK);
+    status = candb->updateAction(action, action);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(action.history_id_size() == 1);
+  }
+  SECTION("queryCandidateSet") {
+    int32_t ctime = time(NULL);
+    Item item;
+    item.set_item_id(31);
+    item.set_publish_time(ctime - 3);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    item.add_zone("河北:石家庄");
+    Status status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+    
+    item.set_item_id(32);
+    item.set_publish_time(ctime - 2);
+    item.set_item_type(ITEM_TYPE_VIDEO);
+    item.clear_zone();
+    item.add_zone("河北:邢台");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(33);
+    item.set_publish_time(ctime - 1);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    item.clear_zone();
+    item.add_zone("北京:北京");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    Recommend recmd;
+    CandidateSet candset;
+
+    recmd.set_request_num(10);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 3);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    candset.Clear();
+    recmd.set_request_num(2);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 2);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    candset.Clear();
+    recmd.set_request_num(10);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_MOBILE);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 2);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    candset.Clear();
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    recmd.set_zone("河北:石家庄");
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 1);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    candset.Clear();
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    recmd.set_zone("河北:保定");
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 2);
+    REQUIRE(candset.base().history_id_size() == 0);
+  }
+  delete candb;
+  remove("./wal-item.writing");
+  remove("./wal-user.writing");
 }
 

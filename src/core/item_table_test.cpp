@@ -21,6 +21,9 @@ SCENARIO("测试item表", "[base]") {
       THEN("候选集合只有一个item") {
         query_t query;
         candidate_set_t cand_set;
+
+        query.network = RECOMMEND_NETWORK_WIFI;
+        query.region_id = 0UL;
         query.start_time = time(NULL) - 10;
         query.end_time = time(NULL);
 
@@ -55,7 +58,7 @@ SCENARIO("测试item表", "[base]") {
         status = table.queryItem(1, item_info);
         REQUIRE(status.ok());
         REQUIRE(item_info.click_count == 1);
-        REQUIRE(item_info.click_time != 1);
+        REQUIRE(item_info.click_time == 1);
       }
     }
     status = table.flushTable();
@@ -75,7 +78,7 @@ SCENARIO("测试item表", "[base]") {
         status = table.queryItem(1, item_info);
         REQUIRE(status.ok());
         REQUIRE(item_info.click_count == 1);
-        REQUIRE(item_info.click_time != 1);
+        REQUIRE(item_info.click_time == 1);
       }
       remove("./wal-item.writing");
       remove("./table-item.dat");

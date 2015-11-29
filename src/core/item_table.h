@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <set>
 #include <list>
+#include <atomic>
 
 #include "status.h"
 #include "table_base.h"
@@ -55,6 +56,8 @@ namespace rsys {
         virtual Status dumpToFile(const std::string& temp_name);
 
       protected:
+        bool isObsolete(int32_t publish_time);
+        bool isBelongsTo(uint64_t region_id, const map_pair_t& regions);
         // 计算存储在滑窗内的物理位置
         int windowIndex(int32_t ctime);
         Status addItemIndex(int index, item_info_t* item_info);
@@ -63,13 +66,14 @@ namespace rsys {
       private:
         Options               options_;
         int               window_size_; // 滑窗大小
-        int               window_base_; // 滑窗基准位
-        int32_t           window_time_; // 滑窗基准时间
+        std::atomic_int   window_base_; // 滑窗基准位
+        std::atomic_int   window_time_; // 滑窗基准时间
         item_list_t*      item_window_; // 采用循环列表存储item，每个slot表示1小时
         pthread_rwlock_t* window_lock_;
 
         hash_map_t*        item_index_; // 存储item索引
         pthread_mutex_t    index_lock_;
+        friend class      ItemAheadLog;
     };
   }; // namespace news
 }; // namespace rsys
