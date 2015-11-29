@@ -14,6 +14,9 @@ namespace rsys {
     static const char kLogTypeItem   = 'I';
     static const char kLogTypeAction = 'A';
 
+    static const char kTableTypeNormal = 'N';
+    static const char kTableTypeTop    = 'T';
+
     static const int32_t kSecondPerHour = 3600;
     static const int32_t kWindowLockSize = 32;
     // 时间校正因子
@@ -97,6 +100,8 @@ namespace rsys {
       for (int32_t i = 0; i < kWindowLockSize; ++i) {
         pthread_rwlock_init(&window_lock_[i], NULL);
       }
+      pthread_rwlock_init(&top_lock_, NULL);
+
       item_index_ = new hash_map_t();
       item_index_->set_empty_key(0UL);
       pthread_mutex_init(&index_lock_, NULL);
@@ -108,6 +113,8 @@ namespace rsys {
       for (int32_t i = 0; i < kWindowLockSize; ++i) {
         pthread_rwlock_destroy(&window_lock_[i]);
       }
+      pthread_rwlock_destroy(&top_lock_);
+
       delete [] window_lock_;
       delete item_index_;
       pthread_mutex_destroy(&index_lock_);
@@ -118,14 +125,26 @@ namespace rsys {
     {
       int32_t ctime = time(NULL);
 
+      pthread_rwlock_wrlock(&top_lock_);
+      item_list_t::iterator iter = item_top_.begin();
+      while (iter != item_top_.end()) {
+        if (isObsoleteTop((*iter)->publish_time, ctime)) {
+          delete (*iter);
+          item_top_.erase(iter++);
+        } else {
+          ++iter;
+        }
+      }
+      pthread_rwlock_unlock(&top_lock_);
       for (int index = window_base_; window_time_ < ctime - options_.item_hold_time; 
           index = (index + 1)%window_size_) {
         pthread_rwlock_wrlock(&window_lock_[index%kWindowLockSize]);
-        item_list_t::iterator iter = item_window_[index].begin();
+        iter = item_window_[index].begin();
         for (; iter != item_window_[index].end(); ++iter) {
           pthread_mutex_lock(&index_lock_);
           item_index_->erase((*iter)->item_id);
           pthread_mutex_unlock(&index_lock_);
+          delete (*iter);
         }
         pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
 
@@ -139,6 +158,11 @@ namespace rsys {
     bool ItemTable::isObsolete(int32_t publish_time) 
     {
       return publish_time < window_time_ ? true:false;
+    }
+
+    bool ItemTable::isObsoleteTop(int32_t publish_time, int32_t ctime)
+    {
+      return publish_time < ctime - options_.top_item_max_age ? true:false;
     }
 
     // 计算存储在滑窗内的物理位置
@@ -165,7 +189,12 @@ namespace rsys {
       item_info_t* item_info = new item_info_t; 
 
       glue::structed_item(item, *item_info); 
-      status = addItem(item_info);
+      if (item.top_info().top_type() == TOP_TYPE_NONE) {
+        status = addItem(item_info);
+      } else {
+        status = addItemTop(item_info);
+      }
+
       if (!status.ok()) {
         delete item_info;
         return status;
@@ -229,6 +258,15 @@ namespace rsys {
       return addItemIndex(index, item_info);
     }
 
+    Status ItemTable::addItemTop(item_info_t* item_info)
+    {
+      pthread_rwlock_wrlock(&top_lock_);
+      addToList(item_top_, item_info); 
+      pthread_rwlock_unlock(&top_lock_);
+
+      return addItemIndex(-1, item_info);
+    }
+
     void ItemTable::addToList(item_list_t& item_list, item_info_t* item_info)
     {
       // 按照时间倒序排序，访问时时间倒序访问，这样在获取时间区段内
@@ -242,6 +280,20 @@ namespace rsys {
       }
       if (iter == item_list.end())
         item_list.insert(iter, item_info);
+    }
+
+
+    void ItemTable::eraseFromList(item_list_t& item_list, item_info_t* item_info)
+    {
+      item_list_t::iterator iter = item_list.begin();
+      for (; iter != item_list.end(); ++iter) {
+        if ((*iter) == item_info) {
+          delete *iter;
+          item_list.erase(iter);
+          break;
+        }
+      }
+      assert(iter != item_list.end());
     }
 
     Status ItemTable::addItemIndex(int index, item_info_t* item_info)
@@ -259,19 +311,17 @@ namespace rsys {
           return Status::Corruption("Insert item failed, id=", item_info->item_id);
         }
       } else {
-        // 删除已插入的item
-        pthread_rwlock_wrlock(&window_lock_[index%kWindowLockSize]);
-        item_list_t::iterator iter_list = item_window_[index].begin();
-        for (; iter_list != item_window_[index].end(); ++iter_list) {
-          if (iter->second.item_info == *iter_list) {
-            delete iter->second.item_info;
-            item_window_[index].erase(iter_list);
-            break;
-          }
+        if (index < 0) {
+          pthread_rwlock_wrlock(&top_lock_);
+          eraseFromList(item_top_, iter->second.item_info);
+          pthread_rwlock_unlock(&top_lock_);
+        } else {
+          // 删除已插入的item
+          pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
+          eraseFromList(item_window_[iter->second.index], iter->second.item_info);
+          pthread_rwlock_unlock(&window_lock_[iter->second.index%kWindowLockSize]);
+          iter->second.item_info = item_info;
         }
-        assert(iter_list != item_window_[index].end());
-        pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
-        iter->second.item_info = item_info;
       }
       pthread_mutex_unlock(&index_lock_);
 
@@ -287,11 +337,19 @@ namespace rsys {
         // 点击了已淘汰的数据则不记录用户点击
         return Status::NotFound("Not found item, id=", item_id);
       } 
-      pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
-      iter->second.item_info->click_count++;
-      if (action.action_time > iter->second.item_info->click_time)
-        iter->second.item_info->click_time = action.action_time;
-      pthread_rwlock_unlock(&window_lock_[iter->second.index%kWindowLockSize]);
+      if (iter->second.index < 0) {
+        pthread_rwlock_wrlock(&top_lock_);
+        iter->second.item_info->click_count++;
+        if (action.action_time > iter->second.item_info->click_time)
+          iter->second.item_info->click_time = action.action_time;
+        pthread_rwlock_unlock(&top_lock_);
+      } else {
+        pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
+        iter->second.item_info->click_count++;
+        if (action.action_time > iter->second.item_info->click_time)
+          iter->second.item_info->click_time = action.action_time;
+        pthread_rwlock_unlock(&window_lock_[iter->second.index%kWindowLockSize]);
+      }
       pthread_mutex_unlock(&index_lock_);
 
       return Status::OK();
@@ -311,16 +369,23 @@ namespace rsys {
       if (query.start_time < window_time_)
         start_time = window_time_;
 
+      pthread_rwlock_rdlock(&top_lock_);
+      item_list_t::iterator iter = item_top_.begin();
+      for (; iter != item_top_.end(); ++iter) {
+        candset.push_back(*(*iter));
+      }
+      pthread_rwlock_unlock(&top_lock_);
+
       // 由于添加item和淘汰item是并行的
       // 有可能在添加一瞬间window_time发生变更,使得插入的item有可能后移
       // 通过时间校正因子来弥补item后移,可能造成数据丢失的问题
       int start_index = windowIndex(start_time);
       int end_index = windowIndex(query.end_time + kTimeFactor);
 
-      assert(start_index >= 0 && start_index < end_index);
+      assert(start_index >= 0 && start_index <= end_index);
       for (int i = end_index; i >= start_index; --i) {
         pthread_rwlock_rdlock(&window_lock_[i%kWindowLockSize]);
-        item_list_t::iterator iter = item_window_[i].begin();
+        iter = item_window_[i].begin();
         for (; iter != item_window_[i].end(); ++iter) {
           if ((*iter)->publish_time < query.start_time
               || (*iter)->publish_time > query.end_time) {
@@ -337,17 +402,7 @@ namespace rsys {
             if (!isBelongsTo(query.region_id, (*iter)->region_id))
               continue;
           }
-          candidate_t cand;
-
-          cand.item_id = (*iter)->item_id;
-          cand.power = (*iter)->power;
-          cand.publish_time = (*iter)->publish_time;
-          cand.picture_num = (*iter)->picture_num;
-          cand.category_id = (*iter)->category_id;
-          cand.item_type = (*iter)->item_type;
-          cand.belongs_to = (*iter)->belongs_to;
-
-          candset.push_back(cand);
+          candset.push_back(*(*iter));
         }
         pthread_rwlock_unlock(&window_lock_[i%kWindowLockSize]);
       }
@@ -361,27 +416,44 @@ namespace rsys {
 
     Status ItemTable::loadData(const std::string& data)
     {
+      int32_t ctime = time(NULL);
       proto::ItemInfo log_item_info;
+      const char* c_data = data.c_str();
 
-      if (!log_item_info.ParseFromString(data)) {
+      if (!log_item_info.ParseFromArray(c_data + 1, data.length() - 1)) {
         return Status::Corruption("Parse item info");
       }
+      if (kTableTypeTop == data[0]) {
+        if (isObsoleteTop(log_item_info.publish_time(), ctime)) {
+          return Status::InvalidData("Obsolete top item, item_id=", log_item_info.item_id(), 
+              ", publish_time=", timeToString(log_item_info.publish_time()));
+        }
+        item_info_t* item_info = new item_info_t;
 
-      if (isObsolete(log_item_info.publish_time())) {
-        return Status::InvalidData("Obsolete item, item_id=", log_item_info.item_id(), 
-            ", publish_time=", timeToString(log_item_info.publish_time()));
+        glue::structed_item_info(log_item_info, *item_info);
+        Status status = addItemTop(item_info);
+        if (!status.ok()) {
+          delete item_info;
+        }
+        return status;
+      } else if (kTableTypeNormal == data[0]) {
+        if (isObsolete(log_item_info.publish_time())) {
+          return Status::InvalidData("Obsolete item, item_id=", log_item_info.item_id(), 
+              ", publish_time=", timeToString(log_item_info.publish_time()));
+        }
+        item_info_t* item_info = new item_info_t;
+
+        glue::structed_item_info(log_item_info, *item_info);
+        int index = windowIndex(item_info->publish_time);
+
+        addToList(item_window_[index], item_info);
+        Status status = addItemIndex(index, item_info);  
+        if (!status.ok()) {
+          delete item_info;
+        }
+        return status;
       }
-      item_info_t* item_info = new item_info_t;
-
-      glue::structed_item_info(log_item_info, *item_info);
-      int index = windowIndex(item_info->publish_time);
-
-      addToList(item_window_[index], item_info);
-      Status status = addItemIndex(index, item_info);  
-      if (!status.ok()) {
-        delete item_info;
-      }
-      return status;
+      return Status::InvalidData("Invalid user data type, type=", data[0]);
     }
 
     Status ItemTable::dumpToFile(const std::string& temp_name)
@@ -394,17 +466,38 @@ namespace rsys {
       }
       std::string serialized_data;
 
+      pthread_rwlock_rdlock(&top_lock_);
+      item_list_t::iterator iter = item_top_.begin();
+      for (; iter != item_top_.end(); ++iter) {
+        std::string data;
+        proto::ItemInfo log_item_info;
+
+        data.append(1, kTableTypeTop);
+        glue::proto_item_info(*(*iter), log_item_info);
+        if (!log_item_info.AppendToString(&data)) {
+          pthread_rwlock_unlock(&top_lock_);
+          writer.close();
+          return Status::Corruption("Serialize item, item_id=", log_item_info.item_id());
+        }
+      }
+      pthread_rwlock_unlock(&top_lock_);
+
       for (int i = window_base_; i < window_base_ + window_size_; ++i) {
         int index = i%window_size_;
 
         pthread_rwlock_rdlock(&window_lock_[index%kWindowLockSize]);
-        item_list_t::iterator iter = item_window_[index].begin();
+        iter = item_window_[index].begin();
         for (; iter != item_window_[index].end(); ++iter) {
           std::string data;
           proto::ItemInfo log_item_info;
 
+          data.append(1, kTableTypeNormal);
           glue::proto_item_info(*(*iter), log_item_info);
-          data = log_item_info.SerializeAsString();
+          if (!log_item_info.AppendToString(&data)) {
+            pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
+            writer.close();
+            return Status::Corruption("Serialize item, item_id=", log_item_info.item_id());
+          }
           status = writer.write(data);
           if (!status.ok()) {
             pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);

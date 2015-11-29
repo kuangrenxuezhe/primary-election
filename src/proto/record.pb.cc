@@ -190,10 +190,11 @@ void protobuf_AssignDesc_record_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemQuery, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemQuery, _is_default_instance_));
   ItemInfo_descriptor_ = file->message_type(8);
-  static const int ItemInfo_offsets_[10] = {
+  static const int ItemInfo_offsets_[12] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, item_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, power_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, publish_time_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, top_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, item_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, picture_num_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, click_count_),
@@ -201,6 +202,7 @@ void protobuf_AssignDesc_record_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, category_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, region_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, belongs_to_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemInfo, top_),
   };
   ItemInfo_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -288,16 +290,17 @@ void protobuf_AddDesc_record_2eproto() {
     "dislike\030\004 \003(\0132\r.proto.KeyStr\022\036\n\006readed\030\005"
     " \003(\0132\016.proto.KeyTime\022#\n\013recommended\030\006 \003("
     "\0132\016.proto.KeyTime\"\034\n\tItemQuery\022\017\n\007item_i"
-    "d\030\001 \001(\006\"\355\001\n\010ItemInfo\022\017\n\007item_id\030\001 \001(\006\022\r\n"
-    "\005power\030\002 \001(\002\022\024\n\014publish_time\030\003 \001(\005\022\021\n\tit"
-    "em_type\030\004 \001(\005\022\023\n\013picture_num\030\005 \001(\005\022\023\n\013cl"
-    "ick_count\030\006 \001(\005\022\022\n\nclick_time\030\007 \001(\005\022\023\n\013c"
-    "ategory_id\030\010 \001(\005\022!\n\tregion_id\030\t \003(\0132\016.pr"
-    "oto.KeyPair\022\"\n\nbelongs_to\030\n \003(\0132\016.proto."
-    "KeyPair*\202\001\n\004Code\022\013\n\007CODE_OK\020\000\022\022\n\016CODE_NO"
-    "T_FOUND\020\001\022\023\n\017CODE_CORRUPTION\020\002\022\026\n\022CODE_N"
-    "OT_SUPPORTED\020\003\022\031\n\025CODE_INVALID_ARGUMENT\020"
-    "\004\022\021\n\rCODE_IO_ERROR\020\005b\006proto3", 868);
+    "d\030\001 \001(\006\"\234\002\n\010ItemInfo\022\017\n\007item_id\030\001 \001(\006\022\r\n"
+    "\005power\030\002 \001(\002\022\024\n\014publish_time\030\003 \001(\005\022\020\n\010to"
+    "p_type\030\004 \001(\005\022\021\n\titem_type\030\005 \001(\005\022\023\n\013pictu"
+    "re_num\030\006 \001(\005\022\023\n\013click_count\030\007 \001(\005\022\022\n\ncli"
+    "ck_time\030\010 \001(\005\022\023\n\013category_id\030\t \001(\005\022!\n\tre"
+    "gion_id\030\n \003(\0132\016.proto.KeyPair\022\"\n\nbelongs"
+    "_to\030\013 \003(\0132\016.proto.KeyPair\022\033\n\003top\030\014 \003(\0132\016"
+    ".proto.KeyPair*\202\001\n\004Code\022\013\n\007CODE_OK\020\000\022\022\n\016"
+    "CODE_NOT_FOUND\020\001\022\023\n\017CODE_CORRUPTION\020\002\022\026\n"
+    "\022CODE_NOT_SUPPORTED\020\003\022\031\n\025CODE_INVALID_AR"
+    "GUMENT\020\004\022\021\n\rCODE_IO_ERROR\020\005b\006proto3", 915);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "record.proto", &protobuf_RegisterTypes);
   Status::default_instance_ = new Status();
@@ -2943,6 +2946,7 @@ void ItemQuery::clear_item_id() {
 const int ItemInfo::kItemIdFieldNumber;
 const int ItemInfo::kPowerFieldNumber;
 const int ItemInfo::kPublishTimeFieldNumber;
+const int ItemInfo::kTopTypeFieldNumber;
 const int ItemInfo::kItemTypeFieldNumber;
 const int ItemInfo::kPictureNumFieldNumber;
 const int ItemInfo::kClickCountFieldNumber;
@@ -2950,6 +2954,7 @@ const int ItemInfo::kClickTimeFieldNumber;
 const int ItemInfo::kCategoryIdFieldNumber;
 const int ItemInfo::kRegionIdFieldNumber;
 const int ItemInfo::kBelongsToFieldNumber;
+const int ItemInfo::kTopFieldNumber;
 #endif  // !_MSC_VER
 
 ItemInfo::ItemInfo()
@@ -2976,6 +2981,7 @@ void ItemInfo::SharedCtor() {
   item_id_ = GOOGLE_ULONGLONG(0);
   power_ = 0;
   publish_time_ = 0;
+  top_type_ = 0;
   item_type_ = 0;
   picture_num_ = 0;
   click_count_ = 0;
@@ -3035,6 +3041,7 @@ void ItemInfo::Clear() {
 
   region_id_.Clear();
   belongs_to_.Clear();
+  top_.Clear();
 }
 
 bool ItemInfo::MergePartialFromCodedStream(
@@ -3087,13 +3094,28 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(32)) goto parse_item_type;
+        if (input->ExpectTag(32)) goto parse_top_type;
         break;
       }
 
-      // optional int32 item_type = 4;
+      // optional int32 top_type = 4;
       case 4: {
         if (tag == 32) {
+         parse_top_type:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &top_type_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(40)) goto parse_item_type;
+        break;
+      }
+
+      // optional int32 item_type = 5;
+      case 5: {
+        if (tag == 40) {
          parse_item_type:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3102,13 +3124,13 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(40)) goto parse_picture_num;
+        if (input->ExpectTag(48)) goto parse_picture_num;
         break;
       }
 
-      // optional int32 picture_num = 5;
-      case 5: {
-        if (tag == 40) {
+      // optional int32 picture_num = 6;
+      case 6: {
+        if (tag == 48) {
          parse_picture_num:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3117,13 +3139,13 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(48)) goto parse_click_count;
+        if (input->ExpectTag(56)) goto parse_click_count;
         break;
       }
 
-      // optional int32 click_count = 6;
-      case 6: {
-        if (tag == 48) {
+      // optional int32 click_count = 7;
+      case 7: {
+        if (tag == 56) {
          parse_click_count:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3132,13 +3154,13 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(56)) goto parse_click_time;
+        if (input->ExpectTag(64)) goto parse_click_time;
         break;
       }
 
-      // optional int32 click_time = 7;
-      case 7: {
-        if (tag == 56) {
+      // optional int32 click_time = 8;
+      case 8: {
+        if (tag == 64) {
          parse_click_time:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3147,13 +3169,13 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(64)) goto parse_category_id;
+        if (input->ExpectTag(72)) goto parse_category_id;
         break;
       }
 
-      // optional int32 category_id = 8;
-      case 8: {
-        if (tag == 64) {
+      // optional int32 category_id = 9;
+      case 9: {
+        if (tag == 72) {
          parse_category_id:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -3162,13 +3184,13 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(74)) goto parse_region_id;
+        if (input->ExpectTag(82)) goto parse_region_id;
         break;
       }
 
-      // repeated .proto.KeyPair region_id = 9;
-      case 9: {
-        if (tag == 74) {
+      // repeated .proto.KeyPair region_id = 10;
+      case 10: {
+        if (tag == 82) {
          parse_region_id:
           DO_(input->IncrementRecursionDepth());
          parse_loop_region_id:
@@ -3177,15 +3199,15 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(74)) goto parse_loop_region_id;
-        if (input->ExpectTag(82)) goto parse_loop_belongs_to;
+        if (input->ExpectTag(82)) goto parse_loop_region_id;
+        if (input->ExpectTag(90)) goto parse_loop_belongs_to;
         input->UnsafeDecrementRecursionDepth();
         break;
       }
 
-      // repeated .proto.KeyPair belongs_to = 10;
-      case 10: {
-        if (tag == 82) {
+      // repeated .proto.KeyPair belongs_to = 11;
+      case 11: {
+        if (tag == 90) {
           DO_(input->IncrementRecursionDepth());
          parse_loop_belongs_to:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
@@ -3193,7 +3215,23 @@ bool ItemInfo::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(82)) goto parse_loop_belongs_to;
+        if (input->ExpectTag(90)) goto parse_loop_belongs_to;
+        if (input->ExpectTag(98)) goto parse_loop_top;
+        input->UnsafeDecrementRecursionDepth();
+        break;
+      }
+
+      // repeated .proto.KeyPair top = 12;
+      case 12: {
+        if (tag == 98) {
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_top:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_top()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(98)) goto parse_loop_top;
         input->UnsafeDecrementRecursionDepth();
         if (input->ExpectAtEnd()) goto success;
         break;
@@ -3238,41 +3276,52 @@ void ItemInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->publish_time(), output);
   }
 
-  // optional int32 item_type = 4;
+  // optional int32 top_type = 4;
+  if (this->top_type() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->top_type(), output);
+  }
+
+  // optional int32 item_type = 5;
   if (this->item_type() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->item_type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->item_type(), output);
   }
 
-  // optional int32 picture_num = 5;
+  // optional int32 picture_num = 6;
   if (this->picture_num() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->picture_num(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->picture_num(), output);
   }
 
-  // optional int32 click_count = 6;
+  // optional int32 click_count = 7;
   if (this->click_count() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->click_count(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->click_count(), output);
   }
 
-  // optional int32 click_time = 7;
+  // optional int32 click_time = 8;
   if (this->click_time() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->click_time(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->click_time(), output);
   }
 
-  // optional int32 category_id = 8;
+  // optional int32 category_id = 9;
   if (this->category_id() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(8, this->category_id(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->category_id(), output);
   }
 
-  // repeated .proto.KeyPair region_id = 9;
+  // repeated .proto.KeyPair region_id = 10;
   for (unsigned int i = 0, n = this->region_id_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      9, this->region_id(i), output);
+      10, this->region_id(i), output);
   }
 
-  // repeated .proto.KeyPair belongs_to = 10;
+  // repeated .proto.KeyPair belongs_to = 11;
   for (unsigned int i = 0, n = this->belongs_to_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      10, this->belongs_to(i), output);
+      11, this->belongs_to(i), output);
+  }
+
+  // repeated .proto.KeyPair top = 12;
+  for (unsigned int i = 0, n = this->top_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      12, this->top(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:proto.ItemInfo)
@@ -3296,43 +3345,55 @@ void ItemInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->publish_time(), target);
   }
 
-  // optional int32 item_type = 4;
+  // optional int32 top_type = 4;
+  if (this->top_type() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->top_type(), target);
+  }
+
+  // optional int32 item_type = 5;
   if (this->item_type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->item_type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->item_type(), target);
   }
 
-  // optional int32 picture_num = 5;
+  // optional int32 picture_num = 6;
   if (this->picture_num() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->picture_num(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->picture_num(), target);
   }
 
-  // optional int32 click_count = 6;
+  // optional int32 click_count = 7;
   if (this->click_count() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->click_count(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->click_count(), target);
   }
 
-  // optional int32 click_time = 7;
+  // optional int32 click_time = 8;
   if (this->click_time() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->click_time(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->click_time(), target);
   }
 
-  // optional int32 category_id = 8;
+  // optional int32 category_id = 9;
   if (this->category_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(8, this->category_id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->category_id(), target);
   }
 
-  // repeated .proto.KeyPair region_id = 9;
+  // repeated .proto.KeyPair region_id = 10;
   for (unsigned int i = 0, n = this->region_id_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        9, this->region_id(i), target);
+        10, this->region_id(i), target);
   }
 
-  // repeated .proto.KeyPair belongs_to = 10;
+  // repeated .proto.KeyPair belongs_to = 11;
   for (unsigned int i = 0, n = this->belongs_to_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        10, this->belongs_to(i), target);
+        11, this->belongs_to(i), target);
+  }
+
+  // repeated .proto.KeyPair top = 12;
+  for (unsigned int i = 0, n = this->top_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        12, this->top(i), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:proto.ItemInfo)
@@ -3359,42 +3420,49 @@ int ItemInfo::ByteSize() const {
         this->publish_time());
   }
 
-  // optional int32 item_type = 4;
+  // optional int32 top_type = 4;
+  if (this->top_type() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->top_type());
+  }
+
+  // optional int32 item_type = 5;
   if (this->item_type() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->item_type());
   }
 
-  // optional int32 picture_num = 5;
+  // optional int32 picture_num = 6;
   if (this->picture_num() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->picture_num());
   }
 
-  // optional int32 click_count = 6;
+  // optional int32 click_count = 7;
   if (this->click_count() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->click_count());
   }
 
-  // optional int32 click_time = 7;
+  // optional int32 click_time = 8;
   if (this->click_time() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->click_time());
   }
 
-  // optional int32 category_id = 8;
+  // optional int32 category_id = 9;
   if (this->category_id() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
         this->category_id());
   }
 
-  // repeated .proto.KeyPair region_id = 9;
+  // repeated .proto.KeyPair region_id = 10;
   total_size += 1 * this->region_id_size();
   for (int i = 0; i < this->region_id_size(); i++) {
     total_size +=
@@ -3402,12 +3470,20 @@ int ItemInfo::ByteSize() const {
         this->region_id(i));
   }
 
-  // repeated .proto.KeyPair belongs_to = 10;
+  // repeated .proto.KeyPair belongs_to = 11;
   total_size += 1 * this->belongs_to_size();
   for (int i = 0; i < this->belongs_to_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
         this->belongs_to(i));
+  }
+
+  // repeated .proto.KeyPair top = 12;
+  total_size += 1 * this->top_size();
+  for (int i = 0; i < this->top_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->top(i));
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -3432,6 +3508,7 @@ void ItemInfo::MergeFrom(const ItemInfo& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   region_id_.MergeFrom(from.region_id_);
   belongs_to_.MergeFrom(from.belongs_to_);
+  top_.MergeFrom(from.top_);
   if (from.item_id() != 0) {
     set_item_id(from.item_id());
   }
@@ -3440,6 +3517,9 @@ void ItemInfo::MergeFrom(const ItemInfo& from) {
   }
   if (from.publish_time() != 0) {
     set_publish_time(from.publish_time());
+  }
+  if (from.top_type() != 0) {
+    set_top_type(from.top_type());
   }
   if (from.item_type() != 0) {
     set_item_type(from.item_type());
@@ -3483,6 +3563,7 @@ void ItemInfo::InternalSwap(ItemInfo* other) {
   std::swap(item_id_, other->item_id_);
   std::swap(power_, other->power_);
   std::swap(publish_time_, other->publish_time_);
+  std::swap(top_type_, other->top_type_);
   std::swap(item_type_, other->item_type_);
   std::swap(picture_num_, other->picture_num_);
   std::swap(click_count_, other->click_count_);
@@ -3490,6 +3571,7 @@ void ItemInfo::InternalSwap(ItemInfo* other) {
   std::swap(category_id_, other->category_id_);
   region_id_.UnsafeArenaSwap(&other->region_id_);
   belongs_to_.UnsafeArenaSwap(&other->belongs_to_);
+  top_.UnsafeArenaSwap(&other->top_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -3547,7 +3629,21 @@ void ItemInfo::clear_publish_time() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.publish_time)
 }
 
-// optional int32 item_type = 4;
+// optional int32 top_type = 4;
+void ItemInfo::clear_top_type() {
+  top_type_ = 0;
+}
+ ::google::protobuf::int32 ItemInfo::top_type() const {
+  // @@protoc_insertion_point(field_get:proto.ItemInfo.top_type)
+  return top_type_;
+}
+ void ItemInfo::set_top_type(::google::protobuf::int32 value) {
+  
+  top_type_ = value;
+  // @@protoc_insertion_point(field_set:proto.ItemInfo.top_type)
+}
+
+// optional int32 item_type = 5;
 void ItemInfo::clear_item_type() {
   item_type_ = 0;
 }
@@ -3561,7 +3657,7 @@ void ItemInfo::clear_item_type() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.item_type)
 }
 
-// optional int32 picture_num = 5;
+// optional int32 picture_num = 6;
 void ItemInfo::clear_picture_num() {
   picture_num_ = 0;
 }
@@ -3575,7 +3671,7 @@ void ItemInfo::clear_picture_num() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.picture_num)
 }
 
-// optional int32 click_count = 6;
+// optional int32 click_count = 7;
 void ItemInfo::clear_click_count() {
   click_count_ = 0;
 }
@@ -3589,7 +3685,7 @@ void ItemInfo::clear_click_count() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.click_count)
 }
 
-// optional int32 click_time = 7;
+// optional int32 click_time = 8;
 void ItemInfo::clear_click_time() {
   click_time_ = 0;
 }
@@ -3603,7 +3699,7 @@ void ItemInfo::clear_click_time() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.click_time)
 }
 
-// optional int32 category_id = 8;
+// optional int32 category_id = 9;
 void ItemInfo::clear_category_id() {
   category_id_ = 0;
 }
@@ -3617,7 +3713,7 @@ void ItemInfo::clear_category_id() {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.category_id)
 }
 
-// repeated .proto.KeyPair region_id = 9;
+// repeated .proto.KeyPair region_id = 10;
 int ItemInfo::region_id_size() const {
   return region_id_.size();
 }
@@ -3647,7 +3743,7 @@ ItemInfo::region_id() const {
   return region_id_;
 }
 
-// repeated .proto.KeyPair belongs_to = 10;
+// repeated .proto.KeyPair belongs_to = 11;
 int ItemInfo::belongs_to_size() const {
   return belongs_to_.size();
 }
@@ -3675,6 +3771,36 @@ const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
 ItemInfo::belongs_to() const {
   // @@protoc_insertion_point(field_list:proto.ItemInfo.belongs_to)
   return belongs_to_;
+}
+
+// repeated .proto.KeyPair top = 12;
+int ItemInfo::top_size() const {
+  return top_.size();
+}
+void ItemInfo::clear_top() {
+  top_.Clear();
+}
+const ::proto::KeyPair& ItemInfo::top(int index) const {
+  // @@protoc_insertion_point(field_get:proto.ItemInfo.top)
+  return top_.Get(index);
+}
+::proto::KeyPair* ItemInfo::mutable_top(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.ItemInfo.top)
+  return top_.Mutable(index);
+}
+::proto::KeyPair* ItemInfo::add_top() {
+  // @@protoc_insertion_point(field_add:proto.ItemInfo.top)
+  return top_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::proto::KeyPair >*
+ItemInfo::mutable_top() {
+  // @@protoc_insertion_point(field_mutable_list:proto.ItemInfo.top)
+  return &top_;
+}
+const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
+ItemInfo::top() const {
+  // @@protoc_insertion_point(field_list:proto.ItemInfo.top)
+  return top_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

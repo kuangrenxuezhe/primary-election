@@ -110,6 +110,7 @@ namespace rsys {
         structed.item_type = proto.item_type();
         structed.picture_num = proto.picture_num();
         structed.category_id = proto.category_id();
+        structed.top_type = proto.top_type();
 
         for (int i = 0; i < proto.region_id_size(); ++i) {
           const proto::KeyPair& pair = proto.region_id(i);
@@ -122,6 +123,12 @@ namespace rsys {
           pair_t value = std::make_pair(pair.name(), pair.power());
 
           structed.belongs_to.insert(std::make_pair(pair.key(), value));
+        }
+        for (int i= 0; i < proto.top_size(); i++) {
+          const proto::KeyPair& pair = proto.top(i);
+          pair_t value = std::make_pair(pair.name(), pair.power());
+
+          structed.top.insert(std::make_pair(pair.key(), value));
         }
       }
 
@@ -136,6 +143,7 @@ namespace rsys {
         proto.set_click_count(structed.click_count);
         proto.set_click_time(structed.click_time);
         proto.set_category_id(structed.category_id);
+        proto.set_top_type(structed.top_type);
 
         proto.mutable_region_id()->Reserve(structed.region_id.size());
         for (map_pair_t::const_iterator iter = structed.region_id.begin();
@@ -151,6 +159,16 @@ namespace rsys {
         for (map_pair_t::const_iterator iter = structed.belongs_to.begin();
             iter != structed.belongs_to.end(); ++iter) {
           proto::KeyPair* pair = proto.add_belongs_to();
+
+          pair->set_key(iter->first);
+          pair->set_name(iter->second.first);
+          pair->set_power(iter->second.second);
+        }
+
+        proto.mutable_top()->Reserve(structed.top.size());
+        for (map_pair_t::const_iterator iter = structed.top.begin();
+            iter != structed.top.end(); ++iter) {
+          proto::KeyPair* pair = proto.add_top();
 
           pair->set_key(iter->first);
           pair->set_name(iter->second.first);
@@ -200,10 +218,20 @@ namespace rsys {
         for (int i = 0; i < proto.circle_size(); ++i) {
           type_id_t id;
 
-          id.type_id_component.type = IDTYPE_CATEGORY;
+          id.type_id_component.type = IDTYPE_CIRCLE;
           id.type_id_component.id = makeID(proto.circle(i).tag_name());
 
           pair_t value = std::make_pair(proto.circle(i).tag_name(), proto.circle(i).tag_power());
+          structed.belongs_to.insert(std::make_pair(id.type_id, value));
+        }
+
+        if (proto.data_source().source_name().length() > 0) {
+          type_id_t id;
+
+          id.type_id_component.type = IDTYPE_SOURCE;
+          id.type_id_component.id = makeID(proto.data_source().source_name());
+
+          pair_t value = std::make_pair(proto.data_source().source_name(), 1.0f);
           structed.belongs_to.insert(std::make_pair(id.type_id, value));
         }
 
@@ -216,6 +244,37 @@ namespace rsys {
             pair_t pair = std::make_pair(proto.zone(i), 1.0f);
             structed.region_id.insert(std::make_pair(region_id[0], pair));
             structed.region_id.insert(std::make_pair(region_id[1], pair));
+          }
+        }
+
+        if (proto.top_info().top_type() == TOP_TYPE_GLOBAL) {
+          type_id_t id;
+
+          id.type_id_component.type = IDTYPE_TOP;
+          id.type_id_component.id = 0;
+
+          pair_t value = std::make_pair("global_top", 1.0f);
+          structed.top.insert(std::make_pair(id.type_id, value));
+        } else if (proto.top_info().top_type() == TOP_TYPE_PARTIAL) {
+          // 置顶标记
+          for (int i = 0; i < proto.top_info().top_srp_id_size(); ++i) {
+            type_id_t id;
+
+            id.type_id_component.type = IDTYPE_SRP;
+            id.type_id_component.id = makeID(proto.top_info().top_srp_id(i));
+
+            pair_t value = std::make_pair(proto.top_info().top_srp_id(i), 1.0f);
+            structed.top.insert(std::make_pair(id.type_id, value));
+          }
+
+          for (int i = 0; i < proto.circle_size(); ++i) {
+            type_id_t id;
+
+            id.type_id_component.type = IDTYPE_CIRCLE;
+            id.type_id_component.id = makeID(proto.circle(i).tag_name());
+
+            pair_t value = std::make_pair(proto.circle(i).tag_name(), proto.circle(i).tag_power());
+            structed.top.insert(std::make_pair(id.type_id, value));
           }
         }
       }

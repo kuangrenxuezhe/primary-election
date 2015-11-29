@@ -146,7 +146,7 @@ SCENARIO("测试User表", "[base]") {
 
       THEN("已推荐数据被过滤掉") {
         candidate_set_t cand_set;
-        candidate_t cand;
+        item_info_t cand;
         cand.item_id = 1;
         cand_set.push_back(cand);
         cand.item_id = 2;

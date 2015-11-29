@@ -888,40 +888,46 @@ class ItemInfo : public ::google::protobuf::Message {
   ::google::protobuf::int32 publish_time() const;
   void set_publish_time(::google::protobuf::int32 value);
 
-  // optional int32 item_type = 4;
+  // optional int32 top_type = 4;
+  void clear_top_type();
+  static const int kTopTypeFieldNumber = 4;
+  ::google::protobuf::int32 top_type() const;
+  void set_top_type(::google::protobuf::int32 value);
+
+  // optional int32 item_type = 5;
   void clear_item_type();
-  static const int kItemTypeFieldNumber = 4;
+  static const int kItemTypeFieldNumber = 5;
   ::google::protobuf::int32 item_type() const;
   void set_item_type(::google::protobuf::int32 value);
 
-  // optional int32 picture_num = 5;
+  // optional int32 picture_num = 6;
   void clear_picture_num();
-  static const int kPictureNumFieldNumber = 5;
+  static const int kPictureNumFieldNumber = 6;
   ::google::protobuf::int32 picture_num() const;
   void set_picture_num(::google::protobuf::int32 value);
 
-  // optional int32 click_count = 6;
+  // optional int32 click_count = 7;
   void clear_click_count();
-  static const int kClickCountFieldNumber = 6;
+  static const int kClickCountFieldNumber = 7;
   ::google::protobuf::int32 click_count() const;
   void set_click_count(::google::protobuf::int32 value);
 
-  // optional int32 click_time = 7;
+  // optional int32 click_time = 8;
   void clear_click_time();
-  static const int kClickTimeFieldNumber = 7;
+  static const int kClickTimeFieldNumber = 8;
   ::google::protobuf::int32 click_time() const;
   void set_click_time(::google::protobuf::int32 value);
 
-  // optional int32 category_id = 8;
+  // optional int32 category_id = 9;
   void clear_category_id();
-  static const int kCategoryIdFieldNumber = 8;
+  static const int kCategoryIdFieldNumber = 9;
   ::google::protobuf::int32 category_id() const;
   void set_category_id(::google::protobuf::int32 value);
 
-  // repeated .proto.KeyPair region_id = 9;
+  // repeated .proto.KeyPair region_id = 10;
   int region_id_size() const;
   void clear_region_id();
-  static const int kRegionIdFieldNumber = 9;
+  static const int kRegionIdFieldNumber = 10;
   const ::proto::KeyPair& region_id(int index) const;
   ::proto::KeyPair* mutable_region_id(int index);
   ::proto::KeyPair* add_region_id();
@@ -930,10 +936,10 @@ class ItemInfo : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
       region_id() const;
 
-  // repeated .proto.KeyPair belongs_to = 10;
+  // repeated .proto.KeyPair belongs_to = 11;
   int belongs_to_size() const;
   void clear_belongs_to();
-  static const int kBelongsToFieldNumber = 10;
+  static const int kBelongsToFieldNumber = 11;
   const ::proto::KeyPair& belongs_to(int index) const;
   ::proto::KeyPair* mutable_belongs_to(int index);
   ::proto::KeyPair* add_belongs_to();
@@ -941,6 +947,18 @@ class ItemInfo : public ::google::protobuf::Message {
       mutable_belongs_to();
   const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
       belongs_to() const;
+
+  // repeated .proto.KeyPair top = 12;
+  int top_size() const;
+  void clear_top();
+  static const int kTopFieldNumber = 12;
+  const ::proto::KeyPair& top(int index) const;
+  ::proto::KeyPair* mutable_top(int index);
+  ::proto::KeyPair* add_top();
+  ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >*
+      mutable_top();
+  const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
+      top() const;
 
   // @@protoc_insertion_point(class_scope:proto.ItemInfo)
  private:
@@ -950,13 +968,15 @@ class ItemInfo : public ::google::protobuf::Message {
   ::google::protobuf::uint64 item_id_;
   float power_;
   ::google::protobuf::int32 publish_time_;
+  ::google::protobuf::int32 top_type_;
   ::google::protobuf::int32 item_type_;
   ::google::protobuf::int32 picture_num_;
   ::google::protobuf::int32 click_count_;
   ::google::protobuf::int32 click_time_;
+  ::google::protobuf::int32 category_id_;
   ::google::protobuf::RepeatedPtrField< ::proto::KeyPair > region_id_;
   ::google::protobuf::RepeatedPtrField< ::proto::KeyPair > belongs_to_;
-  ::google::protobuf::int32 category_id_;
+  ::google::protobuf::RepeatedPtrField< ::proto::KeyPair > top_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_record_2eproto();
   friend void protobuf_AssignDesc_record_2eproto();
@@ -1464,7 +1484,21 @@ inline void ItemInfo::set_publish_time(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.publish_time)
 }
 
-// optional int32 item_type = 4;
+// optional int32 top_type = 4;
+inline void ItemInfo::clear_top_type() {
+  top_type_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::top_type() const {
+  // @@protoc_insertion_point(field_get:proto.ItemInfo.top_type)
+  return top_type_;
+}
+inline void ItemInfo::set_top_type(::google::protobuf::int32 value) {
+  
+  top_type_ = value;
+  // @@protoc_insertion_point(field_set:proto.ItemInfo.top_type)
+}
+
+// optional int32 item_type = 5;
 inline void ItemInfo::clear_item_type() {
   item_type_ = 0;
 }
@@ -1478,7 +1512,7 @@ inline void ItemInfo::set_item_type(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.item_type)
 }
 
-// optional int32 picture_num = 5;
+// optional int32 picture_num = 6;
 inline void ItemInfo::clear_picture_num() {
   picture_num_ = 0;
 }
@@ -1492,7 +1526,7 @@ inline void ItemInfo::set_picture_num(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.picture_num)
 }
 
-// optional int32 click_count = 6;
+// optional int32 click_count = 7;
 inline void ItemInfo::clear_click_count() {
   click_count_ = 0;
 }
@@ -1506,7 +1540,7 @@ inline void ItemInfo::set_click_count(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.click_count)
 }
 
-// optional int32 click_time = 7;
+// optional int32 click_time = 8;
 inline void ItemInfo::clear_click_time() {
   click_time_ = 0;
 }
@@ -1520,7 +1554,7 @@ inline void ItemInfo::set_click_time(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.click_time)
 }
 
-// optional int32 category_id = 8;
+// optional int32 category_id = 9;
 inline void ItemInfo::clear_category_id() {
   category_id_ = 0;
 }
@@ -1534,7 +1568,7 @@ inline void ItemInfo::set_category_id(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:proto.ItemInfo.category_id)
 }
 
-// repeated .proto.KeyPair region_id = 9;
+// repeated .proto.KeyPair region_id = 10;
 inline int ItemInfo::region_id_size() const {
   return region_id_.size();
 }
@@ -1564,7 +1598,7 @@ ItemInfo::region_id() const {
   return region_id_;
 }
 
-// repeated .proto.KeyPair belongs_to = 10;
+// repeated .proto.KeyPair belongs_to = 11;
 inline int ItemInfo::belongs_to_size() const {
   return belongs_to_.size();
 }
@@ -1592,6 +1626,36 @@ inline const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
 ItemInfo::belongs_to() const {
   // @@protoc_insertion_point(field_list:proto.ItemInfo.belongs_to)
   return belongs_to_;
+}
+
+// repeated .proto.KeyPair top = 12;
+inline int ItemInfo::top_size() const {
+  return top_.size();
+}
+inline void ItemInfo::clear_top() {
+  top_.Clear();
+}
+inline const ::proto::KeyPair& ItemInfo::top(int index) const {
+  // @@protoc_insertion_point(field_get:proto.ItemInfo.top)
+  return top_.Get(index);
+}
+inline ::proto::KeyPair* ItemInfo::mutable_top(int index) {
+  // @@protoc_insertion_point(field_mutable:proto.ItemInfo.top)
+  return top_.Mutable(index);
+}
+inline ::proto::KeyPair* ItemInfo::add_top() {
+  // @@protoc_insertion_point(field_add:proto.ItemInfo.top)
+  return top_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >*
+ItemInfo::mutable_top() {
+  // @@protoc_insertion_point(field_mutable_list:proto.ItemInfo.top)
+  return &top_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::proto::KeyPair >&
+ItemInfo::top() const {
+  // @@protoc_insertion_point(field_list:proto.ItemInfo.top)
+  return top_;
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

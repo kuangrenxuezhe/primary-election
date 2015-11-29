@@ -392,6 +392,75 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
       FAIL(status.toString());
     REQUIRE(candset.base().item_id_size() == 2);
     REQUIRE(candset.base().history_id_size() == 0);
+
+    item.set_item_id(34);
+    item.set_publish_time(ctime);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    item.clear_zone();
+    item.add_zone("北京:北京");
+    item.mutable_top_info()->set_top_type(TOP_TYPE_GLOBAL);
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(35);
+    item.set_publish_time(ctime);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    item.clear_zone();
+    item.add_zone("北京:北京");
+    item.mutable_top_info()->set_top_type(TOP_TYPE_PARTIAL);
+    item.mutable_top_info()->add_top_srp_id("1111");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    recmd.Clear();
+    candset.Clear();
+    recmd.set_request_num(10);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 4);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    Subscribe subscribe;
+    subscribe.set_user_id(1);
+    subscribe.add_srp_id("1111");
+    status = candb->updateSubscribe(subscribe);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    recmd.Clear();
+    candset.Clear();
+    recmd.set_request_num(10);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 5);
+    REQUIRE(candset.base().history_id_size() == 0);
+
+    Feedback feedback;
+    feedback.set_user_id(1);
+    feedback.add_item_id(31);
+    feedback.add_item_id(32);
+    status = candb->updateFeedback(feedback);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    recmd.Clear();
+    candset.Clear();
+    recmd.set_request_num(10);
+    recmd.set_user_id(1);
+    recmd.set_network(RECOMMEND_NETWORK_WIFI);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 3);
+    REQUIRE(candset.base().history_id_size() == 0);
   }
   delete candb;
   remove("./wal-item.writing");

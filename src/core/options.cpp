@@ -16,7 +16,7 @@ namespace rsys {
       max_table_level = 3;
       new_item_max_age = 2 * 24 * 60 * 60;
       interval_recommendation = 1 * 24 * 60 * 60;
-      log_expired_days = 7 * 24 * 60 * 60; 
+      top_item_max_age = 1 * 24 * 60 * 60;
       flush_timer = "23/day";
     }
 
@@ -43,8 +43,10 @@ namespace rsys {
           opts.max_table_level = 3;
         if (!parser.lookupValue("new_item_max_age", opts.new_item_max_age))
           opts.new_item_max_age = 2 * 24 * 60 * 60;
-        if (!parser.lookupValue("log_expired_days", opts.log_expired_days))
-          opts.log_expired_days = 7 * 24 * 60 * 60;
+        if (!parser.lookupValue("interval_recommendation", opts.interval_recommendation))
+          opts.interval_recommendation = 1 * 24 * 60 * 60;
+        if (!parser.lookupValue("top_item_max_age", opts.top_item_max_age))
+          opts.top_item_max_age = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("flush_timer", opts.flush_timer))
           opts.flush_timer = "23/day";
       }

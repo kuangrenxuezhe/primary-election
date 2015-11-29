@@ -39,8 +39,8 @@ sources=core/core_type.cpp \
 				service/service_grpc.cpp \
 		    proto/record.pb.cc \
 		    proto/message.pb.cc \
-		    proto/service.pb.cc \
-		    proto/service.grpc.pb.cc
+				proto/service.pb.cc \
+				proto/service.grpc.pb.cc
 
 unittests=unittest.cpp \
 					core/user_table_test.cpp \

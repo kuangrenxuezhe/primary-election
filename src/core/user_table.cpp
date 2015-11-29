@@ -196,24 +196,45 @@ namespace rsys {
           candidate_set_t::iterator iter = cand_set_.begin();
 
           while(iter != cand_set_.end()) {
-            if (user_info->readed.find(iter->item_id) != user_info->readed.end()) {
-              cand_set_.erase(iter++);
-              continue;
-            }
-            if (user_info->recommended.find(iter->item_id) != user_info->recommended.end()) {
-              cand_set_.erase(iter++);
-              continue;
-            }
-            bool is_dislike = false;
-            map_pair_t::iterator iter_find = iter->belongs_to.begin();
+            if (iter->top.size() > 0) {
+              bool is_top = false;
+              map_pair_t::iterator iter_find = iter->top.begin();
 
-            for (; iter_find != iter->belongs_to.end(); ++iter_find) {
-              if (user_info->dislike.find(iter_find->first) != user_info->dislike.end()) {
-                is_dislike = true;
-                break;
+              for (; iter_find != iter->top.end(); ++iter_find) {
+                type_id_t type_id;
+                type_id.type_id = iter_find->first;
+
+
+                if (type_id.type_id_component.type == IDTYPE_TOP) {
+                  is_top = true; // 全局推荐
+                } else {
+                  // 部分推荐，判定是否用户订阅的SRP&圈子
+                  if (user_info->subscribe.find(iter_find->first) != user_info->subscribe.end()) {
+                    is_top = true;
+                  }
+                }
               }
+              is_top ? iter++:cand_set_.erase(iter++);
+            } else {
+              if (user_info->readed.find(iter->item_id) != user_info->readed.end()) {
+                cand_set_.erase(iter++);
+                continue;
+              }
+              if (user_info->recommended.find(iter->item_id) != user_info->recommended.end()) {
+                cand_set_.erase(iter++);
+                continue;
+              }
+              bool is_dislike = false;
+              map_pair_t::iterator iter_find = iter->belongs_to.begin();
+
+              for (; iter_find != iter->belongs_to.end(); ++iter_find) {
+                if (user_info->dislike.find(iter_find->first) != user_info->dislike.end()) {
+                  is_dislike = true;
+                  break;
+                }
+              }
+              is_dislike ? cand_set_.erase(iter++): iter++;
             }
-            is_dislike ? cand_set_.erase(iter++): iter++;
           }
           return true;
         }

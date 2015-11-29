@@ -32,6 +32,7 @@ namespace rsys {
       IDTYPE_SRP           = 7,
       IDTYPE_CITY          = 8,  // 城市值要小于省份，便于排序时排在前面
       IDTYPE_PROVINCE      = 9,
+      IDTYPE_TOP          = 10,
     };
     typedef enum id_type_ id_type_t;
 
@@ -70,26 +71,17 @@ namespace rsys {
       uint64_t       item_id; // itemid
       float            power; // 初选权重
       int32_t	  publish_time; // 发布时间
-      int32_t      item_type; // item类型
-      int32_t    picture_num; // 图片个数
+      int32_t    top_type:16; // 是否置顶
+      int32_t   item_type:16; // item类型
+      int32_t picture_num:16; // 图片个数
+      int32_t category_id:16; // 所属分类, 用于返回
       int32_t    click_count; // 点击计数
       int32_t     click_time; // 最近点击时间
-      int32_t    category_id; // 所属分类, 用于返回
       map_pair_t   region_id; // 所属地区
       map_pair_t  belongs_to; // 所属分类, 圈子, SRP词
+      map_pair_t         top; // 置顶标记
     };
     typedef struct item_info_ item_info_t;
-
-    struct candidate_ {
-      uint64_t      item_id;
-      float           power;
-      int32_t  publish_time;
-      int32_t   category_id;
-      int32_t   picture_num;
-      int32_t     item_type;
-      map_pair_t belongs_to;
-    };
-    typedef struct candidate_ candidate_t;
 
     struct query_ {
       int       request_num;
@@ -100,7 +92,7 @@ namespace rsys {
     };
     typedef struct query_ query_t;
 
-   typedef std::list<candidate_t>     candidate_set_t;
+   typedef std::list<item_info_t>     candidate_set_t;
 
     namespace glue {
       void structed_action(const Action& proto, action_t& structed); 

@@ -56,12 +56,18 @@ namespace rsys {
         virtual Status dumpToFile(const std::string& temp_name);
 
       protected:
-        bool isObsolete(int32_t publish_time);
-        bool isBelongsTo(uint64_t region_id, const map_pair_t& regions);
         // 计算存储在滑窗内的物理位置
         int windowIndex(int32_t ctime);
+        bool isBelongsTo(uint64_t region_id, const map_pair_t& regions);
+
+        bool isObsolete(int32_t publish_time);
+        bool isObsoleteTop(int32_t publish_time, int32_t ctime);
+        
+        Status addItemTop(item_info_t* item_info);
         Status addItemIndex(int index, item_info_t* item_info);
+
         void addToList(item_list_t& item_list, item_info_t* term_info);
+        void eraseFromList(item_list_t& item_list, item_info_t* item_info);
 
       private:
         Options               options_;
@@ -70,6 +76,9 @@ namespace rsys {
         std::atomic_int   window_time_; // 滑窗基准时间
         item_list_t*      item_window_; // 采用循环列表存储item，每个slot表示1小时
         pthread_rwlock_t* window_lock_;
+
+        item_list_t          item_top_; 
+        pthread_rwlock_t     top_lock_;
 
         hash_map_t*        item_index_; // 存储item索引
         pthread_mutex_t    index_lock_;

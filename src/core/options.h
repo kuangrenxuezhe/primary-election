@@ -27,10 +27,10 @@ namespace rsys {
       int32_t new_item_max_age;
       // 默认推荐时间, 默认：1天
       int32_t interval_recommendation;
-      // LOG文件过期天数, 单位秒，默认：7天
-      int32_t log_expired_days; 
       // 用户阅读，推荐记录过期时长, 默认：1天
       int32_t profile_expired_time; 
+      // 置顶数据过期时间，默认：1天
+      int32_t top_item_max_age;
       // 周期性flush，格式：NN/Gap
       //  NN: 有效Gap范围内的数值
       //  Gap：mon 月(1-31), week 周(0-6)，day 天(0-23), hour: 时(0-59)
