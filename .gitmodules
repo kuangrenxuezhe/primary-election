@@ -1,0 +1,3 @@
+[submodule "rsys-util"]
+	path = rsys-util
+	url = git@111.206.69.156:news-rsys/rsys-util.git
