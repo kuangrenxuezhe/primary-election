@@ -4,7 +4,11 @@
 #include <stdint.h>
 #include <set>
 #include <list>
+#ifdef CPP11
 #include <atomic>
+#else
+#include <cstdatomic>
+#endif
 
 #include "status.h"
 #include "table_base.h"
