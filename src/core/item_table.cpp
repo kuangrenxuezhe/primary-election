@@ -335,7 +335,7 @@ namespace rsys {
       if (iter == item_index_->end()) {
         pthread_mutex_unlock(&index_lock_);
         // 点击了已淘汰的数据则不记录用户点击
-        return Status::NotFound("Not found item, id=", item_id);
+        return Status::NotFound("item_id=", item_id);
       } 
       if (iter->second.index < 0) {
         pthread_rwlock_wrlock(&top_lock_);
@@ -381,12 +381,18 @@ namespace rsys {
       // 通过时间校正因子来弥补item后移,可能造成数据丢失的问题
       int start_index = windowIndex(start_time);
       int end_index = windowIndex(query.end_time + kTimeFactor);
+      int logic_end_index = end_index;
 
-      assert(start_index >= 0 && start_index <= end_index);
-      for (int i = end_index; i >= start_index; --i) {
-        pthread_rwlock_rdlock(&window_lock_[i%kWindowLockSize]);
-        iter = item_window_[i].begin();
-        for (; iter != item_window_[i].end(); ++iter) {
+      if (logic_end_index < start_index) {
+        logic_end_index += window_size_;
+      }
+      assert(start_index >= 0 && start_index <= logic_end_index);
+      for (int i = logic_end_index; i >= start_index; --i) {
+        int idx = i%window_size_;
+
+        pthread_rwlock_rdlock(&window_lock_[idx%kWindowLockSize]);
+        iter = item_window_[idx].begin();
+        for (; iter != item_window_[idx].end(); ++iter) {
           if ((*iter)->publish_time < query.start_time
               || (*iter)->publish_time > query.end_time) {
             continue;
@@ -404,7 +410,7 @@ namespace rsys {
           }
           candset.push_back(*(*iter));
         }
-        pthread_rwlock_unlock(&window_lock_[i%kWindowLockSize]);
+        pthread_rwlock_unlock(&window_lock_[idx%kWindowLockSize]);
       }
       return Status::OK();
     }
