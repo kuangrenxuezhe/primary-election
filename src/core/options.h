@@ -27,6 +27,8 @@ namespace rsys {
       int32_t new_item_max_age;
       // 默认推荐时间, 默认：1天
       int32_t interval_recommendation;
+      // 返回候选集最大个数
+      int32_t max_candidate_set_size;
       // 用户阅读，推荐记录过期时长, 默认：1天
       int32_t profile_expired_time; 
       // 置顶数据过期时间，默认：1天

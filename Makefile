@@ -14,8 +14,8 @@ else
 		CFLAGS+= -g -w -O0 -DDEBUG
 endif
 
-ifeq ($(GCC_VERSION), "4.8")
-	CFLAGS+= -std=c++11
+ifeq ($(GCC_VERSION), 4.8)
+	CFLAGS+= -std=c++11 -DCPP11
 else
 	CFLAGS+= -std=c++0x
 endif

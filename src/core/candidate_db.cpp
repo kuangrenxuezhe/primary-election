@@ -149,7 +149,7 @@ namespace rsys {
 
     Status CandidateDB::queryCandidateSet(const Recommend& recmd, CandidateSet& cset)
     {
-      DurationLogger duration(Duration::kMilliSeconds, "QueryCandidateSet: ", recmd.user_id());
+      DurationLogger duration(Duration::kMilliSeconds, "QueryCandidateSet: user_id=", recmd.user_id());
       query_t query;
       candidate_set_t candidate_set;
 
@@ -205,8 +205,8 @@ namespace rsys {
       cset.mutable_base()->set_user_id(recmd.user_id());
 
       int total = candidate_set.size();
-      if (recmd.request_num() < (int)candidate_set.size())
-        total = recmd.request_num();
+      if (options_.max_candidate_set_size < (int)candidate_set.size())
+        total = options_.max_candidate_set_size;
 
       cset.mutable_base()->mutable_item_id()->Reserve(total);
       cset.mutable_payload()->mutable_power()->Reserve(total);
@@ -223,6 +223,7 @@ namespace rsys {
         cset.mutable_payload()->add_picture_num(iter->picture_num);
         cset.mutable_payload()->add_category_id(iter->category_id);
       }
+      duration.appendInfo(", candidate_set_size=", total);
 
       return Status::OK();
     }

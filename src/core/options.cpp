@@ -16,6 +16,7 @@ namespace rsys {
       max_table_level = 3;
       new_item_max_age = 2 * 24 * 60 * 60;
       interval_recommendation = 1 * 24 * 60 * 60;
+      max_candidate_set_size = 5000;
       top_item_max_age = 1 * 24 * 60 * 60;
       flush_timer = "23/day";
     }
@@ -45,6 +46,8 @@ namespace rsys {
           opts.new_item_max_age = 2 * 24 * 60 * 60;
         if (!parser.lookupValue("interval_recommendation", opts.interval_recommendation))
           opts.interval_recommendation = 1 * 24 * 60 * 60;
+        if (!parser.lookupValue("max_candidate_set_size", opts.max_candidate_set_size))
+          opts.max_candidate_set_size = 5000;
         if (!parser.lookupValue("top_item_max_age", opts.top_item_max_age))
           opts.top_item_max_age = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("flush_timer", opts.flush_timer))

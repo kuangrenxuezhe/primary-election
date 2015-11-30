@@ -344,7 +344,6 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     Recommend recmd;
     CandidateSet candset;
 
-    recmd.set_request_num(10);
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_WIFI);
     status = candb->queryCandidateSet(recmd, candset);
@@ -352,19 +351,8 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
       FAIL(status.toString());
     REQUIRE(candset.base().item_id_size() == 3);
     REQUIRE(candset.base().history_id_size() == 0);
-
+    
     candset.Clear();
-    recmd.set_request_num(2);
-    recmd.set_user_id(1);
-    recmd.set_network(RECOMMEND_NETWORK_WIFI);
-    status = candb->queryCandidateSet(recmd, candset);
-    if (!status.ok())
-      FAIL(status.toString());
-    REQUIRE(candset.base().item_id_size() == 2);
-    REQUIRE(candset.base().history_id_size() == 0);
-
-    candset.Clear();
-    recmd.set_request_num(10);
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_MOBILE);
     status = candb->queryCandidateSet(recmd, candset);
@@ -416,7 +404,6 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
 
     recmd.Clear();
     candset.Clear();
-    recmd.set_request_num(10);
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_WIFI);
     status = candb->queryCandidateSet(recmd, candset);
@@ -434,7 +421,6 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
 
     recmd.Clear();
     candset.Clear();
-    recmd.set_request_num(10);
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_WIFI);
     status = candb->queryCandidateSet(recmd, candset);
@@ -453,7 +439,6 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
 
     recmd.Clear();
     candset.Clear();
-    recmd.set_request_num(10);
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_WIFI);
     status = candb->queryCandidateSet(recmd, candset);
