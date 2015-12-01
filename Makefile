@@ -7,7 +7,8 @@ ENABLE_DEBUG?=0
 GCC_VERSION=$(shell g++ -dumpversion)
 
 INCLUDES+=-I./src -I./deps/include  -I./rsys-util/src
-CFLAGS+=-L./deps/lib
+LDFLAGS=-L./deps/lib
+
 ifneq ($(strip $(ENABLE_DEBUG)), 1)
 		CFLAGS+= -g -w -O2
 else
@@ -20,7 +21,7 @@ else
 	CFLAGS+= -std=c++0x
 endif
 
-LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure
+LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags
 
 utils=status.cpp \
 			crc32c.cpp \
@@ -42,6 +43,8 @@ sources=core/core_type.cpp \
 				proto/service.pb.cc \
 				proto/service.grpc.pb.cc
 
+mains=main.cpp
+
 unittests=unittest.cpp \
 					core/user_table_test.cpp \
 					core/item_table_test.cpp \
@@ -49,15 +52,17 @@ unittests=unittest.cpp \
 
 UTILS=$(addprefix ./rsys-util/src/, $(utils))
 SOURCES=$(addprefix ./src/, $(sources))
+
+MAINS=$(addprefix ./src/, $(mains))
 UNITTESTS=$(addprefix ./src/, $(unittests))
 
 all: main unittest 
 
 main:
-	g++ $(CFLAGS) -o bin/candb ./src/main.cpp $(SOURCES) $(UTILS) $(INCLUDES) $(LIBS)
+	g++ -o bin/candb $(CFLAGS) $(SOURCES) $(UTILS) $(MAINS) $(INCLUDES) $(LDFLAGS) $(LIBS)
 
 unittest: 
-	g++ $(CFLAGS) -o bin/unittest $(SOURCES) $(UTILS) $(UNITTESTS) $(INCLUDES) $(LIBS)
+	g++ -o bin/unittest $(CFLAGS) $(SOURCES) $(UTILS) $(UNITTESTS) $(INCLUDES) $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f bin/candb bin/unittest

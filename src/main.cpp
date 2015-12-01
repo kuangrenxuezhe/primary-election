@@ -5,8 +5,14 @@
 //  Created by zhanghl on 14-9-3.
 //  Copyright (c) 2014 CrystalBall. All rights reserved.
 //
+#include <pthread.h>
+#include <grpc++/grpc++.h>
+
+#include "gflags/gflags.h"
+#include "glog/logging.h"
 #include "core/candidate_db.h"
 #include "service/service_glue.h"
+#include "service/service_grpc.h"
 #include "framework/CF_framework_center.h"
 #include "framework/CF_framework_module.h"
 
@@ -26,32 +32,57 @@ enum ErrorLevel {
 };
 
 using namespace rsys::news;
-int main()
+
+struct arg_ {
+  Options*   options;
+  CandidateDB* candb;
+};
+typedef struct arg_ arg_t;
+
+pthread_t grpc_;
+void* service_grpc(void* args);
+DEFINE_string(conf, "conf/candb.conf", "Candidate config file");
+DEFINE_int32(monitor_port, -1, "Monitor port");
+
+int main(int argc, char* argv[])
 {
   Options opts; 
   CandidateDB* candb;
+  Status status = Status::OK();
 
-  Status status = Options::fromConf("candb.conf", opts);
+  google::InitGoogleLogging(argv[0]);
+  gflags::ParseCommandLineFlags(&argc, &argv, false);
+
+  status = Options::fromConf(FLAGS_conf, opts);
   if (!status.ok()) {
-    fprintf(stderr, "%s\n", status.toString().c_str());
+    LOG(FATAL) << status.toString(); 
     return -1;
   }
 
   status = CandidateDB::openDB(opts, &candb); 
   if (!status.ok()) {
-    fprintf(stderr, "%s\n", status.toString().c_str());
+    LOG(FATAL) << status.toString();
     return -1;
   }
+  arg_t arg = {&opts, candb};
+  pthread_create(&grpc_, NULL, service_grpc, &arg);
+
   ServiceGlue serv_glue(candb);
-
   CF_framework_module cd_model;
-  if(cd_model.init_framework((CF_framework_interface*)&serv_glue))
+  if(cd_model.init_framework((CF_framework_interface*)&serv_glue)) {
+    LOG(FATAL) << "Framework start failed";
     return -1;
+  }
+  LOG(INFO) << "Candidate db starting successfully"; 
 
-  printf("candidate starting successfully"); 
+  // 支持可以从参数来指定监控端口
+  int monitor_port = FLAGS_monitor_port;
+  if (monitor_port <= 0)
+    monitor_port = opts.monitor_port;
 
+  //===================monitor=====================================
   CP_SOCKET_T lis_sock;
-  var_4 ret = cp_listen_socket(lis_sock, opts.monitor_port);
+  var_4 ret = cp_listen_socket(lis_sock, monitor_port);
   if (ret) {   
     printf("listen monitor error\n");
     return -2; 
@@ -91,4 +122,24 @@ int main()
     }
   }
   return 0;
+}
+
+using namespace grpc;
+void* service_grpc(void* args)
+{
+  arg_t* arg = (arg_t*)args;
+  ServiceGrpc grpc(arg->candb);
+  ServerBuilder builder;
+
+  char address[300];
+
+  sprintf(address, "0.0.0.0:%d", arg->options->rpc_port);
+  builder.AddListeningPort(std::string(address), grpc::InsecureServerCredentials());
+  builder.RegisterService(&grpc);
+
+  std::unique_ptr<Server> server(builder.BuildAndStart());
+  LOG(INFO) << "GRPC Server listening on:" << arg->options->rpc_port;
+
+  server->Wait();
+  return NULL;
 }
