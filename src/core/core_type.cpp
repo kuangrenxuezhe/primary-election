@@ -184,10 +184,10 @@ namespace rsys {
         structed.item_id = proto.item_id();
         structed.publish_time = proto.publish_time();
         structed.power = proto.power();
+
+        structed.item_type = kNormalItem;
         if (proto.item_type() == ITEM_TYPE_VIDEO)
-          structed.item_type = CANDIDATE_TYPE_VIDEO;
-        else
-          structed.item_type = CANDIDATE_TYPE_NORMAL;
+          structed.item_type = kVideoItem;
         structed.picture_num = proto.picture_num();
 
         structed.category_id = 0;
@@ -238,9 +238,13 @@ namespace rsys {
         for (int i = 0; i < proto.zone_size(); ++i) {
           uint64_t region_id[2];
 
+          if (proto.zone(i).length() <= 0)
+            continue;
+
           if (!zone_to_region_id(proto.zone(i).c_str(), region_id)) {
             LOG(WARNING) << "Invalid region: " << proto.zone(i);
           } else {
+            structed.item_type = kRegionItem;
             pair_t pair = std::make_pair(proto.zone(i), 1.0f);
             structed.region_id.insert(std::make_pair(region_id[0], pair));
             structed.region_id.insert(std::make_pair(region_id[1], pair));
@@ -305,7 +309,16 @@ namespace rsys {
         structed.request_num = proto.request_num();
         structed.start_time = proto.beg_time();
         structed.end_time = proto.end_time();
-        structed.network = proto.network();
+      }
+
+      void glue::copy_to_proto(const item_info_t& item_info, CandidateSet& cset)
+      {
+        cset.mutable_base()->add_item_id(item_info.item_id);
+        cset.mutable_payload()->add_power(item_info.power);
+        cset.mutable_payload()->add_publish_time(item_info.publish_time);
+        cset.mutable_payload()->add_type((CandidateType)item_info.item_type);
+        cset.mutable_payload()->add_picture_num(item_info.picture_num);
+        cset.mutable_payload()->add_category_id(item_info.category_id);
       }
   } // namespace news
 } // namespace rsys

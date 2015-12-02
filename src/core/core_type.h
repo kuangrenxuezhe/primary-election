@@ -36,6 +36,11 @@ namespace rsys {
     };
     typedef enum id_type_ id_type_t;
 
+    enum query_type_ {
+      kNormalItem = 0x00,
+      kVideoItem  = 0x01,
+      kRegionItem = 0x02
+    };
     // ID组成
     struct id_component_ {
       uint64_t          type:5; // ID类型：
@@ -83,11 +88,12 @@ namespace rsys {
     };
     typedef struct item_info_ item_info_t;
 
+    // 0x00 normal, 0x01 video, 0x02 region
     struct query_ {
       int       request_num;
       int32_t    start_time;
       int32_t      end_time;
-      int           network;
+      int         item_type;
       uint64_t    region_id;
     };
     typedef struct query_ query_t;
@@ -110,6 +116,8 @@ namespace rsys {
       bool zone_to_region_id(const char* zone, uint64_t region_id[2]);
       // zone在外部来转换
       void structed_query(const Recommend& proto, query_t& structed);
+
+      void copy_to_proto(const item_info_t& item_info, CandidateSet& cset);
     } // namespace glue
   } // namespace news
 } // namespace rsys

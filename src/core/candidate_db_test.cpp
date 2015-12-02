@@ -244,7 +244,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
 
     user.set_user_id(3);
     status = candb->findUser(user);
-    if (!status.ok())
+    if (!status.isNotFound())
       FAIL(status.toString());
   }
 
@@ -318,7 +318,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     item.set_item_id(31);
     item.set_publish_time(ctime - 3);
     item.set_item_type(ITEM_TYPE_NEWS);
-    item.add_zone("河北:石家庄");
+    //item.add_zone("河北:石家庄");
     Status status = candb->addItem(item);
     if (!status.ok())
       FAIL(status.toString());
@@ -327,7 +327,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     item.set_publish_time(ctime - 2);
     item.set_item_type(ITEM_TYPE_VIDEO);
     item.clear_zone();
-    item.add_zone("河北:邢台");
+    //item.add_zone("河北:邢台");
     status = candb->addItem(item);
     if (!status.ok())
       FAIL(status.toString());
@@ -336,7 +336,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     item.set_publish_time(ctime - 1);
     item.set_item_type(ITEM_TYPE_NEWS);
     item.clear_zone();
-    item.add_zone("北京:北京");
+    //item.add_zone("北京:北京");
     status = candb->addItem(item);
     if (!status.ok())
       FAIL(status.toString());
@@ -368,17 +368,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     status = candb->queryCandidateSet(recmd, candset);
     if (!status.ok())
       FAIL(status.toString());
-    REQUIRE(candset.base().item_id_size() == 1);
-    REQUIRE(candset.base().history_id_size() == 0);
-
-    candset.Clear();
-    recmd.set_user_id(1);
-    recmd.set_network(RECOMMEND_NETWORK_WIFI);
-    recmd.set_zone("河北:保定");
-    status = candb->queryCandidateSet(recmd, candset);
-    if (!status.ok())
-      FAIL(status.toString());
-    REQUIRE(candset.base().item_id_size() == 2);
+    REQUIRE(candset.base().item_id_size() == 3);
     REQUIRE(candset.base().history_id_size() == 0);
 
     item.set_item_id(34);

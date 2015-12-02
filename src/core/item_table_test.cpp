@@ -13,6 +13,7 @@ SCENARIO("测试item表", "[base]") {
 
     WHEN("添加新item时") {
       item_info_t* item = new item_info_t;
+      item->item_type = kNormalItem;
       item->item_id = 1;
       item->publish_time = time(NULL);
       status = table.addItem(item);
@@ -22,7 +23,7 @@ SCENARIO("测试item表", "[base]") {
         query_t query;
         candidate_set_t cand_set;
 
-        query.network = RECOMMEND_NETWORK_WIFI;
+        query.item_type = kNormalItem;
         query.region_id = 0UL;
         query.start_time = time(NULL) - 10;
         query.end_time = time(NULL);

@@ -19,6 +19,8 @@ namespace rsys {
       max_candidate_set_size = 5000;
       top_item_max_age = 1 * 24 * 60 * 60;
       flush_timer = "23/day";
+      max_candidate_video_size = 10;
+      max_candidate_region_size = 10;
     }
 
     Status Options::fromConf(const std::string& conf, Options& opts)
@@ -48,6 +50,10 @@ namespace rsys {
           opts.interval_recommendation = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("max_candidate_set_size", opts.max_candidate_set_size))
           opts.max_candidate_set_size = 5000;
+        if (!parser.lookupValue("max_candidate_video_size", opts.max_candidate_video_size))
+          opts.max_candidate_video_size = 10;
+        if (!parser.lookupValue("max_candidate_region_size", opts.max_candidate_region_size))
+          opts.max_candidate_region_size = 10;
         if (!parser.lookupValue("top_item_max_age", opts.top_item_max_age))
           opts.top_item_max_age = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("flush_timer", opts.flush_timer))

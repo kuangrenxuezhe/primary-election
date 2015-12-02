@@ -27,12 +27,16 @@ namespace rsys {
       int32_t new_item_max_age;
       // 默认推荐时间, 默认：1天
       int32_t interval_recommendation;
-      // 返回候选集最大个数
-      int32_t max_candidate_set_size;
-      // 用户阅读，推荐记录过期时长, 默认：1天
+     // 用户阅读，推荐记录过期时长, 默认：1天
       int32_t profile_expired_time; 
       // 置顶数据过期时间，默认：1天
       int32_t top_item_max_age;
+      // 返回候选集最大个数,默认：5000
+      int32_t max_candidate_set_size;
+      // 返回候选视频最大个数,默认：10
+      int32_t max_candidate_video_size;
+      // 返回候选视频最大个数, 默认：10
+      int32_t max_candidate_region_size;
       // 周期性flush，格式：NN/Gap
       //  NN: 有效Gap范围内的数值
       //  Gap：mon 月(1-31), week 周(0-6)，day 天(0-23), hour: 时(0-59)

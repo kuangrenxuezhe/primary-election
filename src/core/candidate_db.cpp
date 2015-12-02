@@ -151,7 +151,6 @@ namespace rsys {
     {
       DurationLogger duration(Duration::kMilliSeconds, "QueryCandidateSet: user_id=", recmd.user_id());
       query_t query;
-      candidate_set_t candidate_set;
 
       glue::structed_query(recmd, query);
       // 修正时间
@@ -164,31 +163,44 @@ namespace rsys {
       }
       uint64_t region_id[2];
       Status status = Status::OK();
+      candidate_set_t candidate_set, candidate_video_set, candidate_region_set;
 
-      if (!glue::zone_to_region_id(recmd.zone().c_str(), region_id)) {
-        query.region_id = kInvalidRegionID;
-        status = item_table_->queryCandidateSet(query, candidate_set);
-      } else {
-        query.region_id = region_id[1];
-        status = item_table_->queryCandidateSet(query, candidate_set);
-        if (!status.ok()) {
-          return status;
-        }
-        // 对于直辖市只处理城市，因为省份和城市是相同的
-        if (candidate_set.size() <= 0 && region_id[0] != region_id[1])  {
-          // 若城市不存在结果则回退到省份
-          query.region_id = region_id[0];
-          status = item_table_->queryCandidateSet(query, candidate_set);
-        }
-      }
-
+      query.region_id = kInvalidRegionID;
+      // 获取普通新闻数据
+      query.item_type = kNormalItem;
+      status = item_table_->queryCandidateSet(query, candidate_set);
       if (!status.ok()) {
         return status;
       }
+      if (candidate_set.size() > 0) {
+        status = user_table_->filterCandidateSet(recmd.user_id(), candidate_set);
+        if (!status.ok() && !status.isNotFound()) {
+          return status;
+        }
+      }
+ 
+      if (recmd.network() == RECOMMEND_NETWORK_WIFI) {
+        // 获取视频数据 
+        query.item_type = kVideoItem;
+        item_table_->queryCandidateSet(query, candidate_video_set);
+        if (candidate_video_set.size() > 0)
+          user_table_->filterCandidateSet(recmd.user_id(), candidate_video_set);
+      }
 
-      status = user_table_->filterCandidateSet(recmd.user_id(), candidate_set);
-      if (!status.ok() && !status.isNotFound()) {
-        return status;
+      if (recmd.zone().length() > 0) {
+        if (glue::zone_to_region_id(recmd.zone().c_str(), region_id)) {
+          // 获取地域数据
+          query.region_id = region_id[1];
+          item_table_->queryCandidateSet(query, candidate_region_set);
+          // 对于直辖市只处理城市，因为省份和城市是相同的
+          if (candidate_region_set.size() <= 0 && region_id[0] != region_id[1])  {
+            // 若城市不存在结果则回退到省份
+            query.region_id = region_id[0];
+            item_table_->queryCandidateSet(query, candidate_region_set);
+          }
+          if (candidate_region_set.size() > 0)
+            user_table_->filterCandidateSet(recmd.user_id(), candidate_region_set);
+        }
       }
       id_set_t history_set;
 
@@ -204,9 +216,8 @@ namespace rsys {
       }
       cset.mutable_base()->set_user_id(recmd.user_id());
 
-      int total = candidate_set.size();
-      if (options_.max_candidate_set_size < (int)candidate_set.size())
-        total = options_.max_candidate_set_size;
+      // 撮合普通，视频和地域数据
+      int total = options_.max_candidate_set_size;
 
       cset.mutable_base()->mutable_item_id()->Reserve(total);
       cset.mutable_payload()->mutable_power()->Reserve(total);
@@ -214,16 +225,34 @@ namespace rsys {
       cset.mutable_payload()->mutable_category_id()->Reserve(total);
       cset.mutable_payload()->mutable_picture_num()->Reserve(total);
       cset.mutable_payload()->mutable_type()->Reserve(total);
-      candidate_set_t::iterator iter = candidate_set.begin();
-      for (int i = 0; iter != candidate_set.end() && i < total; ++iter, ++i) {
-        cset.mutable_base()->add_item_id(iter->item_id);
-        cset.mutable_payload()->add_power(iter->power);
-        cset.mutable_payload()->add_publish_time(iter->publish_time);
-        cset.mutable_payload()->add_type((CandidateType)iter->item_type);
-        cset.mutable_payload()->add_picture_num(iter->picture_num);
-        cset.mutable_payload()->add_category_id(iter->category_id);
+
+      int total_video = candidate_video_set.size();
+      if (total_video > options_.max_candidate_video_size)
+        total_video = options_.max_candidate_video_size;
+
+      candidate_set_t::iterator iter = candidate_video_set.begin();
+      for (int i = 0; i < total_video && iter != candidate_video_set.end(); ++iter) {
+        glue::copy_to_proto(*iter, cset);
       }
-      duration.appendInfo(", candidate_set_size=", total);
+
+      int total_region = candidate_region_set.size();
+      if (total_region > options_.max_candidate_region_size)
+        total_region = options_.max_candidate_region_size;
+
+      iter = candidate_region_set.begin();
+      for (int i = 0; i < total_region && iter != candidate_region_set.end(); ++iter) {
+        glue::copy_to_proto(*iter, cset);
+      }
+
+      int total_normal = total - total_region - total_video;
+      if (candidate_set.size() < total_normal)
+        total_normal = candidate_set.size();
+
+      iter = candidate_set.begin();
+      for (int i = 0; i < total_normal && iter != candidate_set.end(); ++iter, ++i) {
+        glue::copy_to_proto(*iter, cset);
+     }
+      duration.appendInfo(", candidate set normal=", total_normal, ", video=", total_video, ", region=", total_region);
 
       return Status::OK();
     }

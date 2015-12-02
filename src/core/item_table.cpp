@@ -369,12 +369,14 @@ namespace rsys {
       if (query.start_time < window_time_)
         start_time = window_time_;
 
-      pthread_rwlock_rdlock(&top_lock_);
-      item_list_t::iterator iter = item_top_.begin();
-      for (; iter != item_top_.end(); ++iter) {
-        candset.push_back(*(*iter));
+      item_list_t::iterator iter;
+      if (query.item_type == kNormalItem) {
+        pthread_rwlock_rdlock(&top_lock_);
+        for (iter = item_top_.begin(); iter != item_top_.end(); ++iter) {
+          candset.push_back(*(*iter));
+        }
+        pthread_rwlock_unlock(&top_lock_);
       }
-      pthread_rwlock_unlock(&top_lock_);
 
       // 由于添加item和淘汰item是并行的
       // 有可能在添加一瞬间window_time发生变更,使得插入的item有可能后移
@@ -398,11 +400,8 @@ namespace rsys {
             continue;
           }
 
-          if (query.network == RECOMMEND_NETWORK_MOBILE) {
-            // 移动网络状态下不推荐视频
-            if ((*iter)->item_type == CANDIDATE_TYPE_VIDEO)
-              continue;
-          }
+          if ((*iter)->item_type != query.item_type)
+            continue;
 
           if (query.region_id != kInvalidRegionID) {
             if (!isBelongsTo(query.region_id, (*iter)->region_id))
