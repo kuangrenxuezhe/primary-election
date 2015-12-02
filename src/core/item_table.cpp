@@ -293,7 +293,8 @@ namespace rsys {
           break;
         }
       }
-      assert(iter != item_list.end());
+      //TODO:
+      //assert(iter != item_list.end());
     }
 
     Status ItemTable::addItemIndex(int index, item_info_t* item_info)
