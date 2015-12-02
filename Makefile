@@ -10,9 +10,9 @@ INCLUDES+=-I./src -I./deps/include  -I./rsys-util/src
 LDFLAGS=-L./deps/lib
 
 ifneq ($(strip $(ENABLE_DEBUG)), 1)
-		CFLAGS+= -g -w -O2
+		CFLAGS+= -g -w -O2 -DNDEBUG
 else
-		CFLAGS+= -g -w -O0 -DDEBUG
+		CFLAGS+= -g -w -O0 -DDEBUG -DTRACE
 endif
 
 ifeq ($(GCC_VERSION), 4.8)
