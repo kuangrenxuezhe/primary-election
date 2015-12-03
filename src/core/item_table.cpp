@@ -287,14 +287,15 @@ namespace rsys {
     {
       item_list_t::iterator iter = item_list.begin();
       for (; iter != item_list.end(); ++iter) {
-        if ((*iter) == item_info) {
-          delete *iter;
-          item_list.erase(iter);
-          break;
+        if ((*iter) != item_info) {
+          continue;
         }
+        delete *iter;
+        item_list.erase(iter);
+        return;
       }
-      //TODO:
-      //assert(iter != item_list.end());
+      // 没有找到删除节点，不应该到达
+      assert(item_info->item_id == -1);
     }
 
     Status ItemTable::addItemIndex(int index, item_info_t* item_info)
@@ -303,6 +304,10 @@ namespace rsys {
 
       item_index.index = index;
       item_index.item_info = item_info;
+      // debug
+      if (item_info->item_id == 32341212623558882) {
+        item_info->item_id = item_info->item_id;
+      }
 
       pthread_mutex_lock(&index_lock_);
       hash_map_t::iterator iter = item_index_->find(item_info->item_id);
@@ -314,13 +319,17 @@ namespace rsys {
       } else {
         if (index < 0) {
           pthread_rwlock_wrlock(&top_lock_);
+          item_info->click_count = iter->second.item_info->click_count;
           eraseFromList(item_top_, iter->second.item_info);
           pthread_rwlock_unlock(&top_lock_);
         } else {
           // 删除已插入的item
           pthread_rwlock_wrlock(&window_lock_[iter->second.index%kWindowLockSize]);
+          item_info->click_count = iter->second.item_info->click_count;
           eraseFromList(item_window_[iter->second.index], iter->second.item_info);
           pthread_rwlock_unlock(&window_lock_[iter->second.index%kWindowLockSize]);
+
+          iter->second.index = index;
           iter->second.item_info = item_info;
         }
       }
