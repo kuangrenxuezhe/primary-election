@@ -235,7 +235,8 @@ namespace rsys {
       for (int i = 0; i < total_video && iter != candidate_video_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
         glue::remedy_candidate_weight(*iter, cset);
-        total_weight += cset.payload().power(cset.payload().power_size() - 1);
+        if (cset.payload().power(cset.payload().power_size() - 1) != -100000)
+          total_weight += cset.payload().power(cset.payload().power_size() - 1);
       }
 
       int total_region = candidate_region_set.size();
@@ -246,7 +247,8 @@ namespace rsys {
       for (int i = 0; i < total_region && iter != candidate_region_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
         glue::remedy_candidate_weight(*iter, cset);
-        total_weight += cset.payload().power(cset.payload().power_size() - 1);
+        if (cset.payload().power(cset.payload().power_size() - 1) != -100000)
+          total_weight += cset.payload().power(cset.payload().power_size() - 1);
       }
 
       int total_normal = total - total_region - total_video;
@@ -257,12 +259,16 @@ namespace rsys {
       for (int i = 0; i < total_normal && iter != candidate_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
         glue::remedy_candidate_weight(*iter, cset);
-        total_weight += cset.payload().power(cset.payload().power_size() - 1);
+
+        if (cset.payload().power(cset.payload().power_size() - 1) != -100000)
+          total_weight += cset.payload().power(cset.payload().power_size() - 1);
       }
 
       // 候选集权重归一
       if (total_weight <= 0) total_weight = 1.0f;
       for (int i = 0; i < cset.payload().power_size(); ++i) {
+        if (cset.payload().power(i) == -100000)
+          continue;
         cset.mutable_payload()->set_power(i, cset.payload().power(i)/total_weight);
       }
       duration.appendInfo(", candidate set normal=", total_normal, ", video=", total_video, ", region=", total_region);

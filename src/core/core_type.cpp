@@ -324,17 +324,22 @@ namespace rsys {
       void glue::remedy_candidate_weight(const candidate_t& candidate, CandidateSet& cset)
       {
         int last_index = cset.payload().power_size() - 1;
+        float power = 0.0f;
 
-        // top&partial_top设定publish_time为-1
+        // 要闻
+        if (candidate.item_info.power > 100) {
+          power = -100000;
+        }
+        // 置顶和订阅加权
         if (candidate.candidate_type == kTopCandidate) {
           cset.mutable_payload()->set_publish_time(last_index, -1);
         } else if (candidate.candidate_type == kPartialTopCandidate) {
           cset.mutable_payload()->set_publish_time(last_index, -1);
         } else if (candidate.candidate_type == kSubscribeCandidate) {
-          cset.mutable_payload()->set_power(last_index, 10000);
+          power = 10000;
         }
-        float power = 0.0f;
 
+        // 累加点击权重
         power += 10 * candidate.item_info.click_count;
         if (candidate.item_info.power > 100000) {
           power += candidate.item_info.power/100000;  
