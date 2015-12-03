@@ -69,7 +69,7 @@ SCENARIO("测试User表", "[base]") {
       action_t click;
       click.item_id = 1;
       click.action = ACTION_TYPE_DISLIKE;
-      click.dislike_reason = "1_说明";
+      click.dislike_reason = "\"1_id\":\"说明\",\"1\":\"重复内容\"";
 
       Status status = table.updateAction(1, click);
       REQUIRE(status.ok());
@@ -78,10 +78,7 @@ SCENARIO("测试User表", "[base]") {
         user_info_t user_info;
         status = table.queryUser(1, user_info);
         REQUIRE(status.ok());
-        REQUIRE(user_info.dislike.size() == 1);
-
-        map_str_t::iterator iter = user_info.dislike.begin();
-        REQUIRE(iter->second == click.dislike_reason);
+        REQUIRE(user_info.dislike.size() == 2);
       }
     }
 
@@ -223,7 +220,7 @@ SCENARIO("测试User表", "[base]") {
     
     action_t action;
     action.action = ACTION_TYPE_DISLIKE;
-    action.dislike_reason = "1_xx";
+    action.dislike_reason = "\"1_xx\":\"tt\"";
     status = table.updateAction(2, action);
     REQUIRE(status.ok());
 

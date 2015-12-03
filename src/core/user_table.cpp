@@ -111,28 +111,43 @@ namespace rsys {
 
             return user_info->readed.insert(id_time).second;
           } else if (user_action_.action == ACTION_TYPE_DISLIKE) {
-            const char* seperator;
-            type_id_t id;
-            
-            // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
-            int type = atoi(user_action_.dislike_reason.c_str());
-            if (0 == type) {
-              return false;
-            }
+            std::vector<std::string> tokens;
 
-            id.type_id_component.type = type;
-            id.type_id_component.id = 0UL;
-            if (user_action_.dislike_reason.length() > 2) {
-              seperator = strchr(user_action_.dislike_reason.c_str(), '_');
-              if (NULL != seperator) {
-                seperator++;
-                id.type_id_component.id = makeID(seperator, strlen(seperator));
+            splitString(user_action_.dislike_reason, ',', tokens);
+            for (size_t i = 0; i < tokens.size(); ++i) {
+              const char* seperator;
+              type_id_t id;
+              std::vector<std::string> key_value;
+
+              splitString(tokens[i], ':', key_value);
+              if (key_value.size() != 2) {
+                LOG(WARNING) << "Invalid dislike data: " << tokens[i];
+                continue;
               }
-            }
-            std::pair<uint64_t, std::string> id_str = 
-              std::make_pair(id.type_id, user_action_.dislike_reason);
 
-            return user_info->dislike.insert(id_str).second;
+              trimString(key_value[0], "\"");
+              trimString(key_value[1], "\"");
+
+              // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
+              int type = atoi(key_value[0].c_str());
+              if (0 == type) {
+                LOG(WARNING) << "Invalid dislike data: " << tokens[i];
+                continue;
+              }
+
+              id.type_id_component.type = type;
+              id.type_id_component.id = 0UL;
+              if (key_value[0].length() > 2) {
+                seperator = strchr(key_value[0].c_str(), '_');
+                if (NULL != seperator) {
+                  seperator++;
+                  id.type_id_component.id = makeID(seperator, strlen(seperator));
+                }
+              }
+
+              if (!user_info->dislike.insert(std::make_pair(id.type_id, tokens[i])).second)
+                return false;
+            }
           }
           return true;
         }
