@@ -196,44 +196,58 @@ namespace rsys {
           candidate_set_t::iterator iter = cand_set_.begin();
 
           while(iter != cand_set_.end()) {
-            if (iter->top.size() > 0) {
-              bool is_top = false;
-              map_pair_t::iterator iter_find = iter->top.begin();
+            if (iter->item_info.top.size() > 0) {
+              int top_type = kNormalCandidate;
+              map_pair_t::iterator iter_find = iter->item_info.top.begin();
 
-              for (; iter_find != iter->top.end(); ++iter_find) {
+              for (; iter_find != iter->item_info.top.end(); ++iter_find) {
                 type_id_t type_id;
                 type_id.type_id = iter_find->first;
 
 
                 if (type_id.type_id_component.type == IDTYPE_TOP) {
-                  is_top = true; // 全局推荐
+                  top_type = kTopCandidate; // 全局推荐
                 } else {
                   // 部分推荐，判定是否用户订阅的SRP&圈子
                   if (user_info->subscribe.find(iter_find->first) != user_info->subscribe.end()) {
-                    is_top = true;
+                    top_type = kPartialTopCandidate;
                   }
                 }
               }
-              is_top ? iter++:cand_set_.erase(iter++);
+              if (top_type == kNormalCandidate) {
+                cand_set_.erase(iter++);
+              } else {
+                iter->candidate_type = top_type;
+                iter++;
+              }
             } else {
-              if (user_info->readed.find(iter->item_id) != user_info->readed.end()) {
+              if (user_info->readed.find(iter->item_info.item_id) != user_info->readed.end()) {
                 cand_set_.erase(iter++);
                 continue;
               }
-              if (user_info->recommended.find(iter->item_id) != user_info->recommended.end()) {
+              if (user_info->recommended.find(iter->item_info.item_id) != user_info->recommended.end()) {
                 cand_set_.erase(iter++);
                 continue;
               }
-              bool is_dislike = false;
-              map_pair_t::iterator iter_find = iter->belongs_to.begin();
+              bool is_dislike = false, is_subscribe = false;
+              map_pair_t::iterator iter_find = iter->item_info.belongs_to.begin();
 
-              for (; iter_find != iter->belongs_to.end(); ++iter_find) {
+              for (; iter_find != iter->item_info.belongs_to.end(); ++iter_find) {
                 if (user_info->dislike.find(iter_find->first) != user_info->dislike.end()) {
                   is_dislike = true;
-                  break;
+                }
+                if (user_info->subscribe.find(iter_find->first) != user_info->subscribe.end()) {
+                  is_subscribe = true;
                 }
               }
-              is_dislike ? cand_set_.erase(iter++): iter++;
+              if (is_dislike) {
+                cand_set_.erase(iter++);
+              } else {
+                if (is_subscribe) {
+                  iter->candidate_type = kSubscribeCandidate;
+                }
+                iter++;
+              }
             }
           }
           return true;

@@ -158,7 +158,7 @@ SCENARIO("测试User表", "[base]") {
 
         REQUIRE(cand_set.size() == 1);
         candidate_set_t::iterator iter = cand_set.begin();
-        REQUIRE(iter->item_id == 3);
+        REQUIRE(iter->item_info.item_id == 3);
       }
     }
     remove("./wal-user.writing");

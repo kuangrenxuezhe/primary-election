@@ -16,6 +16,7 @@ namespace rsys {
         ~CandidateDB();
 
       public:
+        const Options& options() const { return options_; }
         static Status openDB(const Options& opts, CandidateDB** dbptr);
 
       public:

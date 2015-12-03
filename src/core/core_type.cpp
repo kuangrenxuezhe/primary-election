@@ -311,14 +311,39 @@ namespace rsys {
         structed.end_time = proto.end_time();
       }
 
-      void glue::copy_to_proto(const item_info_t& item_info, CandidateSet& cset)
+      void glue::copy_to_proto(const candidate_t& candidate, CandidateSet& cset)
       {
-        cset.mutable_base()->add_item_id(item_info.item_id);
-        cset.mutable_payload()->add_power(item_info.power);
-        cset.mutable_payload()->add_publish_time(item_info.publish_time);
-        cset.mutable_payload()->add_type((CandidateType)item_info.item_type);
-        cset.mutable_payload()->add_picture_num(item_info.picture_num);
-        cset.mutable_payload()->add_category_id(item_info.category_id);
+        cset.mutable_base()->add_item_id(candidate.item_info.item_id);
+        cset.mutable_payload()->add_power(candidate.item_info.power);
+        cset.mutable_payload()->add_publish_time(candidate.item_info.publish_time);
+        cset.mutable_payload()->add_type((CandidateType)candidate.item_info.item_type);
+        cset.mutable_payload()->add_picture_num(candidate.item_info.picture_num);
+        cset.mutable_payload()->add_category_id(candidate.item_info.category_id);
+      }
+
+      void glue::remedy_candidate_weight(const candidate_t& candidate, CandidateSet& cset)
+      {
+        int last_index = cset.payload().power_size() - 1;
+
+        // top&partial_top设定publish_time为-1
+        if (candidate.candidate_type == kTopCandidate) {
+          cset.mutable_payload()->set_publish_time(last_index, -1);
+        } else if (candidate.candidate_type == kPartialTopCandidate) {
+          cset.mutable_payload()->set_publish_time(last_index, -1);
+        } else if (candidate.candidate_type == kSubscribeCandidate) {
+          cset.mutable_payload()->set_power(last_index, 10000);
+        }
+        float power = 0.0f;
+
+        power += 10 * candidate.item_info.click_count;
+        if (candidate.item_info.power > 100000) {
+          power += candidate.item_info.power/100000;  
+        } else {
+          power += candidate.item_info.power;
+        }
+        if (power > 100000) power = 100000;
+
+        cset.mutable_payload()->set_power(last_index, power);
       }
   } // namespace news
 } // namespace rsys

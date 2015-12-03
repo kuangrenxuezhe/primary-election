@@ -14,6 +14,16 @@ namespace rsys {
     {
     }
 
+    var_4 ServiceGlue::init_module(var_vd* config_info) {
+      const Options& options = candidate_db_->options();
+      Status status = chrono_.parse(options.flush_timer);
+      if (!status.ok()) {
+        LOG(ERROR) << status.toString();
+        return -1;
+      }
+      next_flush_time_ = chrono_.next(time(NULL));
+    }
+
     var_4 ServiceGlue::update_action(Action& action)
     {
       Status status = candidate_db_->updateAction(action, action);
@@ -93,6 +103,20 @@ namespace rsys {
 
       if (status.isCorruption() || status.isIOError())
         return -1;
+      return 0;
+    }
+
+    var_4 ServiceGlue::persistent_library()
+    {
+      int32_t ctime = time(NULL);
+      if (next_flush_time_ < ctime) {
+        Status status = candidate_db_->flush();
+        if (!status.ok()) {
+          LOG(FATAL) << status.toString();
+          return -1;
+        }
+        next_flush_time_ = chrono_.next(next_flush_time_);
+      }
       return 0;
     }
   }; // namespace news

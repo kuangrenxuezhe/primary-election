@@ -9,15 +9,18 @@ SCENARIO("测试item表", "[base]") {
     Options opts;
     ItemTable table(opts);
     Status status = table.loadTable();
-    REQUIRE(status.ok());
+    if (!status.ok())
+      FAIL(status.toString());
 
     WHEN("添加新item时") {
       item_info_t* item = new item_info_t;
       item->item_type = kNormalItem;
       item->item_id = 1;
+      item->click_count = 0;
       item->publish_time = time(NULL);
       status = table.addItem(item);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("候选集合只有一个item") {
         query_t query;
@@ -29,9 +32,11 @@ SCENARIO("测试item表", "[base]") {
         query.end_time = time(NULL);
 
         status = table.queryCandidateSet(query, cand_set);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(cand_set.size() == 1);
-        REQUIRE(cand_set.begin()->item_id == 1);
+        REQUIRE(cand_set.begin()->item_info.item_id == 1);
 
         item_info_t item_info;
         status = table.queryItem(1, item_info);
@@ -43,27 +48,31 @@ SCENARIO("测试item表", "[base]") {
       item_info_t* item = new item_info_t;
       item->item_id = 1;
       item->publish_time = time(NULL);
-      item->click_count = 0;
       item->click_time = 1;
       Status status = table.addItem(item);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       action_t action;
 
       action.item_id = 1;
       status = table.updateAction(1, action);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("状态变化") {
         item_info_t item_info;
         status = table.queryItem(1, item_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(item_info.click_count == 1);
         REQUIRE(item_info.click_time == 1);
       }
     }
     status = table.flushTable();
-    REQUIRE(status.ok());
+    if (!status.ok())
+      FAIL(status.toString());
   }
 
   GIVEN("给定item表") {
@@ -72,12 +81,15 @@ SCENARIO("测试item表", "[base]") {
 
     WHEN("加载item表") {
       Status status = table.loadTable();
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("加载成功") {
         item_info_t item_info;
         status = table.queryItem(1, item_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(item_info.click_count == 1);
         REQUIRE(item_info.click_time == 1);
       }

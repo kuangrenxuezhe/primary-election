@@ -85,6 +85,7 @@ namespace rsys {
       , item_window_(NULL), window_lock_(NULL), item_index_(NULL)
     {
       options_ = opts;
+      is_eliminating_ = false;
 
       if (opts.new_item_max_age > opts.item_hold_time)
         options_.new_item_max_age = opts.item_hold_time;
@@ -123,7 +124,19 @@ namespace rsys {
     // 淘汰item数据
     Status ItemTable::eliminate()
     {
+      if (is_eliminating_) {
+        return Status::OK();
+      }
       int32_t ctime = time(NULL);
+
+      // 判定待保留数据是否越上界
+      // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
+      if ((ctime - (window_time_ + options_.item_hold_time)) > kSecondPerHour) {
+        if (is_eliminating_) { // double check
+          return Status::OK();
+        }
+        is_eliminating_ = true;
+      }
 
       pthread_rwlock_wrlock(&top_lock_);
       item_list_t::iterator iter = item_top_.begin();
@@ -151,6 +164,7 @@ namespace rsys {
         window_base_ = (window_base_ + 1)%window_size_;
         window_time_ += kSecondPerHour;
       }
+      is_eliminating_ = false;
 
       return Status::OK();
     }
@@ -176,6 +190,8 @@ namespace rsys {
     Status ItemTable::addItem(const Item& item)
     {
       std::string serialized_item;
+
+      eliminate(); // 淘汰过期数据
 
       serialized_item.append(1, kLogTypeItem);
       if (!item.AppendToString(&serialized_item)) {
@@ -226,15 +242,6 @@ namespace rsys {
     Status ItemTable::addItem(item_info_t* item_info)
     {
       int32_t ctime = time(NULL) + kSecondPerHour;
-
-      // 判定待保留数据是否越上界
-      // 若超出则需要淘汰过期数据，否则新数据将插入到列表的末端
-      if ((ctime - (window_time_ + options_.item_hold_time)) > kSecondPerHour) {
-        Status status = eliminate();
-        if (!status.ok()) {
-          return status;
-        }
-      }
 
       // 若新添加数据两天以前的数据则丢弃 
       if (item_info->publish_time < ctime - options_.new_item_max_age) {
@@ -417,7 +424,7 @@ namespace rsys {
             if (!isBelongsTo(query.region_id, (*iter)->region_id))
               continue;
           }
-          candset.push_back(*(*iter));
+          candset.push_back(candidate_t(*(*iter)));
         }
         pthread_rwlock_unlock(&window_lock_[idx%kWindowLockSize]);
       }

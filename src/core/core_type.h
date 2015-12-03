@@ -20,7 +20,7 @@ namespace rsys {
     typedef std::map<uint64_t, int32_t>     map_time_t;
     typedef std::map<uint64_t, std::string>  map_str_t;
     typedef std::map<uint64_t, pair_t>      map_pair_t;
- 
+
     enum id_type_ {
       IDTYPE_NONE          = 0,
       IDTYPE_DUPLICATED    = 1,
@@ -72,7 +72,7 @@ namespace rsys {
     };
     typedef struct user_info_ user_info_t;
 
-     struct item_info_ {
+    struct item_info_ {
       uint64_t       item_id; // itemid
       float            power; // 初选权重
       int32_t	  publish_time; // 发布时间
@@ -98,7 +98,25 @@ namespace rsys {
     };
     typedef struct query_ query_t;
 
-   typedef std::list<item_info_t>     candidate_set_t;
+    enum candidate_type_ {
+      kNormalCandidate     = 0,
+      kTopCandidate        = 1,
+      kPartialTopCandidate = 2,
+      kSubscribeCandidate  = 3,
+    };
+    struct candidate_ {
+      int    candidate_type;
+      item_info_t item_info;
+
+      candidate_(): candidate_type(0) {
+      }
+      candidate_(const item_info_t& o)
+        : candidate_type(0), item_info(o) {
+      }
+    };
+    typedef struct candidate_ candidate_t;
+
+    typedef std::list<candidate_t>     candidate_set_t;
 
     namespace glue {
       void structed_action(const Action& proto, action_t& structed); 
@@ -117,7 +135,9 @@ namespace rsys {
       // zone在外部来转换
       void structed_query(const Recommend& proto, query_t& structed);
 
-      void copy_to_proto(const item_info_t& item_info, CandidateSet& cset);
+      void copy_to_proto(const candidate_t& candidate, CandidateSet& cset);
+      void remedy_candidate_weight(const candidate_t& candidate, CandidateSet& cset);
+
     } // namespace glue
   } // namespace news
 } // namespace rsys

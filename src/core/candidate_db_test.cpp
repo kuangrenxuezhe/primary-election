@@ -11,7 +11,8 @@ SCENARIO("CandidateDB测试", "[base]") {
     WHEN("创建空候选集库") {
       Status status = CandidateDB::openDB(options, &candb);
       THEN("CandidateDB创建成功") {
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
       }
     }
     delete candb;
@@ -21,7 +22,8 @@ SCENARIO("CandidateDB测试", "[base]") {
     Options options;
     CandidateDB* candb = NULL;
     Status status = CandidateDB::openDB(options, &candb);
-    REQUIRE(status.ok());
+    if (!status.ok())
+      FAIL(status.toString());
     WHEN("二次打开候选集库") {
       status = CandidateDB::openDB(options, &candb);
       THEN("CandidateDB打开失败") {
@@ -35,7 +37,8 @@ SCENARIO("CandidateDB测试", "[base]") {
     Options options;
     CandidateDB* candb = NULL;
     Status status = CandidateDB::openDB(options, &candb);
-    REQUIRE(status.ok());
+    if (!status.ok())
+      FAIL(status.ok());
 
     WHEN("添加item数据") {
       Item item;
@@ -43,14 +46,17 @@ SCENARIO("CandidateDB测试", "[base]") {
       item.set_publish_time(time(NULL));
 
       status = candb->addItem(item);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.ok());
 
       THEN("数据添加成功") {
         proto::ItemQuery query;
         query.set_item_id(1);
         proto::ItemInfo item_info;
         status = candb->queryItemInfo(query, item_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.ok());
+
         REQUIRE(item_info.item_id() == item.item_id());
         REQUIRE(item_info.publish_time() == item.publish_time());
       }
@@ -62,14 +68,17 @@ SCENARIO("CandidateDB测试", "[base]") {
       subscribe.add_srp_id("test");
 
       status = candb->updateSubscribe(subscribe);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.ok());
 
       THEN("数据更新成功") {
         proto::UserInfo user_info;
         proto::UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.ok());
+
         REQUIRE(user_info.user_id() == query.user_id());
         REQUIRE(user_info.subscribe_size() == 1);
         REQUIRE(user_info.subscribe(0).str() == subscribe.srp_id(0));
@@ -82,14 +91,16 @@ SCENARIO("CandidateDB测试", "[base]") {
       item.set_publish_time(time(NULL));
 
       status = candb->addItem(item);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       Subscribe subscribe;
       subscribe.set_user_id(1);
       subscribe.add_srp_id("test");
 
       status = candb->updateSubscribe(subscribe);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       Action action;
       action.set_user_id(1);
@@ -98,21 +109,26 @@ SCENARIO("CandidateDB测试", "[base]") {
       action.set_action(ACTION_TYPE_CLICK);
 
       status = candb->updateAction(action, action);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("数据状态更新") {
         proto::UserInfo user_info;
         proto::UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(user_info.readed_size() == 1);
 
         proto::ItemQuery query1;
         query1.set_item_id(1);
         proto::ItemInfo item_info;
         status = candb->queryItemInfo(query1, item_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(item_info.click_count() == 2); 
       }
     }
@@ -123,21 +139,25 @@ SCENARIO("CandidateDB测试", "[base]") {
       subscribe.add_srp_id("test");
 
       status = candb->updateSubscribe(subscribe);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       Feedback feedback;
       feedback.set_user_id(1);
       feedback.add_item_id(11);
 
       status = candb->updateFeedback(feedback);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("数据状态更新") {
         proto::UserInfo user_info;
         proto::UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
         REQUIRE(user_info.recommended_size() == 1);
       }
     }
@@ -148,28 +168,31 @@ SCENARIO("CandidateDB测试", "[base]") {
       subscribe.add_srp_id("test");
 
       status = candb->updateSubscribe(subscribe);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       Item item;
       item.set_item_id(1);
       item.set_publish_time(time(NULL));
 
       status = candb->addItem(item);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       item.set_item_id(2);
       item.set_publish_time(time(NULL));
 
       status = candb->addItem(item);
-      REQUIRE(status.ok());
-
+      if (!status.ok())
+        FAIL(status.toString());
 
       Feedback feedback;
       feedback.set_user_id(1);
       feedback.add_item_id(1);
 
       status = candb->updateFeedback(feedback);
-      REQUIRE(status.ok());
+      if (!status.ok())
+        FAIL(status.toString());
 
       THEN("数据状态更新") {
         Recommend recmd;
@@ -179,7 +202,9 @@ SCENARIO("CandidateDB测试", "[base]") {
         recmd.set_beg_time(time(NULL) - 86400);
         recmd.set_end_time(time(NULL));
         status = candb->queryCandidateSet(recmd, candset);
-        REQUIRE(status.ok());
+        if (!status.ok())
+          FAIL(status.toString());
+
       }
     }
     delete candb;
@@ -211,7 +236,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     status = candb->findUser(user);
     if (!status.isNotFound())
       FAIL(status.toString());
-    
+
     Subscribe subscribe;
     subscribe.set_user_id(1);
     status = candb->updateSubscribe(subscribe);
@@ -263,7 +288,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
       FAIL(status.toString());
 
     item.set_item_id(3);
-    item.set_publish_time(time(NULL) + 3601);
+    item.set_publish_time(time(NULL) + 3701);
     status = candb->addItem(item);
     if (!status.isInvalidData())
       FAIL(status.toString());
@@ -322,7 +347,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     Status status = candb->addItem(item);
     if (!status.ok())
       FAIL(status.toString());
-    
+
     item.set_item_id(32);
     item.set_publish_time(ctime - 2);
     item.set_item_type(ITEM_TYPE_VIDEO);
@@ -351,7 +376,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
       FAIL(status.toString());
     REQUIRE(candset.base().item_id_size() == 3);
     REQUIRE(candset.base().history_id_size() == 0);
-    
+
     candset.Clear();
     recmd.set_user_id(1);
     recmd.set_network(RECOMMEND_NETWORK_MOBILE);

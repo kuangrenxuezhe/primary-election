@@ -29,7 +29,8 @@ utils=status.cpp \
 			file.cpp \
 			table_file.cpp \
 			ahead_log.cpp \
-			table_base.cpp
+			table_base.cpp \
+			chrono_expr.cpp
 
 sources=core/core_type.cpp \
 		    core/options.cpp \

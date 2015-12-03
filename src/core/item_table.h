@@ -74,19 +74,20 @@ namespace rsys {
         void eraseFromList(item_list_t& item_list, item_info_t* item_info);
 
       private:
-        Options               options_;
-        int               window_size_; // 滑窗大小
-        std::atomic_int   window_base_; // 滑窗基准位
-        std::atomic_int   window_time_; // 滑窗基准时间
-        item_list_t*      item_window_; // 采用循环列表存储item，每个slot表示1小时
-        pthread_rwlock_t* window_lock_;
+        Options                 options_;
+        std::atomic_bool is_eliminating_; // 表示是否在清理
+        int                 window_size_; // 滑窗大小
+        std::atomic_int     window_base_; // 滑窗基准位
+        std::atomic_int     window_time_; // 滑窗基准时间
+        item_list_t*        item_window_; // 采用循环列表存储item，每个slot表示1小时
+        pthread_rwlock_t*   window_lock_;
 
-        item_list_t          item_top_; 
-        pthread_rwlock_t     top_lock_;
+        item_list_t            item_top_; 
+        pthread_rwlock_t       top_lock_;
 
-        hash_map_t*        item_index_; // 存储item索引
-        pthread_mutex_t    index_lock_;
-        friend class      ItemAheadLog;
+        hash_map_t*          item_index_; // 存储item索引
+        pthread_mutex_t      index_lock_;
+        friend class        ItemAheadLog;
     };
   }; // namespace news
 }; // namespace rsys

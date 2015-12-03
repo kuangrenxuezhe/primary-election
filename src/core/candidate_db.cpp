@@ -178,7 +178,7 @@ namespace rsys {
           return status;
         }
       }
- 
+
       if (recmd.network() == RECOMMEND_NETWORK_WIFI) {
         // 获取视频数据 
         query.item_type = kVideoItem;
@@ -230,9 +230,12 @@ namespace rsys {
       if (total_video > options_.max_candidate_video_size)
         total_video = options_.max_candidate_video_size;
 
+      float total_weight = 0.0f;
       candidate_set_t::iterator iter = candidate_video_set.begin();
-      for (int i = 0; i < total_video && iter != candidate_video_set.end(); ++iter) {
+      for (int i = 0; i < total_video && iter != candidate_video_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
+        glue::remedy_candidate_weight(*iter, cset);
+        total_weight += cset.payload().power(cset.payload().power_size() - 1);
       }
 
       int total_region = candidate_region_set.size();
@@ -240,8 +243,10 @@ namespace rsys {
         total_region = options_.max_candidate_region_size;
 
       iter = candidate_region_set.begin();
-      for (int i = 0; i < total_region && iter != candidate_region_set.end(); ++iter) {
+      for (int i = 0; i < total_region && iter != candidate_region_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
+        glue::remedy_candidate_weight(*iter, cset);
+        total_weight += cset.payload().power(cset.payload().power_size() - 1);
       }
 
       int total_normal = total - total_region - total_video;
@@ -251,7 +256,15 @@ namespace rsys {
       iter = candidate_set.begin();
       for (int i = 0; i < total_normal && iter != candidate_set.end(); ++iter, ++i) {
         glue::copy_to_proto(*iter, cset);
-     }
+        glue::remedy_candidate_weight(*iter, cset);
+        total_weight += cset.payload().power(cset.payload().power_size() - 1);
+      }
+
+      // 候选集权重归一
+      if (total_weight <= 0) total_weight = 1.0f;
+      for (int i = 0; i < cset.payload().power_size(); ++i) {
+        cset.mutable_payload()->set_power(i, cset.payload().power(i)/total_weight);
+      }
       duration.appendInfo(", candidate set normal=", total_normal, ", video=", total_video, ", region=", total_region);
 
       return Status::OK();
