@@ -22,6 +22,7 @@ namespace rsys {
         return -1;
       }
       next_flush_time_ = chrono_.next(time(NULL));
+      return 0;
     }
 
     var_4 ServiceGlue::update_action(Action& action)
