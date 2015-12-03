@@ -18,7 +18,11 @@ namespace rsys {
           }
 
         virtual ~DurationLogger() {
-          LOG(INFO) << info() << ", used: " << duration().count() << "ms";
+          if (duration().count() < 100) {
+            LOG(INFO) << info() << ", used: " << duration().count() << "ms";
+          } else {
+            LOG(WARNING) << info() << ", used: " << duration().count() << "ms";
+          }
         }
     };
     Status CandidateDB::openDB(const Options& opts, CandidateDB** dbptr)
