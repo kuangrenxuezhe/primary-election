@@ -47,6 +47,10 @@ namespace rsys {
       protected:
         Status lock(); // 单进程锁定
 
+      protected:
+        Status querySubscriptionCandidateSet(const Recommend& query, CandidateSet& candidate_set);
+        Status queryRecommendationCandidateSet(const Recommend& query, CandidateSet& candidate_set);
+
       private:
         Options       options_;
         FileWriter  singleton_; // 保证一个库目录只能一个进程打开

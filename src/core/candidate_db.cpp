@@ -151,9 +151,100 @@ namespace rsys {
       return item_table_->updateAction(action);
     }
 
-    Status CandidateDB::queryCandidateSet(const Recommend& recmd, CandidateSet& cset)
+    Status CandidateDB::queryCandidateSet(const Recommend& query, CandidateSet& candidate_set)
     {
-      DurationLogger duration(Duration::kMilliSeconds, "QueryCandidateSet: user_id=", recmd.user_id());
+      if (options_.service_type != 0)
+        return querySubscriptionCandidateSet(query, candidate_set);
+
+      return queryRecommendationCandidateSet(query, candidate_set);
+    }
+
+    Status CandidateDB::querySubscriptionCandidateSet(const Recommend& recmd, CandidateSet& cset)
+    {
+      DurationLogger duration(Duration::kMilliSeconds, "SubscriptionCandidateSet: user_id=", recmd.user_id());
+      query_t query;
+
+      glue::structed_query(recmd, query);
+      // 修正时间
+      if (recmd.beg_time() <= 0) {
+        query.end_time = time(NULL);
+        query.start_time = query.end_time - options_.interval_recommendation;
+      } else {
+        query.end_time = recmd.beg_time();
+        query.start_time = query.end_time - options_.item_hold_time;
+      }
+      Status status = Status::OK();
+      candidate_set_t candidate_set;
+
+      query.region_id = kInvalidRegionID;
+      // 获取普通新闻数据
+      query.item_type = kNormalItem;
+      status = item_table_->queryCandidateSet(query, candidate_set);
+      if (!status.ok()) {
+        return status;
+      }
+      if (candidate_set.size() > 0) {
+        status = user_table_->filterCandidateSet(recmd.user_id(), candidate_set);
+        if (!status.ok() && !status.isNotFound()) {
+          return status;
+        }
+      }
+      id_set_t history_set;
+
+      status = user_table_->queryHistory(recmd.user_id(), history_set);
+      if (!status.ok() && !status.isNotFound()) {
+        return status;
+      }
+
+      cset.mutable_base()->mutable_history_id()->Reserve(history_set.size());
+      for (id_set_t::iterator iter = history_set.begin(); 
+          iter != history_set.end(); ++iter) {
+        cset.mutable_base()->add_history_id(*iter);
+      }
+      cset.mutable_base()->set_user_id(recmd.user_id());
+
+      int total = (int)candidate_set.size();
+      if (total > options_.max_candidate_set_size) {
+        total = options_.max_candidate_set_size;
+      }
+      cset.mutable_base()->mutable_item_id()->Reserve(total);
+      cset.mutable_payload()->mutable_power()->Reserve(total);
+      cset.mutable_payload()->mutable_publish_time()->Reserve(total);
+      cset.mutable_payload()->mutable_category_id()->Reserve(total);
+      cset.mutable_payload()->mutable_picture_num()->Reserve(total);
+      cset.mutable_payload()->mutable_type()->Reserve(total);
+
+      float total_weight = 0.0f;
+      candidate_set_t::iterator iter = candidate_set.begin();
+      for (int i = 0; i < total && iter != candidate_set.end(); ++iter) {
+        // 过滤掉用户非订阅数据
+        if (iter->candidate_type == kTopCandidate || 
+            iter->candidate_type == kPartialTopCandidate ||
+            iter->candidate_type == kSubscribeCandidate) {
+          i++;
+          glue::copy_to_proto(*iter, cset);
+          glue::remedy_candidate_weight(*iter, cset);
+
+          if (cset.payload().power(cset.payload().power_size() - 1) != -100000)
+            total_weight += cset.payload().power(cset.payload().power_size() - 1);
+        }
+     }
+
+      // 候选集权重归一
+      if (total_weight <= 0) total_weight = 1.0f;
+      for (int i = 0; i < cset.payload().power_size(); ++i) {
+        if (cset.payload().power(i) == -100000)
+          continue;
+        cset.mutable_payload()->set_power(i, cset.payload().power(i)/total_weight);
+      }
+      duration.appendInfo(", candidate set=", total);
+
+      return Status::OK();
+    }
+
+    Status CandidateDB::queryRecommendationCandidateSet(const Recommend& recmd, CandidateSet& cset)
+    {
+      DurationLogger duration(Duration::kMilliSeconds, "RecommendationCandidateSet: user_id=", recmd.user_id());
       query_t query;
 
       glue::structed_query(recmd, query);

@@ -219,7 +219,6 @@ namespace rsys {
                 type_id_t type_id;
                 type_id.type_id = iter_find->first;
 
-
                 if (type_id.type_id_component.type == IDTYPE_TOP) {
                   top_type = kTopCandidate; // 全局推荐
                 } else {

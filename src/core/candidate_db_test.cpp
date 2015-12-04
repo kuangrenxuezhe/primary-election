@@ -467,3 +467,72 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
   remove("./wal-user.writing");
 }
 
+TEST_CASE("CandidateDB圈子订阅逻辑测试", "[base]") {
+  Options opts;
+  opts.service_type = 1;
+  CandidateDB* candb;
+  Status status = CandidateDB::openDB(opts, &candb);
+  if (!status.ok())
+    FAIL(status.toString()); 
+
+  SECTION("queryCandidateSet") {
+    int32_t ctime = time(NULL);
+    Item item;
+    item.set_item_id(31);
+    item.set_publish_time(ctime - 3);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    ItemTag* tag = item.add_circle();
+    tag->set_tag_id(1);
+    tag->set_tag_name("tag1");
+    Status status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(32);
+    item.set_publish_time(ctime - 2);
+    item.set_item_type(ITEM_TYPE_VIDEO);
+    item.clear_circle();
+    tag = item.add_circle();
+    tag->set_tag_id(2);
+    tag->set_tag_name("tag2");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(33);
+    item.set_publish_time(ctime - 1);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    item.clear_circle();
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    Recommend recmd;
+    CandidateSet candset;
+
+    recmd.set_user_id(1);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 0);
+
+    Subscribe subscribe;
+    subscribe.set_user_id(1);
+    subscribe.add_circle_id("tag1");
+    subscribe.add_circle_id("tag2");
+    status = candb->updateSubscribe(subscribe);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    recmd.set_user_id(1);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 1);
+  }
+  delete candb;
+  remove("./wal-item.writing");
+  remove("./wal-user.writing");
+}
+
+

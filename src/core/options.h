@@ -43,6 +43,8 @@ namespace rsys {
       // 样例: 23/day, 表示每天的23点进行flush操作
       // 默认：23/day
       std::string  flush_timer;
+      // 服务类型，0 表示推荐，1 表示圈子订阅 默认：0
+      int32_t service_type;
 
       Options();
       // 从配置文件加载Option

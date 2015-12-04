@@ -21,6 +21,7 @@ namespace rsys {
       flush_timer = "23/day";
       max_candidate_video_size = 10;
       max_candidate_region_size = 10;
+      service_type = 0;
     }
 
     Status Options::fromConf(const std::string& conf, Options& opts)
@@ -58,6 +59,8 @@ namespace rsys {
           opts.top_item_max_age = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("flush_timer", opts.flush_timer))
           opts.flush_timer = "23/day";
+        if (!parser.lookupValue("service_type", opts.service_type))
+          opts.service_type = 0;
       }
       catch(const FileIOException &oex) {
         return Status::IOError(oex.what(), ", file=", conf);
