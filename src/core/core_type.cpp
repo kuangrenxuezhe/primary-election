@@ -110,7 +110,6 @@ namespace rsys {
         structed.item_type = proto.item_type();
         structed.picture_num = proto.picture_num();
         structed.category_id = proto.category_id();
-        structed.top_type = proto.top_type();
 
         for (int i = 0; i < proto.region_id_size(); ++i) {
           const proto::KeyPair& pair = proto.region_id(i);
@@ -143,7 +142,6 @@ namespace rsys {
         proto.set_click_count(structed.click_count);
         proto.set_click_time(structed.click_time);
         proto.set_category_id(structed.category_id);
-        proto.set_top_type(structed.top_type);
 
         proto.mutable_region_id()->Reserve(structed.region_id.size());
         for (map_pair_t::const_iterator iter = structed.region_id.begin();

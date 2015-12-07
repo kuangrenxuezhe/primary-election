@@ -76,8 +76,7 @@ namespace rsys {
       uint64_t       item_id; // itemid
       float            power; // 初选权重
       int32_t	  publish_time; // 发布时间
-      int32_t    top_type:16; // 是否置顶
-      int32_t   item_type:16; // item类型
+      int32_t      item_type; // item类型
       int32_t picture_num:16; // 图片个数
       int32_t category_id:16; // 所属分类, 用于返回
       int32_t    click_count; // 点击计数

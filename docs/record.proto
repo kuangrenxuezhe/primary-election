@@ -58,14 +58,13 @@ message ItemInfo {
   fixed64              item_id = 1;
   float                  power = 2; // 初选权重
   int32	          publish_time = 3; // 发布时间
-  int32               top_type = 4;
-  int32              item_type = 5; // item类型(0 咨询，1 视频)
-  int32            picture_num = 6; // 图片个数
-  int32            click_count = 7;
-  int32             click_time = 8;
-  int32            category_id = 9; // 分类ID
-  repeated KeyPair  region_id = 10; // 所属地区
-  repeated KeyPair belongs_to = 11; 
-  repeated KeyPair        top = 12;
+  int32              item_type = 4; // item类型(0 咨询，1 视频)
+  int32            picture_num = 5; // 图片个数
+  int32            click_count = 6;
+  int32             click_time = 7;
+  int32            category_id = 8; // 分类ID
+  repeated KeyPair   region_id = 9; // 所属地区
+  repeated KeyPair belongs_to = 10; 
+  repeated KeyPair        top = 11;
 }
 
