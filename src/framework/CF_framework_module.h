@@ -283,7 +283,7 @@ public:
                     cc->query_interface(t_request, &t_respond);
                     break;
                 }
-                case 5: // feedback
+                case 6: // feedback
                 {
                     Feedback feedback;
                     if(t_request.protocol().UnpackTo(&feedback) == false)
