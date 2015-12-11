@@ -155,6 +155,7 @@ namespace rsys {
         iter = item_window_[index].begin();
         for (; iter != item_window_[index].end(); ++iter) {
           pthread_mutex_lock(&index_lock_);
+          item_index_->set_deleted_key((*iter)->item_id);
           item_index_->erase((*iter)->item_id);
           pthread_mutex_unlock(&index_lock_);
           delete (*iter);
