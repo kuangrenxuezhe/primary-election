@@ -314,7 +314,7 @@ namespace rsys {
         cset.mutable_base()->add_item_id(candidate.item_info.item_id);
         cset.mutable_payload()->add_power(candidate.item_info.power);
         cset.mutable_payload()->add_publish_time(candidate.item_info.publish_time);
-        if (candidate.candidate_type == kTopCandidate || canddiate_candidate_type == kPartialTopCandidate) {
+        if (candidate.candidate_type == kTopCandidate || candidate.candidate_type == kPartialTopCandidate) {
           cset.mutable_payload()->add_type(CANDIDATE_TYPE_TOP);
         } else  {
           if (candidate.item_info.item_type == kVideoItem)
