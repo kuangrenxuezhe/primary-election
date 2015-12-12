@@ -314,7 +314,16 @@ namespace rsys {
         cset.mutable_base()->add_item_id(candidate.item_info.item_id);
         cset.mutable_payload()->add_power(candidate.item_info.power);
         cset.mutable_payload()->add_publish_time(candidate.item_info.publish_time);
-        cset.mutable_payload()->add_type((CandidateType)candidate.item_info.item_type);
+        if (candidate.candidate_type == kTopCandidate || canddiate_candidate_type == kPartialTopCandidate) {
+          cset.mutable_payload()->add_type(CANDIDATE_TYPE_TOP);
+        } else  {
+          if (candidate.item_info.item_type == kVideoItem)
+            cset.mutable_payload()->add_type(CANDIDATE_TYPE_VIDEO);
+          else if (candidate.item_info.item_type == kRegionItem)
+            cset.mutable_payload()->add_type(CANDIDATE_TYPE_ZONE);
+          else
+            cset.mutable_payload()->add_type(CANDIDATE_TYPE_NORMAL);
+        }
         cset.mutable_payload()->add_picture_num(candidate.item_info.picture_num);
         cset.mutable_payload()->add_category_id(candidate.item_info.category_id);
       }
