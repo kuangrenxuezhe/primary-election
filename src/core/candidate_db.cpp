@@ -284,6 +284,7 @@ namespace rsys {
 
       if (recmd.zone().length() > 0) {
         if (glue::zone_to_region_id(recmd.zone().c_str(), region_id)) {
+          query.item_type = kRegionItem;
           // 获取地域数据
           query.region_id = region_id[1];
           item_table_->queryCandidateSet(query, candidate_region_set);
