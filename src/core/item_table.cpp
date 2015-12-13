@@ -159,6 +159,7 @@ namespace rsys {
           item_index_->erase((*iter)->item_id);
           pthread_mutex_unlock(&index_lock_);
           delete (*iter);
+          item_window_[index].erase(iter++);
         }
         pthread_rwlock_unlock(&window_lock_[index%kWindowLockSize]);
 
