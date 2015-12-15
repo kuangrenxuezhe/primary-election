@@ -333,10 +333,6 @@ namespace rsys {
         int last_index = cset.payload().power_size() - 1;
         float power = 0.0f;
 
-        // 要闻
-        if (candidate.item_info.power > 100) {
-          power = -100000;
-        }
         // 置顶和订阅加权
         if (candidate.candidate_type == kTopCandidate) {
           cset.mutable_payload()->set_publish_time(last_index, -1);
