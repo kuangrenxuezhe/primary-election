@@ -130,7 +130,8 @@ namespace rsys {
 
       void structed_item(const Item& proto, item_info_t& structed);
 
-      bool zone_to_region_id(const char* zone, uint64_t region_id[2]);
+      // region_id 城市在前省份在后存储，城市可省略
+      int zone_to_region_id(const char* zone, uint64_t region_id[2]);
       // zone在外部来转换
       void structed_query(const Recommend& proto, query_t& structed);
 

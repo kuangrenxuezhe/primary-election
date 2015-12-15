@@ -239,13 +239,15 @@ namespace rsys {
           if (proto.zone(i).length() <= 0)
             continue;
 
-          if (!zone_to_region_id(proto.zone(i).c_str(), region_id)) {
+          int zone_num = zone_to_region_id(proto.zone(i).c_str(), region_id);
+          if (zone_num <= 0) {
             LOG(WARNING) << "Invalid region: " << proto.zone(i);
           } else {
             structed.item_type = kRegionItem;
             pair_t pair = std::make_pair(proto.zone(i), 1.0f);
             structed.region_id.insert(std::make_pair(region_id[0], pair));
-            structed.region_id.insert(std::make_pair(region_id[1], pair));
+            if (zone_num > 1)
+              structed.region_id.insert(std::make_pair(region_id[1], pair));
           }
         }
 
@@ -282,24 +284,34 @@ namespace rsys {
       }
 
       // 地域格式--省:市
-      bool glue::zone_to_region_id(const char* zone, uint64_t region_id[2])
+      int glue::zone_to_region_id(const char* zone, uint64_t region_id[2])
       {
         const char* seperator = strchr(zone, ':'); 
         if (NULL == seperator) {
-          return false;
+          return 0;
         }
         type_id_t id;
+        int seperator_len = strlen(seperator + 1);
 
-        id.type_id_component.type = IDTYPE_PROVINCE;
-        id.type_id_component.id = makeID(zone, seperator - zone);
-        region_id[0] = id.type_id;
+        if (seperator_len < 1) {
+          id.type_id_component.type = IDTYPE_PROVINCE;
+          id.type_id_component.id = makeID(zone, seperator - zone);
+          region_id[0] = id.type_id;
 
-        seperator++;
+          return 1;
+        } else {
+          id.type_id_component.type = IDTYPE_PROVINCE;
+          id.type_id_component.id = makeID(zone, seperator - zone);
+          region_id[1] = id.type_id;
+ 
+          seperator++;
 
-        id.type_id_component.type = IDTYPE_CITY;
-        id.type_id_component.id = makeID(seperator, strlen(seperator));
-        region_id[1] = id.type_id;
-        return true;
+          id.type_id_component.type = IDTYPE_CITY;
+          id.type_id_component.id = makeID(seperator, seperator_len);
+          region_id[0] = id.type_id;
+
+          return 2;
+        }
       }
 
       void glue::structed_query(const Recommend& proto, query_t& structed)

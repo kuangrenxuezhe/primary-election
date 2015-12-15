@@ -283,15 +283,16 @@ namespace rsys {
       }
 
       if (recmd.zone().length() > 0) {
-        if (glue::zone_to_region_id(recmd.zone().c_str(), region_id)) {
+        int region_num = glue::zone_to_region_id(recmd.zone().c_str(), region_id);
+        if (region_num > 0) {
           query.item_type = kRegionItem;
           // 获取地域数据
           query.region_id = region_id[1];
           item_table_->queryCandidateSet(query, candidate_region_set);
           // 对于直辖市只处理城市，因为省份和城市是相同的
-          if (candidate_region_set.size() <= 0 && region_id[0] != region_id[1])  {
+          if (region_num > 1 && candidate_region_set.size() <= 0 && region_id[0] != region_id[1])  {
             // 若城市不存在结果则回退到省份
-            query.region_id = region_id[0];
+            query.region_id = region_id[1];
             item_table_->queryCandidateSet(query, candidate_region_set);
           }
           if (candidate_region_set.size() > 0)
