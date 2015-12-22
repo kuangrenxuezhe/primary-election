@@ -1,11 +1,11 @@
-#include "core/options.h"
+#include "core/model_options.h"
 #include "libconfig.hh"
 
 namespace souyue {
   namespace recmd {
     using namespace libconfig;
 
-    Options::Options()
+    ModelOptions::ModelOptions()
     {
       rpc_port = 6200;
       monitor_port = 16200;
@@ -24,7 +24,7 @@ namespace souyue {
       service_type = 0;
     }
 
-    Status Options::fromConf(const std::string& conf, Options& opts)
+    Status ModelOptions::fromConf(const std::string& conf, ModelOptions& opts)
     {
       Config parser;
 

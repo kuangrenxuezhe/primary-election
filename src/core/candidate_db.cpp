@@ -25,7 +25,7 @@ namespace souyue {
           }
         }
     };
-    Status CandidateDB::openDB(const Options& opts, CandidateDB** dbptr)
+    Status CandidateDB::openDB(const ModelOptions& opts, CandidateDB** dbptr)
     {
       DurationLogger duration(Duration::kMilliSeconds, "OpenDB");
       CandidateDB* c_dbptr = new CandidateDB(opts);
@@ -40,7 +40,7 @@ namespace souyue {
       return (*dbptr)->reload();
     }
 
-    CandidateDB::CandidateDB(const Options& opts)
+    CandidateDB::CandidateDB(const ModelOptions& opts)
       : singleton_(opts.work_path + kSingletonName), user_table_(NULL), item_table_(NULL)
     {
       options_ = opts;
@@ -374,7 +374,7 @@ namespace souyue {
     }
 
     // 查询用户是否在用户表中
-    Status CandidateDB::queryUserInfo(const proto::UserQuery& query, proto::UserInfo& user_info)
+    Status CandidateDB::queryUserInfo(const UserQuery& query, UserInfo& user_info)
     {
       DurationLogger duration(Duration::kMilliSeconds, "QueryUserInfo: user_id=", query.user_id());
       user_info_t user;
@@ -390,7 +390,7 @@ namespace souyue {
     }
 
     // 查询用户是否在用户表中
-    Status CandidateDB::queryItemInfo(const proto::ItemQuery& query, proto::ItemInfo& user_info)
+    Status CandidateDB::queryItemInfo(const ItemQuery& query, ItemInfo& user_info)
     {
       DurationLogger duration(Duration::kMilliSeconds, "QueryItemInfo: item_id=", query.item_id());
       item_info_t item;

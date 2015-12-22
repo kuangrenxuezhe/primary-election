@@ -47,17 +47,51 @@ class Feedback;
 class FeedbackRespond;
 class HeartBeat;
 class Item;
+class ItemInfo;
 class ItemSource;
 class ItemTag;
 class ItemWord;
+class KeyPair;
+class KeyStr;
+class KeyTime;
 class Recommend;
+class RepeatedKeyPair;
+class RepeatedKeyStr;
+class RepeatedKeyTime;
+class StatusCode;
 class Subscribe;
 class TopInfo;
 class TransferRequest;
 class TransferRespond;
 class User;
+class UserProfile;
 class UserStatus;
 
+enum Code {
+  CODE_OK = 0,
+  CODE_NOT_FOUND = 1,
+  CODE_CORRUPTION = 2,
+  CODE_NOT_SUPPORTED = 3,
+  CODE_INVALID_ARGUMENT = 4,
+  CODE_IO_ERROR = 5,
+  Code_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  Code_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool Code_IsValid(int value);
+const Code Code_MIN = CODE_OK;
+const Code Code_MAX = CODE_IO_ERROR;
+const int Code_ARRAYSIZE = Code_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Code_descriptor();
+inline const ::std::string& Code_Name(Code value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Code_descriptor(), value);
+}
+inline bool Code_Parse(
+    const ::std::string& name, Code* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Code>(
+    Code_descriptor(), name, value);
+}
 enum ActionType {
   ACTION_TYPE_NONE = 0,
   ACTION_TYPE_CLICK = 1,
@@ -196,6 +230,923 @@ inline bool CandidateType_Parse(
     CandidateType_descriptor(), name, value);
 }
 // ===================================================================
+
+class StatusCode : public ::google::protobuf::Message {
+ public:
+  StatusCode();
+  virtual ~StatusCode();
+
+  StatusCode(const StatusCode& from);
+
+  inline StatusCode& operator=(const StatusCode& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StatusCode& default_instance();
+
+  void Swap(StatusCode* other);
+
+  // implements Message ----------------------------------------------
+
+  inline StatusCode* New() const { return New(NULL); }
+
+  StatusCode* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const StatusCode& from);
+  void MergeFrom(const StatusCode& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(StatusCode* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 code = 1;
+  void clear_code();
+  static const int kCodeFieldNumber = 1;
+  ::google::protobuf::int32 code() const;
+  void set_code(::google::protobuf::int32 value);
+
+  // optional string reason = 2;
+  void clear_reason();
+  static const int kReasonFieldNumber = 2;
+  const ::std::string& reason() const;
+  void set_reason(const ::std::string& value);
+  void set_reason(const char* value);
+  void set_reason(const char* value, size_t size);
+  ::std::string* mutable_reason();
+  ::std::string* release_reason();
+  void set_allocated_reason(::std::string* reason);
+
+  // @@protoc_insertion_point(class_scope:StatusCode)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr reason_;
+  ::google::protobuf::int32 code_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static StatusCode* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class KeyStr : public ::google::protobuf::Message {
+ public:
+  KeyStr();
+  virtual ~KeyStr();
+
+  KeyStr(const KeyStr& from);
+
+  inline KeyStr& operator=(const KeyStr& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KeyStr& default_instance();
+
+  void Swap(KeyStr* other);
+
+  // implements Message ----------------------------------------------
+
+  inline KeyStr* New() const { return New(NULL); }
+
+  KeyStr* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const KeyStr& from);
+  void MergeFrom(const KeyStr& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(KeyStr* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional fixed64 key = 1;
+  void clear_key();
+  static const int kKeyFieldNumber = 1;
+  ::google::protobuf::uint64 key() const;
+  void set_key(::google::protobuf::uint64 value);
+
+  // optional bytes str = 2;
+  void clear_str();
+  static const int kStrFieldNumber = 2;
+  const ::std::string& str() const;
+  void set_str(const ::std::string& value);
+  void set_str(const char* value);
+  void set_str(const void* value, size_t size);
+  ::std::string* mutable_str();
+  ::std::string* release_str();
+  void set_allocated_str(::std::string* str);
+
+  // @@protoc_insertion_point(class_scope:KeyStr)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 key_;
+  ::google::protobuf::internal::ArenaStringPtr str_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static KeyStr* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RepeatedKeyStr : public ::google::protobuf::Message {
+ public:
+  RepeatedKeyStr();
+  virtual ~RepeatedKeyStr();
+
+  RepeatedKeyStr(const RepeatedKeyStr& from);
+
+  inline RepeatedKeyStr& operator=(const RepeatedKeyStr& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RepeatedKeyStr& default_instance();
+
+  void Swap(RepeatedKeyStr* other);
+
+  // implements Message ----------------------------------------------
+
+  inline RepeatedKeyStr* New() const { return New(NULL); }
+
+  RepeatedKeyStr* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RepeatedKeyStr& from);
+  void MergeFrom(const RepeatedKeyStr& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(RepeatedKeyStr* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .KeyStr key_str = 1;
+  int key_str_size() const;
+  void clear_key_str();
+  static const int kKeyStrFieldNumber = 1;
+  const ::KeyStr& key_str(int index) const;
+  ::KeyStr* mutable_key_str(int index);
+  ::KeyStr* add_key_str();
+  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+      mutable_key_str();
+  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+      key_str() const;
+
+  // @@protoc_insertion_point(class_scope:RepeatedKeyStr)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::KeyStr > key_str_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static RepeatedKeyStr* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class KeyTime : public ::google::protobuf::Message {
+ public:
+  KeyTime();
+  virtual ~KeyTime();
+
+  KeyTime(const KeyTime& from);
+
+  inline KeyTime& operator=(const KeyTime& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KeyTime& default_instance();
+
+  void Swap(KeyTime* other);
+
+  // implements Message ----------------------------------------------
+
+  inline KeyTime* New() const { return New(NULL); }
+
+  KeyTime* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const KeyTime& from);
+  void MergeFrom(const KeyTime& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(KeyTime* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional fixed64 key = 1;
+  void clear_key();
+  static const int kKeyFieldNumber = 1;
+  ::google::protobuf::uint64 key() const;
+  void set_key(::google::protobuf::uint64 value);
+
+  // optional int32 last_modified = 2;
+  void clear_last_modified();
+  static const int kLastModifiedFieldNumber = 2;
+  ::google::protobuf::int32 last_modified() const;
+  void set_last_modified(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:KeyTime)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 key_;
+  ::google::protobuf::int32 last_modified_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static KeyTime* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RepeatedKeyTime : public ::google::protobuf::Message {
+ public:
+  RepeatedKeyTime();
+  virtual ~RepeatedKeyTime();
+
+  RepeatedKeyTime(const RepeatedKeyTime& from);
+
+  inline RepeatedKeyTime& operator=(const RepeatedKeyTime& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RepeatedKeyTime& default_instance();
+
+  void Swap(RepeatedKeyTime* other);
+
+  // implements Message ----------------------------------------------
+
+  inline RepeatedKeyTime* New() const { return New(NULL); }
+
+  RepeatedKeyTime* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RepeatedKeyTime& from);
+  void MergeFrom(const RepeatedKeyTime& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(RepeatedKeyTime* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .KeyTime key_time = 1;
+  int key_time_size() const;
+  void clear_key_time();
+  static const int kKeyTimeFieldNumber = 1;
+  const ::KeyTime& key_time(int index) const;
+  ::KeyTime* mutable_key_time(int index);
+  ::KeyTime* add_key_time();
+  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+      mutable_key_time();
+  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+      key_time() const;
+
+  // @@protoc_insertion_point(class_scope:RepeatedKeyTime)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::KeyTime > key_time_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static RepeatedKeyTime* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class KeyPair : public ::google::protobuf::Message {
+ public:
+  KeyPair();
+  virtual ~KeyPair();
+
+  KeyPair(const KeyPair& from);
+
+  inline KeyPair& operator=(const KeyPair& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const KeyPair& default_instance();
+
+  void Swap(KeyPair* other);
+
+  // implements Message ----------------------------------------------
+
+  inline KeyPair* New() const { return New(NULL); }
+
+  KeyPair* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const KeyPair& from);
+  void MergeFrom(const KeyPair& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(KeyPair* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional fixed64 key = 1;
+  void clear_key();
+  static const int kKeyFieldNumber = 1;
+  ::google::protobuf::uint64 key() const;
+  void set_key(::google::protobuf::uint64 value);
+
+  // optional bytes name = 2;
+  void clear_name();
+  static const int kNameFieldNumber = 2;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  void set_name(const char* value);
+  void set_name(const void* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
+  // optional float power = 3;
+  void clear_power();
+  static const int kPowerFieldNumber = 3;
+  float power() const;
+  void set_power(float value);
+
+  // @@protoc_insertion_point(class_scope:KeyPair)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 key_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
+  float power_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static KeyPair* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RepeatedKeyPair : public ::google::protobuf::Message {
+ public:
+  RepeatedKeyPair();
+  virtual ~RepeatedKeyPair();
+
+  RepeatedKeyPair(const RepeatedKeyPair& from);
+
+  inline RepeatedKeyPair& operator=(const RepeatedKeyPair& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RepeatedKeyPair& default_instance();
+
+  void Swap(RepeatedKeyPair* other);
+
+  // implements Message ----------------------------------------------
+
+  inline RepeatedKeyPair* New() const { return New(NULL); }
+
+  RepeatedKeyPair* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RepeatedKeyPair& from);
+  void MergeFrom(const RepeatedKeyPair& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(RepeatedKeyPair* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .KeyPair key_pair = 1;
+  int key_pair_size() const;
+  void clear_key_pair();
+  static const int kKeyPairFieldNumber = 1;
+  const ::KeyPair& key_pair(int index) const;
+  ::KeyPair* mutable_key_pair(int index);
+  ::KeyPair* add_key_pair();
+  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+      mutable_key_pair();
+  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+      key_pair() const;
+
+  // @@protoc_insertion_point(class_scope:RepeatedKeyPair)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::KeyPair > key_pair_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static RepeatedKeyPair* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class UserProfile : public ::google::protobuf::Message {
+ public:
+  UserProfile();
+  virtual ~UserProfile();
+
+  UserProfile(const UserProfile& from);
+
+  inline UserProfile& operator=(const UserProfile& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const UserProfile& default_instance();
+
+  void Swap(UserProfile* other);
+
+  // implements Message ----------------------------------------------
+
+  inline UserProfile* New() const { return New(NULL); }
+
+  UserProfile* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const UserProfile& from);
+  void MergeFrom(const UserProfile& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(UserProfile* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional fixed64 user_id = 1;
+  void clear_user_id();
+  static const int kUserIdFieldNumber = 1;
+  ::google::protobuf::uint64 user_id() const;
+  void set_user_id(::google::protobuf::uint64 value);
+
+  // optional int32 last_modified = 2;
+  void clear_last_modified();
+  static const int kLastModifiedFieldNumber = 2;
+  ::google::protobuf::int32 last_modified() const;
+  void set_last_modified(::google::protobuf::int32 value);
+
+  // repeated .KeyStr subscribe = 3;
+  int subscribe_size() const;
+  void clear_subscribe();
+  static const int kSubscribeFieldNumber = 3;
+  const ::KeyStr& subscribe(int index) const;
+  ::KeyStr* mutable_subscribe(int index);
+  ::KeyStr* add_subscribe();
+  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+      mutable_subscribe();
+  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+      subscribe() const;
+
+  // repeated .KeyStr dislike = 4;
+  int dislike_size() const;
+  void clear_dislike();
+  static const int kDislikeFieldNumber = 4;
+  const ::KeyStr& dislike(int index) const;
+  ::KeyStr* mutable_dislike(int index);
+  ::KeyStr* add_dislike();
+  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+      mutable_dislike();
+  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+      dislike() const;
+
+  // repeated .KeyTime readed = 5;
+  int readed_size() const;
+  void clear_readed();
+  static const int kReadedFieldNumber = 5;
+  const ::KeyTime& readed(int index) const;
+  ::KeyTime* mutable_readed(int index);
+  ::KeyTime* add_readed();
+  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+      mutable_readed();
+  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+      readed() const;
+
+  // repeated .KeyTime recommended = 6;
+  int recommended_size() const;
+  void clear_recommended();
+  static const int kRecommendedFieldNumber = 6;
+  const ::KeyTime& recommended(int index) const;
+  ::KeyTime* mutable_recommended(int index);
+  ::KeyTime* add_recommended();
+  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+      mutable_recommended();
+  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+      recommended() const;
+
+  // @@protoc_insertion_point(class_scope:UserProfile)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 user_id_;
+  ::google::protobuf::RepeatedPtrField< ::KeyStr > subscribe_;
+  ::google::protobuf::RepeatedPtrField< ::KeyStr > dislike_;
+  ::google::protobuf::RepeatedPtrField< ::KeyTime > readed_;
+  ::google::protobuf::RepeatedPtrField< ::KeyTime > recommended_;
+  ::google::protobuf::int32 last_modified_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static UserProfile* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ItemInfo : public ::google::protobuf::Message {
+ public:
+  ItemInfo();
+  virtual ~ItemInfo();
+
+  ItemInfo(const ItemInfo& from);
+
+  inline ItemInfo& operator=(const ItemInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ItemInfo& default_instance();
+
+  void Swap(ItemInfo* other);
+
+  // implements Message ----------------------------------------------
+
+  inline ItemInfo* New() const { return New(NULL); }
+
+  ItemInfo* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ItemInfo& from);
+  void MergeFrom(const ItemInfo& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(ItemInfo* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional fixed64 item_id = 1;
+  void clear_item_id();
+  static const int kItemIdFieldNumber = 1;
+  ::google::protobuf::uint64 item_id() const;
+  void set_item_id(::google::protobuf::uint64 value);
+
+  // optional float power = 2;
+  void clear_power();
+  static const int kPowerFieldNumber = 2;
+  float power() const;
+  void set_power(float value);
+
+  // optional int32 publish_time = 3;
+  void clear_publish_time();
+  static const int kPublishTimeFieldNumber = 3;
+  ::google::protobuf::int32 publish_time() const;
+  void set_publish_time(::google::protobuf::int32 value);
+
+  // optional int32 item_type = 4;
+  void clear_item_type();
+  static const int kItemTypeFieldNumber = 4;
+  ::google::protobuf::int32 item_type() const;
+  void set_item_type(::google::protobuf::int32 value);
+
+  // optional int32 picture_num = 5;
+  void clear_picture_num();
+  static const int kPictureNumFieldNumber = 5;
+  ::google::protobuf::int32 picture_num() const;
+  void set_picture_num(::google::protobuf::int32 value);
+
+  // optional int32 click_count = 6;
+  void clear_click_count();
+  static const int kClickCountFieldNumber = 6;
+  ::google::protobuf::int32 click_count() const;
+  void set_click_count(::google::protobuf::int32 value);
+
+  // optional int32 click_time = 7;
+  void clear_click_time();
+  static const int kClickTimeFieldNumber = 7;
+  ::google::protobuf::int32 click_time() const;
+  void set_click_time(::google::protobuf::int32 value);
+
+  // optional int32 category_id = 8;
+  void clear_category_id();
+  static const int kCategoryIdFieldNumber = 8;
+  ::google::protobuf::int32 category_id() const;
+  void set_category_id(::google::protobuf::int32 value);
+
+  // repeated .KeyPair region_id = 9;
+  int region_id_size() const;
+  void clear_region_id();
+  static const int kRegionIdFieldNumber = 9;
+  const ::KeyPair& region_id(int index) const;
+  ::KeyPair* mutable_region_id(int index);
+  ::KeyPair* add_region_id();
+  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+      mutable_region_id();
+  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+      region_id() const;
+
+  // repeated .KeyPair belongs_to = 10;
+  int belongs_to_size() const;
+  void clear_belongs_to();
+  static const int kBelongsToFieldNumber = 10;
+  const ::KeyPair& belongs_to(int index) const;
+  ::KeyPair* mutable_belongs_to(int index);
+  ::KeyPair* add_belongs_to();
+  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+      mutable_belongs_to();
+  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+      belongs_to() const;
+
+  // repeated .KeyPair top = 11;
+  int top_size() const;
+  void clear_top();
+  static const int kTopFieldNumber = 11;
+  const ::KeyPair& top(int index) const;
+  ::KeyPair* mutable_top(int index);
+  ::KeyPair* add_top();
+  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+      mutable_top();
+  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+      top() const;
+
+  // @@protoc_insertion_point(class_scope:ItemInfo)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::uint64 item_id_;
+  float power_;
+  ::google::protobuf::int32 publish_time_;
+  ::google::protobuf::int32 item_type_;
+  ::google::protobuf::int32 picture_num_;
+  ::google::protobuf::int32 click_count_;
+  ::google::protobuf::int32 click_time_;
+  ::google::protobuf::RepeatedPtrField< ::KeyPair > region_id_;
+  ::google::protobuf::RepeatedPtrField< ::KeyPair > belongs_to_;
+  ::google::protobuf::RepeatedPtrField< ::KeyPair > top_;
+  ::google::protobuf::int32 category_id_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_message_2eproto();
+  friend void protobuf_AssignDesc_message_2eproto();
+  friend void protobuf_ShutdownFile_message_2eproto();
+
+  void InitAsDefaultInstance();
+  static ItemInfo* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class Action : public ::google::protobuf::Message {
  public:
@@ -2394,6 +3345,695 @@ class HeartBeat : public ::google::protobuf::Message {
 // ===================================================================
 
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
+// StatusCode
+
+// optional int32 code = 1;
+inline void StatusCode::clear_code() {
+  code_ = 0;
+}
+inline ::google::protobuf::int32 StatusCode::code() const {
+  // @@protoc_insertion_point(field_get:StatusCode.code)
+  return code_;
+}
+inline void StatusCode::set_code(::google::protobuf::int32 value) {
+  
+  code_ = value;
+  // @@protoc_insertion_point(field_set:StatusCode.code)
+}
+
+// optional string reason = 2;
+inline void StatusCode::clear_reason() {
+  reason_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& StatusCode::reason() const {
+  // @@protoc_insertion_point(field_get:StatusCode.reason)
+  return reason_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void StatusCode::set_reason(const ::std::string& value) {
+  
+  reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:StatusCode.reason)
+}
+inline void StatusCode::set_reason(const char* value) {
+  
+  reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:StatusCode.reason)
+}
+inline void StatusCode::set_reason(const char* value, size_t size) {
+  
+  reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:StatusCode.reason)
+}
+inline ::std::string* StatusCode::mutable_reason() {
+  
+  // @@protoc_insertion_point(field_mutable:StatusCode.reason)
+  return reason_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* StatusCode::release_reason() {
+  
+  return reason_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void StatusCode::set_allocated_reason(::std::string* reason) {
+  if (reason != NULL) {
+    
+  } else {
+    
+  }
+  reason_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), reason);
+  // @@protoc_insertion_point(field_set_allocated:StatusCode.reason)
+}
+
+// -------------------------------------------------------------------
+
+// KeyStr
+
+// optional fixed64 key = 1;
+inline void KeyStr::clear_key() {
+  key_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 KeyStr::key() const {
+  // @@protoc_insertion_point(field_get:KeyStr.key)
+  return key_;
+}
+inline void KeyStr::set_key(::google::protobuf::uint64 value) {
+  
+  key_ = value;
+  // @@protoc_insertion_point(field_set:KeyStr.key)
+}
+
+// optional bytes str = 2;
+inline void KeyStr::clear_str() {
+  str_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& KeyStr::str() const {
+  // @@protoc_insertion_point(field_get:KeyStr.str)
+  return str_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void KeyStr::set_str(const ::std::string& value) {
+  
+  str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:KeyStr.str)
+}
+inline void KeyStr::set_str(const char* value) {
+  
+  str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:KeyStr.str)
+}
+inline void KeyStr::set_str(const void* value, size_t size) {
+  
+  str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:KeyStr.str)
+}
+inline ::std::string* KeyStr::mutable_str() {
+  
+  // @@protoc_insertion_point(field_mutable:KeyStr.str)
+  return str_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* KeyStr::release_str() {
+  
+  return str_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void KeyStr::set_allocated_str(::std::string* str) {
+  if (str != NULL) {
+    
+  } else {
+    
+  }
+  str_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), str);
+  // @@protoc_insertion_point(field_set_allocated:KeyStr.str)
+}
+
+// -------------------------------------------------------------------
+
+// RepeatedKeyStr
+
+// repeated .KeyStr key_str = 1;
+inline int RepeatedKeyStr::key_str_size() const {
+  return key_str_.size();
+}
+inline void RepeatedKeyStr::clear_key_str() {
+  key_str_.Clear();
+}
+inline const ::KeyStr& RepeatedKeyStr::key_str(int index) const {
+  // @@protoc_insertion_point(field_get:RepeatedKeyStr.key_str)
+  return key_str_.Get(index);
+}
+inline ::KeyStr* RepeatedKeyStr::mutable_key_str(int index) {
+  // @@protoc_insertion_point(field_mutable:RepeatedKeyStr.key_str)
+  return key_str_.Mutable(index);
+}
+inline ::KeyStr* RepeatedKeyStr::add_key_str() {
+  // @@protoc_insertion_point(field_add:RepeatedKeyStr.key_str)
+  return key_str_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+RepeatedKeyStr::mutable_key_str() {
+  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyStr.key_str)
+  return &key_str_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+RepeatedKeyStr::key_str() const {
+  // @@protoc_insertion_point(field_list:RepeatedKeyStr.key_str)
+  return key_str_;
+}
+
+// -------------------------------------------------------------------
+
+// KeyTime
+
+// optional fixed64 key = 1;
+inline void KeyTime::clear_key() {
+  key_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 KeyTime::key() const {
+  // @@protoc_insertion_point(field_get:KeyTime.key)
+  return key_;
+}
+inline void KeyTime::set_key(::google::protobuf::uint64 value) {
+  
+  key_ = value;
+  // @@protoc_insertion_point(field_set:KeyTime.key)
+}
+
+// optional int32 last_modified = 2;
+inline void KeyTime::clear_last_modified() {
+  last_modified_ = 0;
+}
+inline ::google::protobuf::int32 KeyTime::last_modified() const {
+  // @@protoc_insertion_point(field_get:KeyTime.last_modified)
+  return last_modified_;
+}
+inline void KeyTime::set_last_modified(::google::protobuf::int32 value) {
+  
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:KeyTime.last_modified)
+}
+
+// -------------------------------------------------------------------
+
+// RepeatedKeyTime
+
+// repeated .KeyTime key_time = 1;
+inline int RepeatedKeyTime::key_time_size() const {
+  return key_time_.size();
+}
+inline void RepeatedKeyTime::clear_key_time() {
+  key_time_.Clear();
+}
+inline const ::KeyTime& RepeatedKeyTime::key_time(int index) const {
+  // @@protoc_insertion_point(field_get:RepeatedKeyTime.key_time)
+  return key_time_.Get(index);
+}
+inline ::KeyTime* RepeatedKeyTime::mutable_key_time(int index) {
+  // @@protoc_insertion_point(field_mutable:RepeatedKeyTime.key_time)
+  return key_time_.Mutable(index);
+}
+inline ::KeyTime* RepeatedKeyTime::add_key_time() {
+  // @@protoc_insertion_point(field_add:RepeatedKeyTime.key_time)
+  return key_time_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+RepeatedKeyTime::mutable_key_time() {
+  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyTime.key_time)
+  return &key_time_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+RepeatedKeyTime::key_time() const {
+  // @@protoc_insertion_point(field_list:RepeatedKeyTime.key_time)
+  return key_time_;
+}
+
+// -------------------------------------------------------------------
+
+// KeyPair
+
+// optional fixed64 key = 1;
+inline void KeyPair::clear_key() {
+  key_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 KeyPair::key() const {
+  // @@protoc_insertion_point(field_get:KeyPair.key)
+  return key_;
+}
+inline void KeyPair::set_key(::google::protobuf::uint64 value) {
+  
+  key_ = value;
+  // @@protoc_insertion_point(field_set:KeyPair.key)
+}
+
+// optional bytes name = 2;
+inline void KeyPair::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& KeyPair::name() const {
+  // @@protoc_insertion_point(field_get:KeyPair.name)
+  return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void KeyPair::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:KeyPair.name)
+}
+inline void KeyPair::set_name(const char* value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:KeyPair.name)
+}
+inline void KeyPair::set_name(const void* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:KeyPair.name)
+}
+inline ::std::string* KeyPair::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:KeyPair.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* KeyPair::release_name() {
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void KeyPair::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:KeyPair.name)
+}
+
+// optional float power = 3;
+inline void KeyPair::clear_power() {
+  power_ = 0;
+}
+inline float KeyPair::power() const {
+  // @@protoc_insertion_point(field_get:KeyPair.power)
+  return power_;
+}
+inline void KeyPair::set_power(float value) {
+  
+  power_ = value;
+  // @@protoc_insertion_point(field_set:KeyPair.power)
+}
+
+// -------------------------------------------------------------------
+
+// RepeatedKeyPair
+
+// repeated .KeyPair key_pair = 1;
+inline int RepeatedKeyPair::key_pair_size() const {
+  return key_pair_.size();
+}
+inline void RepeatedKeyPair::clear_key_pair() {
+  key_pair_.Clear();
+}
+inline const ::KeyPair& RepeatedKeyPair::key_pair(int index) const {
+  // @@protoc_insertion_point(field_get:RepeatedKeyPair.key_pair)
+  return key_pair_.Get(index);
+}
+inline ::KeyPair* RepeatedKeyPair::mutable_key_pair(int index) {
+  // @@protoc_insertion_point(field_mutable:RepeatedKeyPair.key_pair)
+  return key_pair_.Mutable(index);
+}
+inline ::KeyPair* RepeatedKeyPair::add_key_pair() {
+  // @@protoc_insertion_point(field_add:RepeatedKeyPair.key_pair)
+  return key_pair_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+RepeatedKeyPair::mutable_key_pair() {
+  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyPair.key_pair)
+  return &key_pair_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+RepeatedKeyPair::key_pair() const {
+  // @@protoc_insertion_point(field_list:RepeatedKeyPair.key_pair)
+  return key_pair_;
+}
+
+// -------------------------------------------------------------------
+
+// UserProfile
+
+// optional fixed64 user_id = 1;
+inline void UserProfile::clear_user_id() {
+  user_id_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 UserProfile::user_id() const {
+  // @@protoc_insertion_point(field_get:UserProfile.user_id)
+  return user_id_;
+}
+inline void UserProfile::set_user_id(::google::protobuf::uint64 value) {
+  
+  user_id_ = value;
+  // @@protoc_insertion_point(field_set:UserProfile.user_id)
+}
+
+// optional int32 last_modified = 2;
+inline void UserProfile::clear_last_modified() {
+  last_modified_ = 0;
+}
+inline ::google::protobuf::int32 UserProfile::last_modified() const {
+  // @@protoc_insertion_point(field_get:UserProfile.last_modified)
+  return last_modified_;
+}
+inline void UserProfile::set_last_modified(::google::protobuf::int32 value) {
+  
+  last_modified_ = value;
+  // @@protoc_insertion_point(field_set:UserProfile.last_modified)
+}
+
+// repeated .KeyStr subscribe = 3;
+inline int UserProfile::subscribe_size() const {
+  return subscribe_.size();
+}
+inline void UserProfile::clear_subscribe() {
+  subscribe_.Clear();
+}
+inline const ::KeyStr& UserProfile::subscribe(int index) const {
+  // @@protoc_insertion_point(field_get:UserProfile.subscribe)
+  return subscribe_.Get(index);
+}
+inline ::KeyStr* UserProfile::mutable_subscribe(int index) {
+  // @@protoc_insertion_point(field_mutable:UserProfile.subscribe)
+  return subscribe_.Mutable(index);
+}
+inline ::KeyStr* UserProfile::add_subscribe() {
+  // @@protoc_insertion_point(field_add:UserProfile.subscribe)
+  return subscribe_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+UserProfile::mutable_subscribe() {
+  // @@protoc_insertion_point(field_mutable_list:UserProfile.subscribe)
+  return &subscribe_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+UserProfile::subscribe() const {
+  // @@protoc_insertion_point(field_list:UserProfile.subscribe)
+  return subscribe_;
+}
+
+// repeated .KeyStr dislike = 4;
+inline int UserProfile::dislike_size() const {
+  return dislike_.size();
+}
+inline void UserProfile::clear_dislike() {
+  dislike_.Clear();
+}
+inline const ::KeyStr& UserProfile::dislike(int index) const {
+  // @@protoc_insertion_point(field_get:UserProfile.dislike)
+  return dislike_.Get(index);
+}
+inline ::KeyStr* UserProfile::mutable_dislike(int index) {
+  // @@protoc_insertion_point(field_mutable:UserProfile.dislike)
+  return dislike_.Mutable(index);
+}
+inline ::KeyStr* UserProfile::add_dislike() {
+  // @@protoc_insertion_point(field_add:UserProfile.dislike)
+  return dislike_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+UserProfile::mutable_dislike() {
+  // @@protoc_insertion_point(field_mutable_list:UserProfile.dislike)
+  return &dislike_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+UserProfile::dislike() const {
+  // @@protoc_insertion_point(field_list:UserProfile.dislike)
+  return dislike_;
+}
+
+// repeated .KeyTime readed = 5;
+inline int UserProfile::readed_size() const {
+  return readed_.size();
+}
+inline void UserProfile::clear_readed() {
+  readed_.Clear();
+}
+inline const ::KeyTime& UserProfile::readed(int index) const {
+  // @@protoc_insertion_point(field_get:UserProfile.readed)
+  return readed_.Get(index);
+}
+inline ::KeyTime* UserProfile::mutable_readed(int index) {
+  // @@protoc_insertion_point(field_mutable:UserProfile.readed)
+  return readed_.Mutable(index);
+}
+inline ::KeyTime* UserProfile::add_readed() {
+  // @@protoc_insertion_point(field_add:UserProfile.readed)
+  return readed_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+UserProfile::mutable_readed() {
+  // @@protoc_insertion_point(field_mutable_list:UserProfile.readed)
+  return &readed_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+UserProfile::readed() const {
+  // @@protoc_insertion_point(field_list:UserProfile.readed)
+  return readed_;
+}
+
+// repeated .KeyTime recommended = 6;
+inline int UserProfile::recommended_size() const {
+  return recommended_.size();
+}
+inline void UserProfile::clear_recommended() {
+  recommended_.Clear();
+}
+inline const ::KeyTime& UserProfile::recommended(int index) const {
+  // @@protoc_insertion_point(field_get:UserProfile.recommended)
+  return recommended_.Get(index);
+}
+inline ::KeyTime* UserProfile::mutable_recommended(int index) {
+  // @@protoc_insertion_point(field_mutable:UserProfile.recommended)
+  return recommended_.Mutable(index);
+}
+inline ::KeyTime* UserProfile::add_recommended() {
+  // @@protoc_insertion_point(field_add:UserProfile.recommended)
+  return recommended_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+UserProfile::mutable_recommended() {
+  // @@protoc_insertion_point(field_mutable_list:UserProfile.recommended)
+  return &recommended_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+UserProfile::recommended() const {
+  // @@protoc_insertion_point(field_list:UserProfile.recommended)
+  return recommended_;
+}
+
+// -------------------------------------------------------------------
+
+// ItemInfo
+
+// optional fixed64 item_id = 1;
+inline void ItemInfo::clear_item_id() {
+  item_id_ = GOOGLE_ULONGLONG(0);
+}
+inline ::google::protobuf::uint64 ItemInfo::item_id() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.item_id)
+  return item_id_;
+}
+inline void ItemInfo::set_item_id(::google::protobuf::uint64 value) {
+  
+  item_id_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.item_id)
+}
+
+// optional float power = 2;
+inline void ItemInfo::clear_power() {
+  power_ = 0;
+}
+inline float ItemInfo::power() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.power)
+  return power_;
+}
+inline void ItemInfo::set_power(float value) {
+  
+  power_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.power)
+}
+
+// optional int32 publish_time = 3;
+inline void ItemInfo::clear_publish_time() {
+  publish_time_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::publish_time() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.publish_time)
+  return publish_time_;
+}
+inline void ItemInfo::set_publish_time(::google::protobuf::int32 value) {
+  
+  publish_time_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.publish_time)
+}
+
+// optional int32 item_type = 4;
+inline void ItemInfo::clear_item_type() {
+  item_type_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::item_type() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.item_type)
+  return item_type_;
+}
+inline void ItemInfo::set_item_type(::google::protobuf::int32 value) {
+  
+  item_type_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.item_type)
+}
+
+// optional int32 picture_num = 5;
+inline void ItemInfo::clear_picture_num() {
+  picture_num_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::picture_num() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.picture_num)
+  return picture_num_;
+}
+inline void ItemInfo::set_picture_num(::google::protobuf::int32 value) {
+  
+  picture_num_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.picture_num)
+}
+
+// optional int32 click_count = 6;
+inline void ItemInfo::clear_click_count() {
+  click_count_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::click_count() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.click_count)
+  return click_count_;
+}
+inline void ItemInfo::set_click_count(::google::protobuf::int32 value) {
+  
+  click_count_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.click_count)
+}
+
+// optional int32 click_time = 7;
+inline void ItemInfo::clear_click_time() {
+  click_time_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::click_time() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.click_time)
+  return click_time_;
+}
+inline void ItemInfo::set_click_time(::google::protobuf::int32 value) {
+  
+  click_time_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.click_time)
+}
+
+// optional int32 category_id = 8;
+inline void ItemInfo::clear_category_id() {
+  category_id_ = 0;
+}
+inline ::google::protobuf::int32 ItemInfo::category_id() const {
+  // @@protoc_insertion_point(field_get:ItemInfo.category_id)
+  return category_id_;
+}
+inline void ItemInfo::set_category_id(::google::protobuf::int32 value) {
+  
+  category_id_ = value;
+  // @@protoc_insertion_point(field_set:ItemInfo.category_id)
+}
+
+// repeated .KeyPair region_id = 9;
+inline int ItemInfo::region_id_size() const {
+  return region_id_.size();
+}
+inline void ItemInfo::clear_region_id() {
+  region_id_.Clear();
+}
+inline const ::KeyPair& ItemInfo::region_id(int index) const {
+  // @@protoc_insertion_point(field_get:ItemInfo.region_id)
+  return region_id_.Get(index);
+}
+inline ::KeyPair* ItemInfo::mutable_region_id(int index) {
+  // @@protoc_insertion_point(field_mutable:ItemInfo.region_id)
+  return region_id_.Mutable(index);
+}
+inline ::KeyPair* ItemInfo::add_region_id() {
+  // @@protoc_insertion_point(field_add:ItemInfo.region_id)
+  return region_id_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+ItemInfo::mutable_region_id() {
+  // @@protoc_insertion_point(field_mutable_list:ItemInfo.region_id)
+  return &region_id_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+ItemInfo::region_id() const {
+  // @@protoc_insertion_point(field_list:ItemInfo.region_id)
+  return region_id_;
+}
+
+// repeated .KeyPair belongs_to = 10;
+inline int ItemInfo::belongs_to_size() const {
+  return belongs_to_.size();
+}
+inline void ItemInfo::clear_belongs_to() {
+  belongs_to_.Clear();
+}
+inline const ::KeyPair& ItemInfo::belongs_to(int index) const {
+  // @@protoc_insertion_point(field_get:ItemInfo.belongs_to)
+  return belongs_to_.Get(index);
+}
+inline ::KeyPair* ItemInfo::mutable_belongs_to(int index) {
+  // @@protoc_insertion_point(field_mutable:ItemInfo.belongs_to)
+  return belongs_to_.Mutable(index);
+}
+inline ::KeyPair* ItemInfo::add_belongs_to() {
+  // @@protoc_insertion_point(field_add:ItemInfo.belongs_to)
+  return belongs_to_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+ItemInfo::mutable_belongs_to() {
+  // @@protoc_insertion_point(field_mutable_list:ItemInfo.belongs_to)
+  return &belongs_to_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+ItemInfo::belongs_to() const {
+  // @@protoc_insertion_point(field_list:ItemInfo.belongs_to)
+  return belongs_to_;
+}
+
+// repeated .KeyPair top = 11;
+inline int ItemInfo::top_size() const {
+  return top_.size();
+}
+inline void ItemInfo::clear_top() {
+  top_.Clear();
+}
+inline const ::KeyPair& ItemInfo::top(int index) const {
+  // @@protoc_insertion_point(field_get:ItemInfo.top)
+  return top_.Get(index);
+}
+inline ::KeyPair* ItemInfo::mutable_top(int index) {
+  // @@protoc_insertion_point(field_mutable:ItemInfo.top)
+  return top_.Mutable(index);
+}
+inline ::KeyPair* ItemInfo::add_top() {
+  // @@protoc_insertion_point(field_add:ItemInfo.top)
+  return top_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+ItemInfo::mutable_top() {
+  // @@protoc_insertion_point(field_mutable_list:ItemInfo.top)
+  return &top_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+ItemInfo::top() const {
+  // @@protoc_insertion_point(field_list:ItemInfo.top)
+  return top_;
+}
+
+// -------------------------------------------------------------------
+
 // Action
 
 // optional int32 click_time = 1;
@@ -4336,6 +5976,24 @@ inline void HeartBeat::set_allocated_heartbeat(::std::string* heartbeat) {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -4343,6 +6001,11 @@ inline void HeartBeat::set_allocated_heartbeat(::std::string* heartbeat) {
 namespace google {
 namespace protobuf {
 
+template <> struct is_proto_enum< ::Code> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::Code>() {
+  return ::Code_descriptor();
+}
 template <> struct is_proto_enum< ::ActionType> : ::google::protobuf::internal::true_type {};
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::ActionType>() {

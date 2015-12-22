@@ -1,14 +1,14 @@
 #ifndef RSYS_NEWS_SERVICE_GLUE_H
 #define RSYS_NEWS_SERVICE_GLUE_H
 
-#include "chrono_expr.h"
+#include "utils/chrono_expr.h"
 #include "core/candidate_db.h"
 #include "proto/service.pb.h"
-#include "proto/record.pb.h"
+#include "proto/supplement.pb.h"
 #include "framework/CF_framework_interface.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     static const int32_t kPersistentLibrary = 1;
     static const int32_t kUpdateTrain = 0;
     static const int32_t kPrimaryElectionModuleType = 1;
@@ -47,8 +47,8 @@ namespace rsys {
         ChronoExpr         chrono_;
         CandidateDB* candidate_db_;
     };
-  }; // namespace news
-}; // namespace rsys
+  } // namespace recmd  
+} // namespace souyue
 
 #endif // #define RSYS_NEWS_SERVICE_GLUE_H
 

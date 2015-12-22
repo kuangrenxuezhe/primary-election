@@ -12,17 +12,16 @@
 #include <grpc++/support/async_unary_call.h>
 #include <grpc++/support/async_stream.h>
 #include <grpc++/support/sync_stream.h>
-namespace proto {
 
 static const char* PrimaryElection_method_names[] = {
-  "/proto.PrimaryElection/updateAction",
-  "/proto.PrimaryElection/updateItem",
-  "/proto.PrimaryElection/updateSubscribe",
-  "/proto.PrimaryElection/updateFeedback",
-  "/proto.PrimaryElection/queryUserStatus",
-  "/proto.PrimaryElection/queryCandidateSet",
-  "/proto.PrimaryElection/queryUserInfo",
-  "/proto.PrimaryElection/queryItemInfo",
+  "/PrimaryElection/updateAction",
+  "/PrimaryElection/updateItem",
+  "/PrimaryElection/updateSubscribe",
+  "/PrimaryElection/updateFeedback",
+  "/PrimaryElection/queryUserStatus",
+  "/PrimaryElection/queryCandidateSet",
+  "/PrimaryElection/queryUserInfo",
+  "/PrimaryElection/queryItemInfo",
 };
 
 std::unique_ptr< PrimaryElection::Stub> PrimaryElection::NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options) {
@@ -49,28 +48,28 @@ PrimaryElection::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   return new ::grpc::ClientAsyncResponseReader< ::Action>(channel_.get(), cq, rpcmethod_updateAction_, context, request);
 }
 
-::grpc::Status PrimaryElection::Stub::updateItem(::grpc::ClientContext* context, const ::Item& request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Stub::updateItem(::grpc::ClientContext* context, const ::Item& request, ::StatusCode* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_updateItem_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::proto::Status>* PrimaryElection::Stub::AsyncupdateItemRaw(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::proto::Status>(channel_.get(), cq, rpcmethod_updateItem_, context, request);
+::grpc::ClientAsyncResponseReader< ::StatusCode>* PrimaryElection::Stub::AsyncupdateItemRaw(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::StatusCode>(channel_.get(), cq, rpcmethod_updateItem_, context, request);
 }
 
-::grpc::Status PrimaryElection::Stub::updateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Stub::updateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::StatusCode* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_updateSubscribe_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::proto::Status>* PrimaryElection::Stub::AsyncupdateSubscribeRaw(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::proto::Status>(channel_.get(), cq, rpcmethod_updateSubscribe_, context, request);
+::grpc::ClientAsyncResponseReader< ::StatusCode>* PrimaryElection::Stub::AsyncupdateSubscribeRaw(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::StatusCode>(channel_.get(), cq, rpcmethod_updateSubscribe_, context, request);
 }
 
-::grpc::Status PrimaryElection::Stub::updateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Stub::updateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::StatusCode* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_updateFeedback_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::proto::Status>* PrimaryElection::Stub::AsyncupdateFeedbackRaw(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::proto::Status>(channel_.get(), cq, rpcmethod_updateFeedback_, context, request);
+::grpc::ClientAsyncResponseReader< ::StatusCode>* PrimaryElection::Stub::AsyncupdateFeedbackRaw(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::StatusCode>(channel_.get(), cq, rpcmethod_updateFeedback_, context, request);
 }
 
 ::grpc::Status PrimaryElection::Stub::queryUserStatus(::grpc::ClientContext* context, const ::User& request, ::UserStatus* response) {
@@ -89,20 +88,20 @@ PrimaryElection::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   return new ::grpc::ClientAsyncResponseReader< ::CandidateSet>(channel_.get(), cq, rpcmethod_queryCandidateSet_, context, request);
 }
 
-::grpc::Status PrimaryElection::Stub::queryUserInfo(::grpc::ClientContext* context, const ::proto::UserQuery& request, ::proto::UserInfo* response) {
+::grpc::Status PrimaryElection::Stub::queryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::UserInfo* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_queryUserInfo_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::proto::UserInfo>* PrimaryElection::Stub::AsyncqueryUserInfoRaw(::grpc::ClientContext* context, const ::proto::UserQuery& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::proto::UserInfo>(channel_.get(), cq, rpcmethod_queryUserInfo_, context, request);
+::grpc::ClientAsyncResponseReader< ::UserInfo>* PrimaryElection::Stub::AsyncqueryUserInfoRaw(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::UserInfo>(channel_.get(), cq, rpcmethod_queryUserInfo_, context, request);
 }
 
-::grpc::Status PrimaryElection::Stub::queryItemInfo(::grpc::ClientContext* context, const ::proto::ItemQuery& request, ::proto::ItemInfo* response) {
+::grpc::Status PrimaryElection::Stub::queryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::ItemInfo* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_queryItemInfo_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::proto::ItemInfo>* PrimaryElection::Stub::AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::proto::ItemQuery& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::proto::ItemInfo>(channel_.get(), cq, rpcmethod_queryItemInfo_, context, request);
+::grpc::ClientAsyncResponseReader< ::ItemInfo>* PrimaryElection::Stub::AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::ItemInfo>(channel_.get(), cq, rpcmethod_queryItemInfo_, context, request);
 }
 
 PrimaryElection::AsyncService::AsyncService() : ::grpc::AsynchronousService(PrimaryElection_method_names, 8) {}
@@ -124,36 +123,36 @@ void PrimaryElection::AsyncService::RequestupdateAction(::grpc::ServerContext* c
   AsynchronousService::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status PrimaryElection::Service::updateItem(::grpc::ServerContext* context, const ::Item* request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Service::updateItem(::grpc::ServerContext* context, const ::Item* request, ::StatusCode* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void PrimaryElection::AsyncService::RequestupdateItem(::grpc::ServerContext* context, ::Item* request, ::grpc::ServerAsyncResponseWriter< ::proto::Status>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void PrimaryElection::AsyncService::RequestupdateItem(::grpc::ServerContext* context, ::Item* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status PrimaryElection::Service::updateSubscribe(::grpc::ServerContext* context, const ::Subscribe* request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Service::updateSubscribe(::grpc::ServerContext* context, const ::Subscribe* request, ::StatusCode* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void PrimaryElection::AsyncService::RequestupdateSubscribe(::grpc::ServerContext* context, ::Subscribe* request, ::grpc::ServerAsyncResponseWriter< ::proto::Status>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void PrimaryElection::AsyncService::RequestupdateSubscribe(::grpc::ServerContext* context, ::Subscribe* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status PrimaryElection::Service::updateFeedback(::grpc::ServerContext* context, const ::Feedback* request, ::proto::Status* response) {
+::grpc::Status PrimaryElection::Service::updateFeedback(::grpc::ServerContext* context, const ::Feedback* request, ::StatusCode* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void PrimaryElection::AsyncService::RequestupdateFeedback(::grpc::ServerContext* context, ::Feedback* request, ::grpc::ServerAsyncResponseWriter< ::proto::Status>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void PrimaryElection::AsyncService::RequestupdateFeedback(::grpc::ServerContext* context, ::Feedback* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
 }
 
@@ -179,25 +178,25 @@ void PrimaryElection::AsyncService::RequestqueryCandidateSet(::grpc::ServerConte
   AsynchronousService::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status PrimaryElection::Service::queryUserInfo(::grpc::ServerContext* context, const ::proto::UserQuery* request, ::proto::UserInfo* response) {
+::grpc::Status PrimaryElection::Service::queryUserInfo(::grpc::ServerContext* context, const ::UserQuery* request, ::UserInfo* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void PrimaryElection::AsyncService::RequestqueryUserInfo(::grpc::ServerContext* context, ::proto::UserQuery* request, ::grpc::ServerAsyncResponseWriter< ::proto::UserInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void PrimaryElection::AsyncService::RequestqueryUserInfo(::grpc::ServerContext* context, ::UserQuery* request, ::grpc::ServerAsyncResponseWriter< ::UserInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status PrimaryElection::Service::queryItemInfo(::grpc::ServerContext* context, const ::proto::ItemQuery* request, ::proto::ItemInfo* response) {
+::grpc::Status PrimaryElection::Service::queryItemInfo(::grpc::ServerContext* context, const ::ItemQuery* request, ::ItemInfo* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void PrimaryElection::AsyncService::RequestqueryItemInfo(::grpc::ServerContext* context, ::proto::ItemQuery* request, ::grpc::ServerAsyncResponseWriter< ::proto::ItemInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void PrimaryElection::AsyncService::RequestqueryItemInfo(::grpc::ServerContext* context, ::ItemQuery* request, ::grpc::ServerAsyncResponseWriter< ::ItemInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
 }
 
@@ -214,17 +213,17 @@ void PrimaryElection::AsyncService::RequestqueryItemInfo(::grpc::ServerContext* 
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[1],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Item, ::proto::Status>(
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Item, ::StatusCode>(
           std::mem_fn(&PrimaryElection::Service::updateItem), this)));
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[2],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Subscribe, ::proto::Status>(
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Subscribe, ::StatusCode>(
           std::mem_fn(&PrimaryElection::Service::updateSubscribe), this)));
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[3],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Feedback, ::proto::Status>(
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::Feedback, ::StatusCode>(
           std::mem_fn(&PrimaryElection::Service::updateFeedback), this)));
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[4],
@@ -239,16 +238,14 @@ void PrimaryElection::AsyncService::RequestqueryItemInfo(::grpc::ServerContext* 
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[6],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::proto::UserQuery, ::proto::UserInfo>(
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::UserQuery, ::UserInfo>(
           std::mem_fn(&PrimaryElection::Service::queryUserInfo), this)));
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       PrimaryElection_method_names[7],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::proto::ItemQuery, ::proto::ItemInfo>(
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::ItemQuery, ::ItemInfo>(
           std::mem_fn(&PrimaryElection::Service::queryItemInfo), this)));
   return service_.get();
 }
 
-
-}  // namespace proto
 

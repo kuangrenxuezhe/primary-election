@@ -38,16 +38,15 @@ endif
 LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags
 
 sources=core/core_type.cpp \
-		    core/options.cpp \
+		    core/model_options.cpp \
 	      core/user_table.cpp \
 		    core/item_table.cpp \
 		    core/candidate_db.cpp \
 				service/service_glue.cpp \
 				service/service_grpc.cpp \
-		    proto/record.pb.cc \
-		    proto/message.pb.cc \
-				proto/service.pb.cc \
-				proto/service.grpc.pb.cc
+		    proto/message.pb.cpp \
+				proto/service.pb.cpp \
+				proto/service.grpc.pb.cpp
 
 unittests=unittest.cpp \
 					core/user_table_test.cpp \

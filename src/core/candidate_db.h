@@ -2,22 +2,22 @@
 #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CANDIDATE_DB_H
 
 #include "utils/status.h"
-#include "core/options.h"
+#include "core/model_options.h"
 #include "core/user_table.h"
 #include "core/item_table.h"
-#include "proto/record.pb.h"
+#include "proto/supplement.pb.h"
 #include "proto/service.pb.h"
 
 namespace souyue {
   namespace recmd {
     class CandidateDB {
       public:
-        CandidateDB(const Options& opts);
+        CandidateDB(const ModelOptions& opts);
         ~CandidateDB();
 
       public:
-        const Options& options() const { return options_; }
-        static Status openDB(const Options& opts, CandidateDB** dbptr);
+        const ModelOptions& options() const { return options_; }
+        static Status openDB(const ModelOptions& opts, CandidateDB** dbptr);
 
       public:
         // 可异步方式，线程安全
@@ -40,9 +40,9 @@ namespace souyue {
 
       public:
         // 查询用户是否在用户表中
-        Status queryItemInfo(const proto::ItemQuery& query, proto::ItemInfo& item_info);
+        Status queryItemInfo(const ItemQuery& query, ItemInfo& item_info);
         // 查询用户是否在用户表中
-        Status queryUserInfo(const proto::UserQuery& query, proto::UserInfo& user_info);
+        Status queryUserInfo(const UserQuery& query, UserInfo& user_info);
 
       protected:
         Status lock(); // 单进程锁定
@@ -52,7 +52,7 @@ namespace souyue {
         Status queryRecommendationCandidateSet(const Recommend& query, CandidateSet& candidate_set);
 
       private:
-        Options       options_;
+        ModelOptions  options_;
         FileWriter  singleton_; // 保证一个库目录只能一个进程打开
         UserTable* user_table_;
         ItemTable* item_table_;

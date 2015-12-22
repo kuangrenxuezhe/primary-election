@@ -8,11 +8,9 @@
 #ifndef _CF_FRAMEWORK_JPARSE_H_
 #define _CF_FRAMEWORK_JPARSE_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
-
+#include "util/UH_Define.h"
 #include "cJSON.h"
-
-#include "CenterToModuleProtocol.pb.h"
+#include "proto/message.pb.h"
 
 class CF_framework_jparse
 {

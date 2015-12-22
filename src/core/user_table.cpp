@@ -3,15 +3,15 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "util.h"
-#include "crc32c.h"
-#include "ahead_log.h"
+#include "utils/util.h"
+#include "utils/crc32c.h"
+#include "utils/ahead_log.h"
 #include "glog/logging.h"
-#include "proto/record.pb.h"
+#include "proto/supplement.pb.h"
 #include "proto/service.pb.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     static const fver_t kUserFver(0, 1);
     static const std::string kUserAheadLog = "wal-user";
     static const std::string kUserTable = "table-user.dat";
@@ -281,7 +281,7 @@ namespace rsys {
         }
     };
 
-    UserTable::UserTable(const Options& opts)
+    UserTable::UserTable(const ModelOptions& opts)
       : TableBase(opts.work_path, kUserTable, kUserFver), level_table_(NULL)
     {
       options_ = opts;
@@ -535,7 +535,7 @@ namespace rsys {
 
     Status UserTable::loadData(const std::string& data) 
     {
-      proto::UserInfo log_user_info;
+      UserInfo log_user_info;
 
       if (!log_user_info.ParseFromString(data)) {
         return Status::Corruption("Parse user info");
@@ -577,7 +577,7 @@ namespace rsys {
         if (NULL == user_info) {
           continue;
         }
-        proto::UserInfo log_user_info;
+        UserInfo log_user_info;
 
         log_user_info.set_user_id(iter.key());
         glue::proto_user_info(*user_info, log_user_info);
@@ -593,5 +593,5 @@ namespace rsys {
 
       return Status::OK();
     }
-  } // namespace news
-} // namespace rsys
+  } // namespace recmd
+} // namespace souyue

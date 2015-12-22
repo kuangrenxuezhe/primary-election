@@ -7,7 +7,7 @@
 
 namespace souyue {
   namespace recmd {
-    struct Options {
+    struct ModelOptions {
       // GRPC服务端口，默认：6200
       int rpc_port;
       // 服务监控端口，默认：16200
@@ -46,9 +46,9 @@ namespace souyue {
       // 服务类型，0 表示推荐，1 表示圈子订阅 默认：0
       int32_t service_type;
 
-      Options();
+      ModelOptions();
       // 从配置文件加载Option
-      static Status fromConf(const std::string& conf, Options& opts);
+      static Status fromConf(const std::string& conf, ModelOptions& opts);
     };
   } // namespace recmd 
 } // namespace souyue

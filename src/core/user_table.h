@@ -10,8 +10,8 @@
 #include "utils/table_base.h"
 #include "utils/level_table.h"
 #include "core/core_type.h"
-#include "core/options.h"
-#include "proto/record.pb.h"
+#include "core/model_options.h"
+#include "proto/supplement.pb.h"
 #include "proto/message.pb.h"
 
 namespace souyue {
@@ -21,7 +21,7 @@ namespace souyue {
         typedef LevelTable<uint64_t, user_info_t> level_table_t;
 
       public:
-        UserTable(const Options& opts);
+        UserTable(const ModelOptions& opts);
         virtual ~UserTable();
 
       public:
@@ -62,7 +62,7 @@ namespace souyue {
         bool isObsolete(int32_t last_modified, int32_t ctime);
 
       private:
-        Options            options_;
+        ModelOptions       options_;
         level_table_t* level_table_;        
         friend class   UserAheadLog;
     };

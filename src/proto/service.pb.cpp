@@ -16,8 +16,6 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace proto {
-
 namespace {
 
 
@@ -55,21 +53,20 @@ void protobuf_AddDesc_service_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::proto::protobuf_AddDesc_record_2eproto();
   ::protobuf_AddDesc_message_2eproto();
+  ::protobuf_AddDesc_supplement_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\rservice.proto\022\005proto\032\014record.proto\032\rme"
-    "ssage.proto2\200\003\n\017PrimaryElection\022\"\n\014updat"
-    "eAction\022\007.Action\032\007.Action\"\000\022$\n\nupdateIte"
-    "m\022\005.Item\032\r.proto.Status\"\000\022.\n\017updateSubsc"
-    "ribe\022\n.Subscribe\032\r.proto.Status\"\000\022,\n\016upd"
-    "ateFeedback\022\t.Feedback\032\r.proto.Status\"\000\022"
-    "\'\n\017queryUserStatus\022\005.User\032\013.UserStatus\"\000"
-    "\0220\n\021queryCandidateSet\022\n.Recommend\032\r.Cand"
-    "idateSet\"\000\0224\n\rqueryUserInfo\022\020.proto.User"
-    "Query\032\017.proto.UserInfo\"\000\0224\n\rqueryItemInf"
-    "o\022\020.proto.ItemQuery\032\017.proto.ItemInfo\"\000b\006"
-    "proto3", 446);
+    "\n\rservice.proto\032\rmessage.proto\032\020suppleme"
+    "nt.proto2\342\002\n\017PrimaryElection\022\"\n\014updateAc"
+    "tion\022\007.Action\032\007.Action\"\000\022\"\n\nupdateItem\022\005"
+    ".Item\032\013.StatusCode\"\000\022,\n\017updateSubscribe\022"
+    "\n.Subscribe\032\013.StatusCode\"\000\022*\n\016updateFeed"
+    "back\022\t.Feedback\032\013.StatusCode\"\000\022\'\n\017queryU"
+    "serStatus\022\005.User\032\013.UserStatus\"\000\0220\n\021query"
+    "CandidateSet\022\n.Recommend\032\r.CandidateSet\""
+    "\000\022(\n\rqueryUserInfo\022\n.UserQuery\032\t.UserInf"
+    "o\"\000\022(\n\rqueryItemInfo\022\n.ItemQuery\032\t.ItemI"
+    "nfo\"\000b\006proto3", 413);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "service.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_service_2eproto);
@@ -83,7 +80,5 @@ struct StaticDescriptorInitializer_service_2eproto {
 } static_descriptor_initializer_service_2eproto_;
 
 // @@protoc_insertion_point(namespace_scope)
-
-}  // namespace proto
 
 // @@protoc_insertion_point(global_scope)

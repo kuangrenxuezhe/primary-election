@@ -12,7 +12,7 @@
 
 #include "utils/status.h"
 #include "utils/table_base.h"
-#include "core/options.h"
+#include "core/model_options.h"
 #include "core/core_type.h"
 #include "proto/service.pb.h"
 #include "sparsehash/dense_hash_map"
@@ -32,7 +32,7 @@ namespace souyue {
         typedef google::dense_hash_map<uint64_t, item_index_t> hash_map_t;
 
       public:
-        ItemTable(const Options& opts);
+        ItemTable(const ModelOptions& opts);
         ~ItemTable();
       
       public:
@@ -74,7 +74,7 @@ namespace souyue {
         void eraseFromList(item_list_t& item_list, item_info_t* item_info);
 
       private:
-        Options                 options_;
+        ModelOptions            options_;
         std::atomic_bool is_eliminating_; // 表示是否在清理
         int                 window_size_; // 滑窗大小
         std::atomic_int     window_base_; // 滑窗基准位

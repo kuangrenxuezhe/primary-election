@@ -25,11 +25,9 @@
 #include <google/protobuf/metadata.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
-#include "record.pb.h"
 #include "message.pb.h"
+#include "supplement.pb.h"
 // @@protoc_insertion_point(includes)
-
-namespace proto {
 
 // Internal implementation detail -- do not call these.
 void protobuf_AddDesc_service_2eproto();
@@ -49,8 +47,6 @@ void protobuf_ShutdownFile_service_2eproto();
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
-
-}  // namespace proto
 
 // @@protoc_insertion_point(global_scope)
 

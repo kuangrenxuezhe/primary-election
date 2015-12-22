@@ -1,10 +1,10 @@
 #include "service/service_glue.h"
 
-#include "status.h"
+#include "utils/status.h"
 #include "glog/logging.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     ServiceGlue::ServiceGlue(CandidateDB* candidate_db)
       : candidate_db_(candidate_db)
     {
@@ -15,7 +15,7 @@ namespace rsys {
     }
 
     var_4 ServiceGlue::init_module(var_vd* config_info) {
-      const Options& options = candidate_db_->options();
+      const ModelOptions& options = candidate_db_->options();
       Status status = chrono_.parse(options.flush_timer);
       if (!status.ok()) {
         LOG(ERROR) << status.toString();
@@ -120,6 +120,6 @@ namespace rsys {
       }
       return 0;
     }
-  }; // namespace news
-}; // namespace rsys
+  } // namespace recmd
+} // namespace souyue
 

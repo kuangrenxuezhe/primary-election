@@ -1,8 +1,8 @@
 #include "service/service_grpc.h"
 #include "glog/logging.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     ServiceGrpc::ServiceGrpc(CandidateDB* candidate_db): candidate_db_(candidate_db)
     {
     }
@@ -33,11 +33,11 @@ namespace rsys {
       return failed_status_glue(status);
     }
 
-    grpc::Status ServiceGrpc::updateItem(grpc::ServerContext* context, const Item* request, proto::Status* response)
+    grpc::Status ServiceGrpc::updateItem(grpc::ServerContext* context, const Item* request, StatusCode* response)
     {
       Status status = candidate_db_->addItem(*request);
       if (status.ok()) {
-        response->set_code(proto::CODE_OK);
+        response->set_code(CODE_OK);
         return grpc::Status::OK;
       }
       LOG(ERROR)<<status.toString()<<", from="<<context->peer();
@@ -45,11 +45,11 @@ namespace rsys {
       return failed_status_glue(status);
     }
 
-    grpc::Status ServiceGrpc::updateSubscribe(grpc::ServerContext* context, const Subscribe* request, proto::Status* response)
+    grpc::Status ServiceGrpc::updateSubscribe(grpc::ServerContext* context, const Subscribe* request, StatusCode* response)
     {
       Status status = candidate_db_->updateSubscribe(*request);
       if (status.ok()) {
-        response->set_code(proto::CODE_OK);
+        response->set_code(CODE_OK);
         return grpc::Status::OK;
       }
       LOG(ERROR)<<status.toString()<<", from="<<context->peer();
@@ -57,11 +57,11 @@ namespace rsys {
       return failed_status_glue(status);
     }
 
-    grpc::Status ServiceGrpc::updateFeedback(grpc::ServerContext* context, const Feedback* request, proto::Status* response)
+    grpc::Status ServiceGrpc::updateFeedback(grpc::ServerContext* context, const Feedback* request, StatusCode* response)
     {
       Status status = candidate_db_->updateFeedback(*request);
       if (status.ok()) {
-        response->set_code(proto::CODE_OK);
+        response->set_code(CODE_OK);
         return grpc::Status::OK;
       }
       LOG(ERROR)<<status.toString()<<", from="<<context->peer();
@@ -95,7 +95,7 @@ namespace rsys {
       return failed_status_glue(status);
     }
 
-    grpc::Status ServiceGrpc::queryUserInfo(grpc::ServerContext* context, const proto::UserQuery* request, proto::UserInfo* response)
+    grpc::Status ServiceGrpc::queryUserInfo(grpc::ServerContext* context, const UserQuery* request, UserInfo* response)
     {
       Status status = candidate_db_->queryUserInfo(*request, *response);
       if (status.ok()) {
@@ -106,7 +106,7 @@ namespace rsys {
       return failed_status_glue(status);
     }
 
-    grpc::Status ServiceGrpc::queryItemInfo(grpc::ServerContext* context, const proto::ItemQuery* request, proto::ItemInfo* response)
+    grpc::Status ServiceGrpc::queryItemInfo(grpc::ServerContext* context, const ItemQuery* request, ItemInfo* response)
     {
       Status status = candidate_db_->queryItemInfo(*request, *response);
       if (status.ok()) {
@@ -116,5 +116,5 @@ namespace rsys {
 
       return failed_status_glue(status);
     }
-  } // namespace news
-} // namespace rsys
+  } // namespace recmd
+} // namespace souyue

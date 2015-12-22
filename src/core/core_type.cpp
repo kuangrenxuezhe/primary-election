@@ -38,35 +38,35 @@ namespace souyue {
         }
       }
 
-      void glue::structed_user_info(const proto::UserInfo& proto, user_info_t& structed)
+      void glue::structed_user_info(const UserInfo& proto, user_info_t& structed)
       {
         structed.last_modified = proto.last_modified();
         for (int i = 0; i < proto.subscribe_size(); ++i) {
-          const proto::KeyStr& pair = proto.subscribe(i);
+          const KeyStr& pair = proto.subscribe(i);
           structed.subscribe.insert(std::make_pair(pair.key(), pair.str()));
         }
         for (int i = 0; i < proto.dislike_size(); ++i) {
-          const proto::KeyStr& pair = proto.dislike(i);
+          const KeyStr& pair = proto.dislike(i);
           structed.dislike.insert(std::make_pair(pair.key(), pair.str()));
         }
         for (int i = 0; i < proto.readed_size(); ++i) {
-          const proto::KeyTime& pair  = proto.readed(i);
+          const KeyTime& pair  = proto.readed(i);
           structed.readed.insert(std::make_pair(pair.key(), pair.last_modified()));
         }
         for (int i = 0; i < proto.recommended_size(); ++i) {
-          const proto::KeyTime& pair  = proto.recommended(i);
+          const KeyTime& pair  = proto.recommended(i);
           structed.recommended.insert(std::make_pair(pair.key(), pair.last_modified()));
         }
       }
 
-      void glue::proto_user_info(const user_info_t& structed, proto::UserInfo& proto)
+      void glue::proto_user_info(const user_info_t& structed, UserInfo& proto)
       {
         proto.set_last_modified(structed.last_modified);
 
         proto.mutable_subscribe()->Reserve(structed.subscribe.size());
         for (map_str_t::const_iterator citer = structed.subscribe.begin();
             citer != structed.subscribe.end(); ++citer) {
-          proto::KeyStr* pair = proto.add_subscribe();
+          KeyStr* pair = proto.add_subscribe();
 
           pair->set_key(citer->first);
           pair->set_str(citer->second);
@@ -75,7 +75,7 @@ namespace souyue {
         proto.mutable_dislike()->Reserve(structed.dislike.size());
         for (map_str_t::const_iterator citer = structed.dislike.begin();
             citer != structed.dislike.end(); ++citer) {
-          proto::KeyStr* pair = proto.add_dislike();
+          KeyStr* pair = proto.add_dislike();
 
           pair->set_key(citer->first);
           pair->set_str(citer->second);
@@ -84,7 +84,7 @@ namespace souyue {
         proto.mutable_readed()->Reserve(structed.readed.size());
         for (map_time_t::const_iterator citer = structed.readed.begin();
             citer != structed.readed.end(); ++citer) {
-          proto::KeyTime* pair = proto.add_readed();
+          KeyTime* pair = proto.add_readed();
 
           pair->set_key(citer->first);
           pair->set_last_modified(citer->second);
@@ -93,14 +93,14 @@ namespace souyue {
         proto.mutable_recommended()->Reserve(structed.recommended.size());
         for (map_time_t::const_iterator citer = structed.recommended.begin();
             citer != structed.recommended.end(); ++citer) {
-          proto::KeyTime* pair = proto.add_recommended();
+          KeyTime* pair = proto.add_recommended();
 
           pair->set_key(citer->first);
           pair->set_last_modified(citer->second);
         }
       }
 
-      void glue::structed_item_info(const proto::ItemInfo& proto, item_info_t& structed)
+      void glue::structed_item_info(const ItemInfo& proto, item_info_t& structed)
       {
         structed.item_id = proto.item_id();
         structed.click_count = proto.click_count();
@@ -112,26 +112,26 @@ namespace souyue {
         structed.category_id = proto.category_id();
 
         for (int i = 0; i < proto.region_id_size(); ++i) {
-          const proto::KeyPair& pair = proto.region_id(i);
+          const KeyPair& pair = proto.region_id(i);
           pair_t value = std::make_pair(pair.name(), pair.power());
 
           structed.region_id.insert(std::make_pair(pair.key(), value));
         }
         for (int i = 0; i < proto.belongs_to_size(); ++i) {
-          const proto::KeyPair& pair = proto.belongs_to(i);
+          const KeyPair& pair = proto.belongs_to(i);
           pair_t value = std::make_pair(pair.name(), pair.power());
 
           structed.belongs_to.insert(std::make_pair(pair.key(), value));
         }
         for (int i= 0; i < proto.top_size(); i++) {
-          const proto::KeyPair& pair = proto.top(i);
+          const KeyPair& pair = proto.top(i);
           pair_t value = std::make_pair(pair.name(), pair.power());
 
           structed.top.insert(std::make_pair(pair.key(), value));
         }
       }
 
-      void glue::proto_item_info(const item_info_t& structed, proto::ItemInfo& proto)
+      void glue::proto_item_info(const item_info_t& structed, ItemInfo& proto)
       {
         proto.set_item_id(structed.item_id);
 
@@ -146,7 +146,7 @@ namespace souyue {
         proto.mutable_region_id()->Reserve(structed.region_id.size());
         for (map_pair_t::const_iterator iter = structed.region_id.begin();
             iter != structed.region_id.end(); ++iter) {
-          proto::KeyPair* pair = proto.add_region_id();
+          KeyPair* pair = proto.add_region_id();
 
           pair->set_key(iter->first);
           pair->set_name(iter->second.first);
@@ -156,7 +156,7 @@ namespace souyue {
         proto.mutable_belongs_to()->Reserve(structed.belongs_to.size());
         for (map_pair_t::const_iterator iter = structed.belongs_to.begin();
             iter != structed.belongs_to.end(); ++iter) {
-          proto::KeyPair* pair = proto.add_belongs_to();
+          KeyPair* pair = proto.add_belongs_to();
 
           pair->set_key(iter->first);
           pair->set_name(iter->second.first);
@@ -166,7 +166,7 @@ namespace souyue {
         proto.mutable_top()->Reserve(structed.top.size());
         for (map_pair_t::const_iterator iter = structed.top.begin();
             iter != structed.top.end(); ++iter) {
-          proto::KeyPair* pair = proto.add_top();
+          KeyPair* pair = proto.add_top();
 
           pair->set_key(iter->first);
           pair->set_name(iter->second.first);
@@ -294,7 +294,7 @@ namespace souyue {
         int seperator_len = strlen(seperator + 1);
 
         // 若末尾存在分号则计算id时删除
-        while (sperator_len>0 && seperator[seperator_len] == ';')
+        while (seperator_len>0 && seperator[seperator_len] == ';')
           seperator_len--;
 
         if (seperator_len < 1) {

@@ -1,14 +1,14 @@
 #include "core/item_table.h"
 
-#include "buffer.h"
-#include "util.h"
-#include "crc32c.h"
+#include "utils/buffer.h"
+#include "utils/util.h"
+#include "utils/crc32c.h"
 #include "glog/logging.h"
-#include "proto/record.pb.h"
+#include "proto/supplement.pb.h"
 #include "proto/service.pb.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     static const fver_t kItemFver(1, 0);
 
     static const char kLogTypeItem   = 'I';
@@ -80,7 +80,7 @@ namespace rsys {
         ItemTable* item_table_;
     };
 
-    ItemTable::ItemTable(const Options& opts)
+    ItemTable::ItemTable(const ModelOptions& opts)
       : TableBase(opts.work_path, kItemTable, kItemFver)
       , item_window_(NULL), window_lock_(NULL), item_index_(NULL)
     {
@@ -441,7 +441,7 @@ namespace rsys {
     Status ItemTable::loadData(const std::string& data)
     {
       int32_t ctime = time(NULL);
-      proto::ItemInfo log_item_info;
+      ItemInfo log_item_info;
       const char* c_data = data.c_str();
 
       if (!log_item_info.ParseFromArray(c_data + 1, data.length() - 1)) {
@@ -494,7 +494,7 @@ namespace rsys {
       item_list_t::iterator iter = item_top_.begin();
       for (; iter != item_top_.end(); ++iter) {
         std::string data;
-        proto::ItemInfo log_item_info;
+        ItemInfo log_item_info;
 
         data.append(1, kTableTypeTop);
         glue::proto_item_info(*(*iter), log_item_info);
@@ -513,7 +513,7 @@ namespace rsys {
         iter = item_window_[index].begin();
         for (; iter != item_window_[index].end(); ++iter) {
           std::string data;
-          proto::ItemInfo log_item_info;
+          ItemInfo log_item_info;
 
           data.append(1, kTableTypeNormal);
           glue::proto_item_info(*(*iter), log_item_info);

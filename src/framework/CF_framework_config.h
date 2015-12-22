@@ -66,12 +66,6 @@ typedef struct _center_config_
   var_f4 fw_time_factor;
   var_f4 fw_algorithm_factor;
 
-  var_1  md_kafka_host[32];
-  var_u2 md_kafka_port;
-  var_1  md_kafka_topic[64];
-  var_4  md_kafka_partition;
-  var_1  md_kafka_save[256];
-
   // 
   var_4 init()
   {
@@ -179,17 +173,6 @@ typedef struct _center_config_
     if(read.GetFieldValue("FW_ALGORITHM_FACTOR", fw_algorithm_factor))
       return -1;
 
-    if(read.GetFieldValue("MD_KAFKA_HOST", md_kafka_host))
-      return -1;
-    if(read.GetFieldValue("MD_KAFKA_PORT", md_kafka_port))
-      return -1;
-    if(read.GetFieldValue("MD_KAFKA_TOPIC", md_kafka_topic))
-      return -1;
-    if(read.GetFieldValue("MD_KAFKA_PARTITION", md_kafka_partition))
-      return -1;
-    if(read.GetFieldValue("MD_KAFKA_SAVE", md_kafka_save))
-      return -1;
-
     return 0;
   }
 } CENTER_CONFIG;
@@ -262,6 +245,12 @@ typedef struct _module_config_
 
   var_1 nbm_fn_dic[256];
   var_1 nbm_itm_path[256];
+
+  var_1  md_kafka_host[32];
+  var_u2 md_kafka_port;
+  var_1  md_kafka_topic[64];
+  var_4  md_kafka_partition;
+  var_1  md_kafka_save[256];
 
   var_4 init()
   {
@@ -380,6 +369,17 @@ typedef struct _module_config_
     if(read.GetFieldValue("NBM_FN_DIC", nbm_fn_dic))
       return -1;
     if(read.GetFieldValue("NBM_ITM_PATH", nbm_itm_path))
+      return -1;
+
+    if(read.GetFieldValue("MD_KAFKA_HOST", md_kafka_host))
+      return -1;
+    if(read.GetFieldValue("MD_KAFKA_PORT", md_kafka_port))
+      return -1;
+    if(read.GetFieldValue("MD_KAFKA_TOPIC", md_kafka_topic))
+      return -1;
+    if(read.GetFieldValue("MD_KAFKA_PARTITION", md_kafka_partition))
+      return -1;
+    if(read.GetFieldValue("MD_KAFKA_SAVE", md_kafka_save))
       return -1;
 
     return 0;
