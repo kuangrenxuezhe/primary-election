@@ -9,13 +9,199 @@
 #ifndef _CF_FRAMEWORK_MODULE_H_
 #define _CF_FRAMEWORK_MODULE_H_
 
-#include "util/UH_Define.h"
-#include "util/UC_Mem_Allocator_Recycle.h"
+#include "../code_library/platform_cross/UH_Define.h"
+#include "../code_library/platform_cross/UC_Mem_Allocator_Recycle.h"
 
-#include "framework/CF_framework_config.h"
-#include "framework/CF_framework_interface.h"
+#include "CF_framework_config.h"
+#include "CF_framework_interface.h"
+#include "CF_framework_jparse.h"
 
-#include "proto/message.pb.h"
+#include "CenterToModuleProtocol.pb.h"
+
+#include "rdkafkacpp.h"
+
+using namespace RdKafka;
+
+class UC_Kafka
+{
+public:
+    UC_Kafka()
+    {
+        m_partition = 0;
+        
+        m_cfg_kafka = NULL;
+        m_cfg_topic = NULL;
+        
+        m_consumer = NULL;
+        m_topic = NULL;
+    }
+    
+    var_4 connect(const var_1* host, const var_u2 port, const var_1* topic, var_4 partition = 0, const var_1* save_offset = NULL, var_4 is_init = 0)
+    {
+        m_partition = partition;
+        
+        m_cfg_kafka = Conf::create(Conf::CONF_GLOBAL);
+        m_cfg_topic = Conf::create(Conf::CONF_TOPIC);
+        if(m_cfg_kafka == NULL || m_cfg_topic == NULL)
+        {
+            printf("create conf kafka or topic error\n");
+            return -1;
+        }
+
+        std::string str_error;
+        
+        char brocker[32];
+        sprintf(brocker,"%s:%d", host, port);
+        
+        std::string str_broker = brocker;
+        
+        if(m_cfg_kafka->set("metadata.broker.list", str_broker, str_error) != Conf::CONF_OK)
+        {
+            printf("set conf kafka error\n");
+            return -1;
+        }
+        
+        if(save_offset)
+        {
+            if(is_init)
+                cp_remove_file((var_1*)save_offset);
+            
+            if(m_cfg_topic->set("auto.commit.interval.ms", "100", str_error) != Conf::CONF_OK)
+            {
+                printf("set topic conf auto.commit.interval.ms error\n");
+                return -1;
+            }
+            
+            if(m_cfg_topic->set("offset.store.path", save_offset, str_error) != Conf::CONF_OK)
+            {
+                printf("set topic offset.store.path error\n");
+                return -1;
+            }
+            if(m_cfg_topic->set("auto.offset.reset", "smallest", str_error) != Conf::CONF_OK)
+            {
+                printf("set topic auto.offset.reset error\n");
+                return -1;
+            }
+        }
+        
+        m_consumer = RdKafka::Consumer::create(m_cfg_kafka, str_error);
+        if(m_consumer == NULL)
+        {
+            printf("create consumer error\n");
+            return -1;
+        }
+
+        std::string str_topic = topic;
+        
+        m_topic = RdKafka::Topic::create(m_consumer, str_topic, m_cfg_topic, str_error);
+        if(m_topic == NULL)
+        {
+            printf("create topic error\n");
+            return -1;
+        }
+
+        if(m_consumer->start(m_topic, m_partition, Topic::OFFSET_STORED) != ERR_NO_ERROR)
+        {
+            printf("start consumer error\n");
+            return -1;
+        }
+        
+        return 0;
+    }
+    
+    var_vd disconnect()
+    {
+        if(m_consumer != NULL)
+        {
+            if(m_topic != NULL)
+            {
+                m_consumer->stop(m_topic, m_partition);
+                m_consumer->poll(1000);
+                
+                delete m_topic;
+                m_topic = NULL;
+            }
+            
+            delete m_consumer;
+            m_consumer = NULL;
+            
+            wait_destroyed(5000);
+        }
+    }
+
+    var_4 message(var_1* result, const var_8 max_size, var_8& ret_size)
+    {
+        if(m_consumer == NULL || m_topic == NULL)
+        {
+            printf("first call connect\n");
+            return -1;
+        }
+
+        var_4 ret_val  = 0;
+        
+        RdKafka::Message* msg = m_consumer->consume(m_topic, m_partition, 10000);
+        switch(msg->err())
+        {
+            case ERR__TIMED_OUT:
+                printf("message - time out\n");
+                ret_val = -100;
+                break;
+                
+            case ERR__PARTITION_EOF:
+                printf("message - partition eof\n");
+                ret_val = -200;
+                break;
+                
+            case ERR_NO_ERROR:
+            {
+                ret_size = msg->len(); // msg->offset()
+                if(max_size < ret_size + 1)
+                    ret_val = -300;
+                else
+                {
+                    memcpy(result, msg->payload(), ret_size);
+                    result[ret_size] = 0;
+                }
+                break;
+            }
+            default:
+                printf("unknow error - %d, %s\n", msg->err(), msg->errstr().c_str());
+                
+                ret_val = -400;
+                break;
+        }
+        
+        delete msg;
+
+        m_consumer->poll(0);
+        
+        return ret_val;
+    }
+    
+    var_vd test()
+    {
+        UC_Kafka kfk;
+        
+        if(kfk.connect("103.7.221.141", 9099, "formaldehyde"))
+            return;
+        
+        var_1 buf[102400];
+        var_8 len = 0;
+        var_8 max = 102400;
+        
+        kfk.message(buf, max, len);
+    }
+private:
+    var_4 m_partition;
+    
+    Conf* m_cfg_kafka;
+    Conf* m_cfg_topic;
+    
+    Consumer* m_consumer;
+    Topic*    m_topic;
+    
+    var_1 m_save_offset[256];
+};
 
 class CF_framework_module
 {
@@ -29,21 +215,25 @@ public:
             return -1;
         if(cp_listen_socket(m_listen, m_cfg.md_listen_port))
             return -1;
-       
+        
         m_module = module;
-
-        m_module_type = m_module->module_type();
         
         m_is_train = m_module->is_update_train();
         m_is_persistent = m_module->is_persistent_library();
 
         if(m_module->init_module((var_vd*)&m_cfg))
             return -1;
+
+        if(m_kfk.connect(m_cfg.md_kafka_host, m_cfg.md_kafka_port, m_cfg.md_kafka_topic, 0, m_cfg.md_kafka_save))
+        {
+            printf("init_framework - kafka connect failure\n");
+            return -1;
+        }
         
-        if(m_mem_message.init(m_cfg.md_message_size))
+        if(cp_create_thread(thread_kafka, this))
             return -1;
         
-        if(cp_create_thread(thread_work, this, m_cfg.md_work_thread_num))
+        if(cp_create_thread(thread_network, this, m_cfg.md_work_thread_num))
             return -1;
         
         if(m_is_persistent && cp_create_thread(thread_persistent, this))
@@ -189,32 +379,126 @@ public:
         return -9;
     }
     
-    static CP_THREAD_T thread_work(var_vd* argv)
+    static CP_THREAD_T thread_kafka(var_vd* argv)
+    {
+        CF_framework_module* cc = (CF_framework_module*)argv;
+        
+        var_8  get_len = 0;
+        var_8  get_max = cc->m_cfg.md_message_size;
+        var_1* get_buf = new var_1[get_max];
+        assert(get_buf);
+
+        CF_framework_jparse jparse;
+        
+        TransferRequest request;
+
+        for(;;)
+        {
+            request.Clear();
+            
+            if(cc->m_kfk.message(get_buf, get_max, get_len))
+            {
+                printf("thread_kafka - kfk.message failure\n");
+                continue;
+            }
+            
+            if(jparse.parse_json(get_buf, &request))
+            {
+                printf("thread_kafka - jparse.parse_json failure\n%s\n", get_buf);
+                continue;
+            }
+            
+            switch(request.main_protocol())
+            {
+                case 1: // action
+                {
+                    Action action;
+                    if(request.protocol().UnpackTo(&action) == false)
+                    {
+                        printf("thread_kafka - action unpack(action) failure\n");
+                        continue;
+                    }
+                    if(cc->m_module->update_action(action))
+                    {
+                        printf("thread_kafka - action update_action failure\n");
+                        continue;
+                    }
+                    
+                    printf("thread_kafka - action update_action success\n");
+                    break;
+                }
+                case 2: // item
+                {
+                    Item item;
+                    if(request.protocol().UnpackTo(&item) == false)
+                    {
+                        printf("thread_kafka - item unpack(item) failure\n");
+                        continue;
+                    }
+                    if(cc->m_module->update_item(item))
+                    {
+                        printf("thread_kafka - item update_item failure\n");
+                        continue;
+                    }
+                    
+                    printf("thread_kafka - item update_item success\n");
+                    break;
+                }
+                case 3: // subscribe
+                {
+                    Subscribe subscribe;
+                    if(request.protocol().UnpackTo(&subscribe) == false)
+                    {
+                        printf("thread_kafka - subscribe unpack(subscribe) failure\n");
+                        continue;
+                    }
+
+                    if(cc->m_module->update_subscribe(subscribe))
+                    {
+                        printf("thread_kafka - subscribe update_subscribe failure\n");
+                        continue;
+                    }
+                    
+                    printf("thread_kafka - subscribe update_subscribe success\n");
+                    break;
+                }
+                default:
+                {
+                    printf("thread_kafka - protocol type error\n");
+                    break;
+                }
+            }
+        }
+        
+        return NULL;
+    }
+
+    static CP_THREAD_T thread_network(var_vd* argv)
     {
         CF_framework_module* cc = (CF_framework_module*)argv;
         
         CP_SOCKET_T client;
 
         var_4  recv_len = 0;
-        var_1* recv_buf = (var_1*)cc->m_mem_message.get_mem();
+        var_1* recv_buf = new var_1[cc->m_cfg.md_message_size];
         assert(recv_buf);
         
         var_4  send_len = 0;
-        var_1* send_buf = (var_1*)cc->m_mem_message.get_mem();
+        var_1* send_buf = new var_1[cc->m_cfg.md_message_size];
         assert(send_buf);
         
         for(;;)
         {
             if(cc->recv_request(client, recv_buf, cc->m_cfg.md_message_size, recv_len))
             {
-                printf("thread_work - recv_request failure\n");
+                printf("thread_network - recv_request failure\n");
                 continue;
             }
             
             TransferRequest t_request;
             if(t_request.ParseFromArray(recv_buf, recv_len) == false)
             {
-                printf("thread_work - t_request.ParseFromArray failure\n");
+                printf("thread_network - t_request.ParseFromArray failure\n");
                 continue;
             }
             
@@ -321,9 +605,6 @@ public:
             
             cc->send_request(client, send_buf, send_len);
         }
-        
-        cc->m_mem_message.put_mem((var_vd*)send_buf);
-        cc->m_mem_message.put_mem((var_vd*)recv_buf);
         
         return NULL;
     }
@@ -436,17 +717,13 @@ public:
     CP_SOCKET_T m_listen;
     
     MODULE_CONFIG m_cfg;
-
-    UC_Mem_Allocator_Recycle m_mem_message;
     
     CF_framework_interface* m_module;
     
-    var_4 m_module_type;
     var_4 m_is_train;
     var_4 m_is_persistent;
+    
+    UC_Kafka m_kfk;
 };
 
 #endif // _CF_FRAMEWORK_MODULE_H_
-
-// action.ByteSize();
-// action.SerializeToArray(<#void *data#>, <#int size#>)

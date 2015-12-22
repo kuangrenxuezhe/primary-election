@@ -293,6 +293,10 @@ namespace rsys {
         type_id_t id;
         int seperator_len = strlen(seperator + 1);
 
+        // 若末尾存在分号则计算id时删除
+        while (sperator_len>0 && seperator[seperator_len] == ';')
+          seperator_len--;
+
         if (seperator_len < 1) {
           id.type_id_component.type = IDTYPE_PROVINCE;
           id.type_id_component.id = makeID(zone, seperator - zone);
