@@ -1,9 +1,9 @@
 #include "core/core_type.h"
-#include "util.h"
+#include "utils/util.h"
 #include "glog/logging.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
       void glue::structed_action(const Action& proto, action_t& structed)
       {
         structed.item_id = proto.item_id();
@@ -369,5 +369,5 @@ namespace rsys {
 
         cset.mutable_payload()->set_power(last_index, power);
       }
-  } // namespace news
-} // namespace rsys
+  } // namespace recmd
+} // namespace souyue

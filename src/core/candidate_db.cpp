@@ -1,12 +1,12 @@
 #include "core/candidate_db.h"
 #include <sys/time.h>
-#include "util.h"
-#include "duration.h"
+#include "utils/util.h"
+#include "utils/duration.h"
 #include "core/core_type.h"
 #include "glog/logging.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     static const fver_t kSingletonVer(1,0);
     static const std::string kSingletonName = "/._candb_lock_";
 
@@ -403,6 +403,6 @@ namespace rsys {
 
       return Status::OK();
     }
-  } // namespace news
-} // namespace rsys
+  } // namespace recmd
+} // namespace souyue
 

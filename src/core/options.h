@@ -1,12 +1,12 @@
-#ifndef RSYS_NEWS_OPTIONS_H
-#define RSYS_NEWS_OPTIONS_H
+#ifndef SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_OPTIONS_H
+#define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_OPTIONS_H
 
 #include <stdint.h>
 #include <string>
-#include "status.h"
+#include "utils/status.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     struct Options {
       // GRPC服务端口，默认：6200
       int rpc_port;
@@ -50,7 +50,7 @@ namespace rsys {
       // 从配置文件加载Option
       static Status fromConf(const std::string& conf, Options& opts);
     };
-  } // namespace news
-} // namespace rsys
-#endif // #define RSYS_NEWS_OPTIONS_H
+  } // namespace recmd 
+} // namespace souyue
+#endif // #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_OPTIONS_H
 

@@ -1,8 +1,8 @@
 #include "core/options.h"
 #include "libconfig.hh"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     using namespace libconfig;
 
     Options::Options()
@@ -70,5 +70,5 @@ namespace rsys {
       }
       return Status::OK();
     }
-  } // namespace news
-} // namespace rsys
+  } // namespace recmd 
+} // namespace souyue

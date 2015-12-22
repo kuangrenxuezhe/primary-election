@@ -1,18 +1,29 @@
+BUILD=.build
+TARGET=candb
+UNITTESTS=unittest
 
-ifneq ($(strip $(enable_debug)),)
-		ENABLE_DEBUG=1
+SRCPATH=./src/
+OBJPATH=$(BUILD)/objs/
+
+ifneq ($(strip $(debug)),)
+	DEBUG=1
 endif
-ENABLE_DEBUG?=0
+DEBUG?=0
+
+ifneq ($(strip $(prefix)),)
+	PREFIX=$(prefix)
+endif
+PREFIX?=/usr
 
 GCC_VERSION=$(shell g++ -dumpversion)
 
-INCLUDES+=-I./src -I./deps/include  -I./rsys-util/src
-LDFLAGS=-L./deps/lib
+INCLUDES=-I./src -I./deps/include
+LDFLAGS=-L./deps/lib -L$(BUILD)/lib
 
-ifneq ($(strip $(ENABLE_DEBUG)), 1)
-		CFLAGS+= -g -w -O2 -DNDEBUG
+ifneq ($(strip $(DEBUG)), 1)
+	CFLAGS+= -g -w -O2 -DNDEBUG
 else
-		CFLAGS+= -g -w -O0 -DDEBUG -DTRACE
+	CFLAGS+=-g -w -O0 -DDEBUG -DTRACE
 endif
 
 ifeq ($(GCC_VERSION), 4.8)
@@ -21,16 +32,10 @@ else
 	CFLAGS+= -std=c++0x
 endif
 
-LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags
+.SUFFIXES:
+.PHONY: build install check rebuild uninstall clean help
 
-utils=status.cpp \
-			crc32c.cpp \
-			wal.cpp \
-			file.cpp \
-			table_file.cpp \
-			ahead_log.cpp \
-			table_base.cpp \
-			chrono_expr.cpp
+LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags
 
 sources=core/core_type.cpp \
 		    core/options.cpp \
@@ -44,26 +49,66 @@ sources=core/core_type.cpp \
 				proto/service.pb.cc \
 				proto/service.grpc.pb.cc
 
-mains=main.cpp
-
 unittests=unittest.cpp \
 					core/user_table_test.cpp \
 					core/item_table_test.cpp \
 					core/candidate_db_test.cpp
+				
+OBJECTS=$(addprefix $(OBJPATH), $(sources:.cpp=.o))
+OBJTESTS=$(addprefix $(OBJPATH), $(unittests:.cpp=.o))
 
-UTILS=$(addprefix ./rsys-util/src/, $(utils))
-SOURCES=$(addprefix ./src/, $(sources))
+build: mkdir $(TARGET) $(UNITTESTS)
 
-MAINS=$(addprefix ./src/, $(mains))
-UNITTESTS=$(addprefix ./src/, $(unittests))
+$(TARGET): $(OBJECTS)
+	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
 
-all: main unittest 
+$(UNITTESTS): $(OBJTESTS)
+	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
 
-main:
-	g++ -o bin/candb $(CFLAGS) $(SOURCES) $(UTILS) $(MAINS) $(INCLUDES) $(LDFLAGS) $(LIBS)
+sinclude $(addprefix $(OBJPATH), $(sources:.cpp=.d))
+sinclude $(addprefix $(OBJPATH), $(unittests:.cpp=.d))
+$(OBJPATH)%.o: $(SRCPATH)%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CFLAGS) $(INCLUDES) $^ -c -o $@
+	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $^ > $(OBJPATH)/$*.d
+	@mv -f $(OBJPATH)/$*.d $(OBJPATH)/$*.d.tmp
+	@sed -e 's|.*:|$(OBJPATH)/$*.o:|' < $(OBJPATH)/$*.d.tmp > $(OBJPATH)/$*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $(OBJPATH)/$*.d.tmp | fmt -1 | \
+		sed -e 's/^ *//' -e 's/$$/:/' >> $(OBJPATH)/$*.d
+	@rm -f $(OBJPATH)/$*.d.tmp
 
-unittest: 
-	g++ -o bin/unittest $(CFLAGS) $(SOURCES) $(UTILS) $(UNITTESTS) $(INCLUDES) $(LDFLAGS) $(LIBS)
+check: build 
+	@$(BUILD)/bin/unittest
+
+install: build
+	@mkdir -p $(PREFIX)/bin
+	@cp $(BUILD)/lib/$(TARGET) $(PREFIX)/lib/
+	
+rebuild: clean build
+
+uninstall:
+	@rm -rf $(PREFIX)/include/db
+	@rm -rf $(PREFIX)/include/proto
+	@rm -f $(PREFIX)/lib/$(TARGET)
 
 clean:
-	rm -f bin/candb bin/unittest
+	@rm -rf $(BUILD)
+
+mkdir:
+	@mkdir -p $(BUILD)
+	@mkdir -p $(BUILD)/bin
+	@mkdir -p $(BUILD)/objs
+
+help:
+	@echo "Usage: make [options] [target]"
+	@echo "Options:"
+	@echo "  debug[=FLAG]   : flag: 0 ndebug, 1 debug"
+	@echo "  prefix[=PATH]  : install path, default: /usr/include"
+	@echo "Target:"
+	@echo "  build          : Build target"
+	@echo "  install        : Install target to prefix path"
+	@echo "  check          : Run unittest"
+	@echo "  rebuild        : Rebuild target"
+	@echo "  uninstall      : Uninstall from prefix path"
+	@echo "  clean          : Clean target and objects"
+	@echo "  help           : Print help"

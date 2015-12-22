@@ -1,21 +1,21 @@
-#ifndef RSYS_NEWS_PRIMARY_ELECTION_H
-#define RSYS_NEWS_PRIMARY_ELECTION_H
+#ifndef SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_PRIMARY_ELECTION_H
+#define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_PRIMARY_ELECTION_H
 
 #include <stdint.h>
 #include <pthread.h>
 
 #include <map>
 
-#include "status.h"
-#include "table_base.h"
-#include "level_table.h"
+#include "utils/status.h"
+#include "utils/table_base.h"
+#include "utils/level_table.h"
 #include "core/core_type.h"
 #include "core/options.h"
 #include "proto/record.pb.h"
 #include "proto/message.pb.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     class UserTable: public TableBase {
       public:
         typedef LevelTable<uint64_t, user_info_t> level_table_t;
@@ -66,7 +66,7 @@ namespace rsys {
         level_table_t* level_table_;        
         friend class   UserAheadLog;
     };
-  } // namespace news
-} // namespace rsys
-#endif // #define RSYS_NEWS_PRIMARY_ELECTION_H
+  } // namespace recmd
+} // namespace souyue
+#endif // #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_PRIMARY_ELECTION_H
 

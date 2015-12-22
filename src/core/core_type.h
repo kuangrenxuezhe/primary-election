@@ -1,5 +1,5 @@
-#ifndef RSYS_NEWS_CORE_TYPE_H
-#define RSYS_NEWS_CORE_TYPE_H
+#ifndef SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CORE_TYPE_H
+#define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CORE_TYPE_H
 
 #include <stdint.h>
 
@@ -8,11 +8,11 @@
 #include <list>
 #include <string>
 
-#include "proto/record.pb.h"
 #include "proto/message.pb.h"
+#include "proto/supplement.pb.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     static const uint64_t kInvalidRegionID = 0UL;
 
     typedef std::pair<std::string, float> pair_t;
@@ -139,7 +139,7 @@ namespace rsys {
       void remedy_candidate_weight(const candidate_t& candidate, CandidateSet& cset);
 
     } // namespace glue
-  } // namespace news
-} // namespace rsys
-#endif // #define RSYS_NEWS_CORE_TYPE_H
+  } // namespace recmd 
+} // namespace souyue
+#endif // #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CORE_TYPE_H
 

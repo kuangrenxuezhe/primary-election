@@ -2,8 +2,7 @@
 #include "core/item_table.h"
 #include "proto/service.pb.h"
 
-using namespace rsys::news;
-
+using namespace souyue::recmd;
 SCENARIO("测试item表", "[base]") {
   GIVEN("给定空的item表") {
     Options opts;

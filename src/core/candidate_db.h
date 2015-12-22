@@ -1,15 +1,15 @@
-#ifndef RSYS_NEWS_CANDIDATE_DB_H
-#define RSYS_NEWS_CANDIDATE_DB_H
+#ifndef SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CANDIDATE_DB_H
+#define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CANDIDATE_DB_H
 
-#include "status.h"
+#include "utils/status.h"
 #include "core/options.h"
 #include "core/user_table.h"
 #include "core/item_table.h"
 #include "proto/record.pb.h"
 #include "proto/service.pb.h"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     class CandidateDB {
       public:
         CandidateDB(const Options& opts);
@@ -57,6 +57,6 @@ namespace rsys {
         UserTable* user_table_;
         ItemTable* item_table_;
     };
-  }; // namespace news
-}; // namespace rsys
-#endif // #define RSYS_NEWS_CANDIDATE_DB_H
+  } // namespace recmd 
+} // namespace souyue
+#endif // #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_CANDIDATE_DB_H

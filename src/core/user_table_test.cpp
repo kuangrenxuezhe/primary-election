@@ -2,8 +2,7 @@
 #include "core/user_table.h"
 #include "proto/service.pb.h"
 
-using namespace rsys::news;
-
+using namespace souyue::recmd;
 SCENARIO("测试User表", "[base]") {
   GIVEN("空用户表") {
     Options opts;

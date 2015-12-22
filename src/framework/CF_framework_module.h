@@ -9,16 +9,15 @@
 #ifndef _CF_FRAMEWORK_MODULE_H_
 #define _CF_FRAMEWORK_MODULE_H_
 
-#include "../code_library/platform_cross/UH_Define.h"
-#include "../code_library/platform_cross/UC_Mem_Allocator_Recycle.h"
+#include "util/UH_Define.h"
+#include "util/UC_Mem_Allocator_Recycle.h"
 
-#include "CF_framework_config.h"
-#include "CF_framework_interface.h"
-#include "CF_framework_jparse.h"
+#include "framework/CF_framework_config.h"
+#include "framework/CF_framework_interface.h"
+#include "framework/CF_framework_jparse.h"
 
-#include "CenterToModuleProtocol.pb.h"
-
-#include "rdkafkacpp.h"
+#include "proto/message.pb.h"
+#include "librdkafka/rdkafkacpp.h"
 
 using namespace RdKafka;
 

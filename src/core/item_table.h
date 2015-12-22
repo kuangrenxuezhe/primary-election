@@ -1,5 +1,5 @@
-#ifndef RSYS_NEWS_ITEM_TABLE_H
-#define RSYS_NEWS_ITEM_TABLE_H
+#ifndef SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_ITEM_TABLE_H
+#define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_ITEM_TABLE_H
 
 #include <stdint.h>
 #include <set>
@@ -10,15 +10,15 @@
 #include <cstdatomic>
 #endif
 
-#include "status.h"
-#include "table_base.h"
+#include "utils/status.h"
+#include "utils/table_base.h"
 #include "core/options.h"
 #include "core/core_type.h"
 #include "proto/service.pb.h"
 #include "sparsehash/dense_hash_map"
 
-namespace rsys {
-  namespace news {
+namespace souyue {
+  namespace recmd {
     struct item_index_ {
       int32_t          index; // 滑窗内的偏移
       item_info_t* item_info; // item_info地址
@@ -89,7 +89,7 @@ namespace rsys {
         pthread_mutex_t      index_lock_;
         friend class        ItemAheadLog;
     };
-  }; // namespace news
-}; // namespace rsys
-#endif // #define RSYS_NEWS_ITEM_TABLE_H
+  }; // namespace recmd
+}; // namespace souyue
+#endif // #define SOUYUE_RECMD_MODELS_PRIMARY_ELECTION_ITEM_TABLE_H
 
