@@ -22,52 +22,52 @@ namespace souyue {
       }
     }
 
-    grpc::Status ServiceGrpc::updateAction(grpc::ServerContext* context, const Action* request, Action* response)
-    {
-      Status status = candidate_db_->updateAction(*request, *response);
-      if (status.ok()) {
-        return grpc::Status::OK;
-      }
-      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+    //grpc::Status ServiceGrpc::updateAction(grpc::ServerContext* context, const Action* request, Action* response)
+    //{
+    //  Status status = candidate_db_->updateAction(*request, *response);
+    //  if (status.ok()) {
+    //    return grpc::Status::OK;
+    //  }
+    //  LOG(ERROR)<<status.toString()<<", from="<<context->peer();
 
-      return failed_status_glue(status);
-    }
+    //  return failed_status_glue(status);
+    //}
 
-    grpc::Status ServiceGrpc::updateItem(grpc::ServerContext* context, const Item* request, StatusCode* response)
-    {
-      Status status = candidate_db_->addItem(*request);
-      if (status.ok()) {
-        response->set_code(CODE_OK);
-        return grpc::Status::OK;
-      }
-      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+    //grpc::Status ServiceGrpc::updateItem(grpc::ServerContext* context, const Item* request, StatusCode* response)
+    //{
+    //  Status status = candidate_db_->addItem(*request);
+    //  if (status.ok()) {
+    //    response->set_code(CODE_OK);
+    //    return grpc::Status::OK;
+    //  }
+    //  LOG(ERROR)<<status.toString()<<", from="<<context->peer();
 
-      return failed_status_glue(status);
-    }
+    //  return failed_status_glue(status);
+    //}
 
-    grpc::Status ServiceGrpc::updateSubscribe(grpc::ServerContext* context, const Subscribe* request, StatusCode* response)
-    {
-      Status status = candidate_db_->updateSubscribe(*request);
-      if (status.ok()) {
-        response->set_code(CODE_OK);
-        return grpc::Status::OK;
-      }
-      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
-      
-      return failed_status_glue(status);
-    }
+    //grpc::Status ServiceGrpc::updateSubscribe(grpc::ServerContext* context, const Subscribe* request, StatusCode* response)
+    //{
+    //  Status status = candidate_db_->updateSubscribe(*request);
+    //  if (status.ok()) {
+    //    response->set_code(CODE_OK);
+    //    return grpc::Status::OK;
+    //  }
+    //  LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+    //  
+    //  return failed_status_glue(status);
+    //}
 
-    grpc::Status ServiceGrpc::updateFeedback(grpc::ServerContext* context, const Feedback* request, StatusCode* response)
-    {
-      Status status = candidate_db_->updateFeedback(*request);
-      if (status.ok()) {
-        response->set_code(CODE_OK);
-        return grpc::Status::OK;
-      }
-      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+    //grpc::Status ServiceGrpc::updateFeedback(grpc::ServerContext* context, const Feedback* request, StatusCode* response)
+    //{
+    //  Status status = candidate_db_->updateFeedback(*request);
+    //  if (status.ok()) {
+    //    response->set_code(CODE_OK);
+    //    return grpc::Status::OK;
+    //  }
+    //  LOG(ERROR)<<status.toString()<<", from="<<context->peer();
 
-      return failed_status_glue(status);
-    }
+    //  return failed_status_glue(status);
+    //}
 
     grpc::Status ServiceGrpc::queryUserStatus(grpc::ServerContext* context, const User* request, UserStatus* response)
     {

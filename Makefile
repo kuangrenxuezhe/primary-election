@@ -35,9 +35,10 @@ endif
 .SUFFIXES:
 .PHONY: build install check rebuild uninstall clean help
 
-LIBS=-lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags
+LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags -lz
 
-sources=core/core_type.cpp \
+sources=main.cpp \
+				core/core_type.cpp \
 		    core/model_options.cpp \
 	      core/user_table.cpp \
 		    core/item_table.cpp \
@@ -45,6 +46,7 @@ sources=core/core_type.cpp \
 				service/service_glue.cpp \
 				service/service_grpc.cpp \
 		    proto/message.pb.cpp \
+				proto/supplement.pb.cpp \
 				proto/service.pb.cpp \
 				proto/service.grpc.pb.cpp
 
@@ -59,9 +61,11 @@ OBJTESTS=$(addprefix $(OBJPATH), $(unittests:.cpp=.o))
 build: mkdir $(TARGET) $(UNITTESTS)
 
 $(TARGET): $(OBJECTS)
+	@mkdir -p $(BUILD)/bin/
 	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
 
 $(UNITTESTS): $(OBJTESTS)
+	@mkdir -p $(BUILD)/bin/
 	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
 
 sinclude $(addprefix $(OBJPATH), $(sources:.cpp=.d))

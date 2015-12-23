@@ -23,26 +23,20 @@ class ServerCompletionQueue;
 class ServerContext;
 }  // namespace grpc
 
+namespace proto {
+
 class PrimaryElection GRPC_FINAL {
  public:
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status updateAction(::grpc::ClientContext* context, const ::Action& request, ::Action* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Action>> AsyncupdateAction(::grpc::ClientContext* context, const ::Action& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::Action>>(AsyncupdateActionRaw(context, request, cq));
+    virtual ::grpc::Status queryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::UserInfo* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UserInfo>> AsyncqueryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UserInfo>>(AsyncqueryUserInfoRaw(context, request, cq));
     }
-    virtual ::grpc::Status updateItem(::grpc::ClientContext* context, const ::Item& request, ::StatusCode* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>> AsyncupdateItem(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>>(AsyncupdateItemRaw(context, request, cq));
-    }
-    virtual ::grpc::Status updateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::StatusCode* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>> AsyncupdateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>>(AsyncupdateSubscribeRaw(context, request, cq));
-    }
-    virtual ::grpc::Status updateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::StatusCode* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>> AsyncupdateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>>(AsyncupdateFeedbackRaw(context, request, cq));
+    virtual ::grpc::Status queryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::ItemInfo* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::ItemInfo>> AsyncqueryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::ItemInfo>>(AsyncqueryItemInfoRaw(context, request, cq));
     }
     virtual ::grpc::Status queryUserStatus(::grpc::ClientContext* context, const ::User& request, ::UserStatus* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UserStatus>> AsyncqueryUserStatus(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) {
@@ -52,42 +46,22 @@ class PrimaryElection GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::CandidateSet>> AsyncqueryCandidateSet(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::CandidateSet>>(AsyncqueryCandidateSetRaw(context, request, cq));
     }
-    virtual ::grpc::Status queryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::UserInfo* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UserInfo>> AsyncqueryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::UserInfo>>(AsyncqueryUserInfoRaw(context, request, cq));
-    }
-    virtual ::grpc::Status queryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::ItemInfo* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::ItemInfo>> AsyncqueryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::ItemInfo>>(AsyncqueryItemInfoRaw(context, request, cq));
-    }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::Action>* AsyncupdateActionRaw(::grpc::ClientContext* context, const ::Action& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>* AsyncupdateItemRaw(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>* AsyncupdateSubscribeRaw(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::StatusCode>* AsyncupdateFeedbackRaw(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::UserInfo>* AsyncqueryUserInfoRaw(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::ItemInfo>* AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::Channel>& channel);
-    ::grpc::Status updateAction(::grpc::ClientContext* context, const ::Action& request, ::Action* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Action>> AsyncupdateAction(::grpc::ClientContext* context, const ::Action& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::Action>>(AsyncupdateActionRaw(context, request, cq));
+    ::grpc::Status queryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::UserInfo* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UserInfo>> AsyncqueryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UserInfo>>(AsyncqueryUserInfoRaw(context, request, cq));
     }
-    ::grpc::Status updateItem(::grpc::ClientContext* context, const ::Item& request, ::StatusCode* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>> AsyncupdateItem(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>>(AsyncupdateItemRaw(context, request, cq));
-    }
-    ::grpc::Status updateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::StatusCode* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>> AsyncupdateSubscribe(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>>(AsyncupdateSubscribeRaw(context, request, cq));
-    }
-    ::grpc::Status updateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::StatusCode* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>> AsyncupdateFeedback(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::StatusCode>>(AsyncupdateFeedbackRaw(context, request, cq));
+    ::grpc::Status queryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::ItemInfo* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::ItemInfo>> AsyncqueryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::ItemInfo>>(AsyncqueryItemInfoRaw(context, request, cq));
     }
     ::grpc::Status queryUserStatus(::grpc::ClientContext* context, const ::User& request, ::UserStatus* response) GRPC_OVERRIDE;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UserStatus>> AsyncqueryUserStatus(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) {
@@ -97,33 +71,17 @@ class PrimaryElection GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::CandidateSet>> AsyncqueryCandidateSet(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::CandidateSet>>(AsyncqueryCandidateSetRaw(context, request, cq));
     }
-    ::grpc::Status queryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::UserInfo* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UserInfo>> AsyncqueryUserInfo(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::UserInfo>>(AsyncqueryUserInfoRaw(context, request, cq));
-    }
-    ::grpc::Status queryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::ItemInfo* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::ItemInfo>> AsyncqueryItemInfo(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::ItemInfo>>(AsyncqueryItemInfoRaw(context, request, cq));
-    }
 
    private:
     std::shared_ptr< ::grpc::Channel> channel_;
-    ::grpc::ClientAsyncResponseReader< ::Action>* AsyncupdateActionRaw(::grpc::ClientContext* context, const ::Action& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::StatusCode>* AsyncupdateItemRaw(::grpc::ClientContext* context, const ::Item& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::StatusCode>* AsyncupdateSubscribeRaw(::grpc::ClientContext* context, const ::Subscribe& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::StatusCode>* AsyncupdateFeedbackRaw(::grpc::ClientContext* context, const ::Feedback& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::UserInfo>* AsyncqueryUserInfoRaw(::grpc::ClientContext* context, const ::UserQuery& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::ItemInfo>* AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::ItemQuery& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    const ::grpc::RpcMethod rpcmethod_updateAction_;
-    const ::grpc::RpcMethod rpcmethod_updateItem_;
-    const ::grpc::RpcMethod rpcmethod_updateSubscribe_;
-    const ::grpc::RpcMethod rpcmethod_updateFeedback_;
-    const ::grpc::RpcMethod rpcmethod_queryUserStatus_;
-    const ::grpc::RpcMethod rpcmethod_queryCandidateSet_;
+    ::grpc::ClientAsyncResponseReader< ::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::User& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncResponseReader< ::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::Recommend& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     const ::grpc::RpcMethod rpcmethod_queryUserInfo_;
     const ::grpc::RpcMethod rpcmethod_queryItemInfo_;
+    const ::grpc::RpcMethod rpcmethod_queryUserStatus_;
+    const ::grpc::RpcMethod rpcmethod_queryCandidateSet_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -131,14 +89,10 @@ class PrimaryElection GRPC_FINAL {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status updateAction(::grpc::ServerContext* context, const ::Action* request, ::Action* response);
-    virtual ::grpc::Status updateItem(::grpc::ServerContext* context, const ::Item* request, ::StatusCode* response);
-    virtual ::grpc::Status updateSubscribe(::grpc::ServerContext* context, const ::Subscribe* request, ::StatusCode* response);
-    virtual ::grpc::Status updateFeedback(::grpc::ServerContext* context, const ::Feedback* request, ::StatusCode* response);
-    virtual ::grpc::Status queryUserStatus(::grpc::ServerContext* context, const ::User* request, ::UserStatus* response);
-    virtual ::grpc::Status queryCandidateSet(::grpc::ServerContext* context, const ::Recommend* request, ::CandidateSet* response);
     virtual ::grpc::Status queryUserInfo(::grpc::ServerContext* context, const ::UserQuery* request, ::UserInfo* response);
     virtual ::grpc::Status queryItemInfo(::grpc::ServerContext* context, const ::ItemQuery* request, ::ItemInfo* response);
+    virtual ::grpc::Status queryUserStatus(::grpc::ServerContext* context, const ::User* request, ::UserStatus* response);
+    virtual ::grpc::Status queryCandidateSet(::grpc::ServerContext* context, const ::Recommend* request, ::CandidateSet* response);
     ::grpc::RpcService* service() GRPC_OVERRIDE GRPC_FINAL;
    private:
     std::unique_ptr< ::grpc::RpcService> service_;
@@ -147,16 +101,14 @@ class PrimaryElection GRPC_FINAL {
    public:
     explicit AsyncService();
     ~AsyncService() {};
-    void RequestupdateAction(::grpc::ServerContext* context, ::Action* request, ::grpc::ServerAsyncResponseWriter< ::Action>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestupdateItem(::grpc::ServerContext* context, ::Item* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestupdateSubscribe(::grpc::ServerContext* context, ::Subscribe* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestupdateFeedback(::grpc::ServerContext* context, ::Feedback* request, ::grpc::ServerAsyncResponseWriter< ::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestqueryUserStatus(::grpc::ServerContext* context, ::User* request, ::grpc::ServerAsyncResponseWriter< ::UserStatus>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestqueryCandidateSet(::grpc::ServerContext* context, ::Recommend* request, ::grpc::ServerAsyncResponseWriter< ::CandidateSet>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestqueryUserInfo(::grpc::ServerContext* context, ::UserQuery* request, ::grpc::ServerAsyncResponseWriter< ::UserInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestqueryItemInfo(::grpc::ServerContext* context, ::ItemQuery* request, ::grpc::ServerAsyncResponseWriter< ::ItemInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestqueryUserStatus(::grpc::ServerContext* context, ::User* request, ::grpc::ServerAsyncResponseWriter< ::UserStatus>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestqueryCandidateSet(::grpc::ServerContext* context, ::Recommend* request, ::grpc::ServerAsyncResponseWriter< ::CandidateSet>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
   };
 };
+
+}  // namespace proto
 
 
 #endif  // GRPC_service_2eproto__INCLUDED

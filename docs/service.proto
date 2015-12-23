@@ -1,24 +1,16 @@
 syntax = "proto3";
+package proto;
 
 import "message.proto";
 import "supplement.proto";
 
 service PrimaryElection {
-  // 用户操作更新
-  rpc updateAction(Action) returns(Action) {}
-  // 新闻数据添加或更新
-  rpc updateItem(Item) returns(StatusCode) {}
-  // 用户订阅信息全局更新
-  rpc updateSubscribe(Subscribe) returns(StatusCode) {}
-  // 推荐结果反馈
-  rpc updateFeedback(Feedback) returns(StatusCode) {}
+  // 用户信息查询
+  rpc queryUserInfo(UserQuery) returns(UserInfo) {}
+  rpc queryItemInfo(ItemQuery) returns(ItemInfo) {}
 
   // 用户查询
   rpc queryUserStatus(User) returns(UserStatus) {}
   // 查询候选集合
   rpc queryCandidateSet(Recommend) returns(CandidateSet) {}
-
-  // 用户信息查询
-  rpc queryUserInfo(UserQuery) returns(UserInfo) {}
-  rpc queryItemInfo(ItemQuery) returns(ItemInfo) {}
 }

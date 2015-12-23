@@ -31,10 +31,10 @@ enum ErrorLevel {
   LEVEL_E,        //可忽略
 };
 
-using namespace rsys::news;
+using namespace souyue::recmd;
 
 struct arg_ {
-  Options*   options;
+  ModelOptions*   options;
   CandidateDB* candb;
 };
 typedef struct arg_ arg_t;
@@ -46,14 +46,14 @@ DEFINE_int32(monitor_port, -1, "Monitor port");
 
 int main(int argc, char* argv[])
 {
-  Options opts; 
+  ModelOptions opts; 
   CandidateDB* candb;
   Status status = Status::OK();
 
   google::InitGoogleLogging(argv[0]);
   gflags::ParseCommandLineFlags(&argc, &argv, false);
 
-  status = Options::fromConf(FLAGS_conf, opts);
+  status = ModelOptions::fromConf(FLAGS_conf, opts);
   if (!status.ok()) {
     LOG(FATAL) << status.toString(); 
     return -1;
