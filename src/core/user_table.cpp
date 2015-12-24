@@ -34,9 +34,13 @@ namespace souyue {
         }
 
         virtual Status rollback(const std::string& data) {
+          static int total = 0;
+          total++;
+          fprintf(stdout, "total=%d\n", total);
           if (data.length() <= 1) { // 数据大小至少一个字节，表示类型
             return Status::Corruption("Invalid user info data");
           }
+          Status status = Status::OK();
           const char* c_data = data.c_str();
 
           if (kLogTypeAction == data[0]) {
@@ -48,7 +52,11 @@ namespace souyue {
             action_t action;
 
             glue::structed_action(log_action, action);
-            return user_table_->updateAction(log_action.user_id(), action);
+            status = user_table_->updateAction(log_action.user_id(), action);
+            if (!status.ok()) {
+              LOG(WARNING) << status.toString();
+            }
+            return Status::OK();
           } else if (kLogTypeSubscribe == data[0]) {
             Subscribe log_subscribe;
 
@@ -58,17 +66,28 @@ namespace souyue {
             map_str_t subscribe;
 
             glue::structed_subscribe(log_subscribe, subscribe);
-            return user_table_->updateUser(log_subscribe.user_id(), subscribe);
+            status = user_table_->updateUser(log_subscribe.user_id(), subscribe);
+            if (!status.ok()) {
+              LOG(WARNING) << status.toString();
+            }
+            return Status::OK();
           } else if (kLogTypeFeedback == data[0]) {
             Feedback log_feedback;
 
+            if (total == 9125) {
+              total = 9125;
+            }
             if (!log_feedback.ParseFromArray(c_data + 1, data.length() - 1)) {
               return Status::Corruption("Parse recommend feedback");
             }
             id_set_t feedback;
 
             glue::structed_feedback(log_feedback, feedback);
-            return user_table_->updateFeedback(log_feedback.user_id(), feedback);
+            status = user_table_->updateFeedback(log_feedback.user_id(), feedback);
+            if (!status.ok()) {
+              LOG(WARNING) << status.toString();
+            }
+            return Status::OK();
           }
           return Status::InvalidData("Invalid user data type, type=", data[0]);
         }

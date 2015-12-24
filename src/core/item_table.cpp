@@ -38,6 +38,7 @@ namespace souyue {
           if (data.length() <= 1) { // 数据大小至少一个字节，表示类型
             return Status::Corruption("Invalid user info data");
           }
+          Status status = Status::OK();
           const char* c_data = data.c_str();
 
           if (kLogTypeAction == data[0]) {
@@ -49,10 +50,11 @@ namespace souyue {
             action_t action;
 
             glue::structed_action(log_action, action);
-            Status status = item_table_->updateAction(log_action.user_id(), action);
+            status = item_table_->updateAction(log_action.user_id(), action);
             if (!status.ok()) {
-              return status;
+              LOG(WARNING) << status.toString();
             }
+            return Status::OK();
           } else if (kLogTypeItem == data[0]) {
             Item log_item;
 
@@ -70,11 +72,11 @@ namespace souyue {
             Status status = item_table_->addItem(item_info);
             if (!status.ok()) {
               delete item_info;
-              return status;
+              LOG(WARNING) << status.toString();
             }
+            return Status::OK();
           }
- 
-          return Status::OK();
+          return Status::InvalidData("Invalid item data type, type=", data[0]);
         }
       private:
         ItemTable* item_table_;
