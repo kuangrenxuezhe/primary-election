@@ -35,7 +35,7 @@ endif
 .SUFFIXES:
 .PHONY: build install check rebuild uninstall clean help
 
-LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc++_unsecure -lgflags -lz
+LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz
 
 sources=main.cpp \
 				core/core_type.cpp \
