@@ -287,7 +287,7 @@ namespace souyue {
         if (region_num > 0) {
           query.item_type = kRegionItem;
           // 获取地域数据
-          query.region_id = region_id[1];
+          query.region_id = region_id[0];
           item_table_->queryCandidateSet(query, candidate_region_set);
           // 对于直辖市只处理城市，因为省份和城市是相同的
           if (region_num > 1 && candidate_region_set.size() <= 0 && region_id[0] != region_id[1])  {

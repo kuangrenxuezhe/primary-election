@@ -34,9 +34,6 @@ namespace souyue {
         }
 
         virtual Status rollback(const std::string& data) {
-          static int total = 0;
-          total++;
-          fprintf(stdout, "total=%d\n", total);
           if (data.length() <= 1) { // 数据大小至少一个字节，表示类型
             return Status::Corruption("Invalid user info data");
           }
@@ -74,9 +71,6 @@ namespace souyue {
           } else if (kLogTypeFeedback == data[0]) {
             Feedback log_feedback;
 
-            if (total == 9125) {
-              total = 9125;
-            }
             if (!log_feedback.ParseFromArray(c_data + 1, data.length() - 1)) {
               return Status::Corruption("Parse recommend feedback");
             }
