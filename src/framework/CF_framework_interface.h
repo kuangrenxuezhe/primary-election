@@ -12,6 +12,8 @@
 #include "util/UH_Define.h"
 #include "proto/message.pb.h"
 
+using namespace module::protocol;
+
 class CF_framework_interface
 {
 public:    

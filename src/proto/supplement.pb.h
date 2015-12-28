@@ -30,6 +30,9 @@
 #include "message.pb.h"
 // @@protoc_insertion_point(includes)
 
+namespace module {
+namespace protocol {
+
 // Internal implementation detail -- do not call these.
 void protobuf_AddDesc_supplement_2eproto();
 void protobuf_AssignDesc_supplement_2eproto();
@@ -103,7 +106,7 @@ class UserQuery : public ::google::protobuf::Message {
   ::google::protobuf::uint64 user_id() const;
   void set_user_id(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:UserQuery)
+  // @@protoc_insertion_point(class_scope:module.protocol.UserQuery)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -187,64 +190,64 @@ class UserInfo : public ::google::protobuf::Message {
   ::google::protobuf::int32 last_modified() const;
   void set_last_modified(::google::protobuf::int32 value);
 
-  // repeated .KeyStr subscribe = 3;
+  // repeated .module.protocol.KeyStr subscribe = 3;
   int subscribe_size() const;
   void clear_subscribe();
   static const int kSubscribeFieldNumber = 3;
-  const ::KeyStr& subscribe(int index) const;
-  ::KeyStr* mutable_subscribe(int index);
-  ::KeyStr* add_subscribe();
-  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+  const ::module::protocol::KeyStr& subscribe(int index) const;
+  ::module::protocol::KeyStr* mutable_subscribe(int index);
+  ::module::protocol::KeyStr* add_subscribe();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
       mutable_subscribe();
-  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
       subscribe() const;
 
-  // repeated .KeyStr dislike = 4;
+  // repeated .module.protocol.KeyStr dislike = 4;
   int dislike_size() const;
   void clear_dislike();
   static const int kDislikeFieldNumber = 4;
-  const ::KeyStr& dislike(int index) const;
-  ::KeyStr* mutable_dislike(int index);
-  ::KeyStr* add_dislike();
-  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+  const ::module::protocol::KeyStr& dislike(int index) const;
+  ::module::protocol::KeyStr* mutable_dislike(int index);
+  ::module::protocol::KeyStr* add_dislike();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
       mutable_dislike();
-  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
       dislike() const;
 
-  // repeated .KeyTime readed = 5;
+  // repeated .module.protocol.KeyTime readed = 5;
   int readed_size() const;
   void clear_readed();
   static const int kReadedFieldNumber = 5;
-  const ::KeyTime& readed(int index) const;
-  ::KeyTime* mutable_readed(int index);
-  ::KeyTime* add_readed();
-  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+  const ::module::protocol::KeyTime& readed(int index) const;
+  ::module::protocol::KeyTime* mutable_readed(int index);
+  ::module::protocol::KeyTime* add_readed();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
       mutable_readed();
-  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
       readed() const;
 
-  // repeated .KeyTime recommended = 6;
+  // repeated .module.protocol.KeyTime recommended = 6;
   int recommended_size() const;
   void clear_recommended();
   static const int kRecommendedFieldNumber = 6;
-  const ::KeyTime& recommended(int index) const;
-  ::KeyTime* mutable_recommended(int index);
-  ::KeyTime* add_recommended();
-  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+  const ::module::protocol::KeyTime& recommended(int index) const;
+  ::module::protocol::KeyTime* mutable_recommended(int index);
+  ::module::protocol::KeyTime* add_recommended();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
       mutable_recommended();
-  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
       recommended() const;
 
-  // @@protoc_insertion_point(class_scope:UserInfo)
+  // @@protoc_insertion_point(class_scope:module.protocol.UserInfo)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
   ::google::protobuf::uint64 user_id_;
-  ::google::protobuf::RepeatedPtrField< ::KeyStr > subscribe_;
-  ::google::protobuf::RepeatedPtrField< ::KeyStr > dislike_;
-  ::google::protobuf::RepeatedPtrField< ::KeyTime > readed_;
-  ::google::protobuf::RepeatedPtrField< ::KeyTime > recommended_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr > subscribe_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr > dislike_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime > readed_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime > recommended_;
   ::google::protobuf::int32 last_modified_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_supplement_2eproto();
@@ -318,7 +321,7 @@ class ItemQuery : public ::google::protobuf::Message {
   ::google::protobuf::uint64 item_id() const;
   void set_item_id(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:ItemQuery)
+  // @@protoc_insertion_point(class_scope:module.protocol.ItemQuery)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -345,13 +348,13 @@ inline void UserQuery::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 UserQuery::user_id() const {
-  // @@protoc_insertion_point(field_get:UserQuery.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.UserQuery.user_id)
   return user_id_;
 }
 inline void UserQuery::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:UserQuery.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.UserQuery.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -363,13 +366,13 @@ inline void UserInfo::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 UserInfo::user_id() const {
-  // @@protoc_insertion_point(field_get:UserInfo.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.user_id)
   return user_id_;
 }
 inline void UserInfo::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:UserInfo.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.UserInfo.user_id)
 }
 
 // optional int32 last_modified = 2;
@@ -377,132 +380,132 @@ inline void UserInfo::clear_last_modified() {
   last_modified_ = 0;
 }
 inline ::google::protobuf::int32 UserInfo::last_modified() const {
-  // @@protoc_insertion_point(field_get:UserInfo.last_modified)
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.last_modified)
   return last_modified_;
 }
 inline void UserInfo::set_last_modified(::google::protobuf::int32 value) {
   
   last_modified_ = value;
-  // @@protoc_insertion_point(field_set:UserInfo.last_modified)
+  // @@protoc_insertion_point(field_set:module.protocol.UserInfo.last_modified)
 }
 
-// repeated .KeyStr subscribe = 3;
+// repeated .module.protocol.KeyStr subscribe = 3;
 inline int UserInfo::subscribe_size() const {
   return subscribe_.size();
 }
 inline void UserInfo::clear_subscribe() {
   subscribe_.Clear();
 }
-inline const ::KeyStr& UserInfo::subscribe(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.subscribe)
+inline const ::module::protocol::KeyStr& UserInfo::subscribe(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.subscribe)
   return subscribe_.Get(index);
 }
-inline ::KeyStr* UserInfo::mutable_subscribe(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.subscribe)
+inline ::module::protocol::KeyStr* UserInfo::mutable_subscribe(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.subscribe)
   return subscribe_.Mutable(index);
 }
-inline ::KeyStr* UserInfo::add_subscribe() {
-  // @@protoc_insertion_point(field_add:UserInfo.subscribe)
+inline ::module::protocol::KeyStr* UserInfo::add_subscribe() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.subscribe)
   return subscribe_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserInfo::mutable_subscribe() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.subscribe)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.subscribe)
   return &subscribe_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserInfo::subscribe() const {
-  // @@protoc_insertion_point(field_list:UserInfo.subscribe)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.subscribe)
   return subscribe_;
 }
 
-// repeated .KeyStr dislike = 4;
+// repeated .module.protocol.KeyStr dislike = 4;
 inline int UserInfo::dislike_size() const {
   return dislike_.size();
 }
 inline void UserInfo::clear_dislike() {
   dislike_.Clear();
 }
-inline const ::KeyStr& UserInfo::dislike(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.dislike)
+inline const ::module::protocol::KeyStr& UserInfo::dislike(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.dislike)
   return dislike_.Get(index);
 }
-inline ::KeyStr* UserInfo::mutable_dislike(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.dislike)
+inline ::module::protocol::KeyStr* UserInfo::mutable_dislike(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.dislike)
   return dislike_.Mutable(index);
 }
-inline ::KeyStr* UserInfo::add_dislike() {
-  // @@protoc_insertion_point(field_add:UserInfo.dislike)
+inline ::module::protocol::KeyStr* UserInfo::add_dislike() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.dislike)
   return dislike_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserInfo::mutable_dislike() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.dislike)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.dislike)
   return &dislike_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserInfo::dislike() const {
-  // @@protoc_insertion_point(field_list:UserInfo.dislike)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.dislike)
   return dislike_;
 }
 
-// repeated .KeyTime readed = 5;
+// repeated .module.protocol.KeyTime readed = 5;
 inline int UserInfo::readed_size() const {
   return readed_.size();
 }
 inline void UserInfo::clear_readed() {
   readed_.Clear();
 }
-inline const ::KeyTime& UserInfo::readed(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.readed)
+inline const ::module::protocol::KeyTime& UserInfo::readed(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.readed)
   return readed_.Get(index);
 }
-inline ::KeyTime* UserInfo::mutable_readed(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.readed)
+inline ::module::protocol::KeyTime* UserInfo::mutable_readed(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.readed)
   return readed_.Mutable(index);
 }
-inline ::KeyTime* UserInfo::add_readed() {
-  // @@protoc_insertion_point(field_add:UserInfo.readed)
+inline ::module::protocol::KeyTime* UserInfo::add_readed() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.readed)
   return readed_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserInfo::mutable_readed() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.readed)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.readed)
   return &readed_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserInfo::readed() const {
-  // @@protoc_insertion_point(field_list:UserInfo.readed)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.readed)
   return readed_;
 }
 
-// repeated .KeyTime recommended = 6;
+// repeated .module.protocol.KeyTime recommended = 6;
 inline int UserInfo::recommended_size() const {
   return recommended_.size();
 }
 inline void UserInfo::clear_recommended() {
   recommended_.Clear();
 }
-inline const ::KeyTime& UserInfo::recommended(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.recommended)
+inline const ::module::protocol::KeyTime& UserInfo::recommended(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.recommended)
   return recommended_.Get(index);
 }
-inline ::KeyTime* UserInfo::mutable_recommended(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.recommended)
+inline ::module::protocol::KeyTime* UserInfo::mutable_recommended(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.recommended)
   return recommended_.Mutable(index);
 }
-inline ::KeyTime* UserInfo::add_recommended() {
-  // @@protoc_insertion_point(field_add:UserInfo.recommended)
+inline ::module::protocol::KeyTime* UserInfo::add_recommended() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.recommended)
   return recommended_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserInfo::mutable_recommended() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.recommended)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.recommended)
   return &recommended_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserInfo::recommended() const {
-  // @@protoc_insertion_point(field_list:UserInfo.recommended)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.recommended)
   return recommended_;
 }
 
@@ -515,13 +518,13 @@ inline void ItemQuery::clear_item_id() {
   item_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 ItemQuery::item_id() const {
-  // @@protoc_insertion_point(field_get:ItemQuery.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemQuery.item_id)
   return item_id_;
 }
 inline void ItemQuery::set_item_id(::google::protobuf::uint64 value) {
   
   item_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemQuery.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemQuery.item_id)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -531,6 +534,9 @@ inline void ItemQuery::set_item_id(::google::protobuf::uint64 value) {
 
 
 // @@protoc_insertion_point(namespace_scope)
+
+}  // namespace protocol
+}  // namespace module
 
 // @@protoc_insertion_point(global_scope)
 

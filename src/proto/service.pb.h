@@ -29,6 +29,9 @@
 #include "supplement.pb.h"
 // @@protoc_insertion_point(includes)
 
+namespace module {
+namespace protocol {
+
 // Internal implementation detail -- do not call these.
 void protobuf_AddDesc_service_2eproto();
 void protobuf_AssignDesc_service_2eproto();
@@ -47,6 +50,9 @@ void protobuf_ShutdownFile_service_2eproto();
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
+
+}  // namespace protocol
+}  // namespace module
 
 // @@protoc_insertion_point(global_scope)
 

@@ -16,6 +16,9 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
+namespace module {
+namespace protocol {
+
 namespace {
 
 const ::google::protobuf::Descriptor* UserQuery_descriptor_ = NULL;
@@ -124,15 +127,17 @@ void protobuf_AddDesc_supplement_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::protobuf_AddDesc_message_2eproto();
+  ::module::protocol::protobuf_AddDesc_message_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\020supplement.proto\032\rmessage.proto\"\034\n\tUse"
-    "rQuery\022\017\n\007user_id\030\001 \001(\006\"\241\001\n\010UserInfo\022\017\n\007"
-    "user_id\030\001 \001(\006\022\025\n\rlast_modified\030\002 \001(\005\022\032\n\t"
-    "subscribe\030\003 \003(\0132\007.KeyStr\022\030\n\007dislike\030\004 \003("
-    "\0132\007.KeyStr\022\030\n\006readed\030\005 \003(\0132\010.KeyTime\022\035\n\013"
-    "recommended\030\006 \003(\0132\010.KeyTime\"\034\n\tItemQuery"
-    "\022\017\n\007item_id\030\001 \001(\006b\006proto3", 265);
+    "\n\020supplement.proto\022\017module.protocol\032\rmes"
+    "sage.proto\"\034\n\tUserQuery\022\017\n\007user_id\030\001 \001(\006"
+    "\"\341\001\n\010UserInfo\022\017\n\007user_id\030\001 \001(\006\022\025\n\rlast_m"
+    "odified\030\002 \001(\005\022*\n\tsubscribe\030\003 \003(\0132\027.modul"
+    "e.protocol.KeyStr\022(\n\007dislike\030\004 \003(\0132\027.mod"
+    "ule.protocol.KeyStr\022(\n\006readed\030\005 \003(\0132\030.mo"
+    "dule.protocol.KeyTime\022-\n\013recommended\030\006 \003"
+    "(\0132\030.module.protocol.KeyTime\"\034\n\tItemQuer"
+    "y\022\017\n\007item_id\030\001 \001(\006b\006proto3", 346);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "supplement.proto", &protobuf_RegisterTypes);
   UserQuery::default_instance_ = new UserQuery();
@@ -170,7 +175,7 @@ const int UserQuery::kUserIdFieldNumber;
 UserQuery::UserQuery()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:UserQuery)
+  // @@protoc_insertion_point(constructor:module.protocol.UserQuery)
 }
 
 void UserQuery::InitAsDefaultInstance() {
@@ -182,7 +187,7 @@ UserQuery::UserQuery(const UserQuery& from)
     _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:UserQuery)
+  // @@protoc_insertion_point(copy_constructor:module.protocol.UserQuery)
 }
 
 void UserQuery::SharedCtor() {
@@ -192,7 +197,7 @@ void UserQuery::SharedCtor() {
 }
 
 UserQuery::~UserQuery() {
-  // @@protoc_insertion_point(destructor:UserQuery)
+  // @@protoc_insertion_point(destructor:module.protocol.UserQuery)
   SharedDtor();
 }
 
@@ -234,7 +239,7 @@ bool UserQuery::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:UserQuery)
+  // @@protoc_insertion_point(parse_start:module.protocol.UserQuery)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -267,34 +272,34 @@ bool UserQuery::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:UserQuery)
+  // @@protoc_insertion_point(parse_success:module.protocol.UserQuery)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:UserQuery)
+  // @@protoc_insertion_point(parse_failure:module.protocol.UserQuery)
   return false;
 #undef DO_
 }
 
 void UserQuery::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:UserQuery)
+  // @@protoc_insertion_point(serialize_start:module.protocol.UserQuery)
   // optional fixed64 user_id = 1;
   if (this->user_id() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->user_id(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:UserQuery)
+  // @@protoc_insertion_point(serialize_end:module.protocol.UserQuery)
 }
 
 ::google::protobuf::uint8* UserQuery::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:UserQuery)
+  // @@protoc_insertion_point(serialize_to_array_start:module.protocol.UserQuery)
   // optional fixed64 user_id = 1;
   if (this->user_id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->user_id(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:UserQuery)
+  // @@protoc_insertion_point(serialize_to_array_end:module.protocol.UserQuery)
   return target;
 }
 
@@ -374,13 +379,13 @@ void UserQuery::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
  ::google::protobuf::uint64 UserQuery::user_id() const {
-  // @@protoc_insertion_point(field_get:UserQuery.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.UserQuery.user_id)
   return user_id_;
 }
  void UserQuery::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:UserQuery.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.UserQuery.user_id)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -399,7 +404,7 @@ const int UserInfo::kRecommendedFieldNumber;
 UserInfo::UserInfo()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:UserInfo)
+  // @@protoc_insertion_point(constructor:module.protocol.UserInfo)
 }
 
 void UserInfo::InitAsDefaultInstance() {
@@ -411,7 +416,7 @@ UserInfo::UserInfo(const UserInfo& from)
     _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:UserInfo)
+  // @@protoc_insertion_point(copy_constructor:module.protocol.UserInfo)
 }
 
 void UserInfo::SharedCtor() {
@@ -422,7 +427,7 @@ void UserInfo::SharedCtor() {
 }
 
 UserInfo::~UserInfo() {
-  // @@protoc_insertion_point(destructor:UserInfo)
+  // @@protoc_insertion_point(destructor:module.protocol.UserInfo)
   SharedDtor();
 }
 
@@ -469,7 +474,7 @@ bool UserInfo::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:UserInfo)
+  // @@protoc_insertion_point(parse_start:module.protocol.UserInfo)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -504,7 +509,7 @@ bool UserInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .KeyStr subscribe = 3;
+      // repeated .module.protocol.KeyStr subscribe = 3;
       case 3: {
         if (tag == 26) {
          parse_subscribe:
@@ -521,7 +526,7 @@ bool UserInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .KeyStr dislike = 4;
+      // repeated .module.protocol.KeyStr dislike = 4;
       case 4: {
         if (tag == 34) {
           DO_(input->IncrementRecursionDepth());
@@ -537,7 +542,7 @@ bool UserInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .KeyTime readed = 5;
+      // repeated .module.protocol.KeyTime readed = 5;
       case 5: {
         if (tag == 42) {
           DO_(input->IncrementRecursionDepth());
@@ -553,7 +558,7 @@ bool UserInfo::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .KeyTime recommended = 6;
+      // repeated .module.protocol.KeyTime recommended = 6;
       case 6: {
         if (tag == 50) {
           DO_(input->IncrementRecursionDepth());
@@ -582,17 +587,17 @@ bool UserInfo::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:UserInfo)
+  // @@protoc_insertion_point(parse_success:module.protocol.UserInfo)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:UserInfo)
+  // @@protoc_insertion_point(parse_failure:module.protocol.UserInfo)
   return false;
 #undef DO_
 }
 
 void UserInfo::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:UserInfo)
+  // @@protoc_insertion_point(serialize_start:module.protocol.UserInfo)
   // optional fixed64 user_id = 1;
   if (this->user_id() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->user_id(), output);
@@ -603,36 +608,36 @@ void UserInfo::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->last_modified(), output);
   }
 
-  // repeated .KeyStr subscribe = 3;
+  // repeated .module.protocol.KeyStr subscribe = 3;
   for (unsigned int i = 0, n = this->subscribe_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->subscribe(i), output);
   }
 
-  // repeated .KeyStr dislike = 4;
+  // repeated .module.protocol.KeyStr dislike = 4;
   for (unsigned int i = 0, n = this->dislike_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->dislike(i), output);
   }
 
-  // repeated .KeyTime readed = 5;
+  // repeated .module.protocol.KeyTime readed = 5;
   for (unsigned int i = 0, n = this->readed_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->readed(i), output);
   }
 
-  // repeated .KeyTime recommended = 6;
+  // repeated .module.protocol.KeyTime recommended = 6;
   for (unsigned int i = 0, n = this->recommended_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       6, this->recommended(i), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:UserInfo)
+  // @@protoc_insertion_point(serialize_end:module.protocol.UserInfo)
 }
 
 ::google::protobuf::uint8* UserInfo::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:UserInfo)
+  // @@protoc_insertion_point(serialize_to_array_start:module.protocol.UserInfo)
   // optional fixed64 user_id = 1;
   if (this->user_id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->user_id(), target);
@@ -643,35 +648,35 @@ void UserInfo::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->last_modified(), target);
   }
 
-  // repeated .KeyStr subscribe = 3;
+  // repeated .module.protocol.KeyStr subscribe = 3;
   for (unsigned int i = 0, n = this->subscribe_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         3, this->subscribe(i), target);
   }
 
-  // repeated .KeyStr dislike = 4;
+  // repeated .module.protocol.KeyStr dislike = 4;
   for (unsigned int i = 0, n = this->dislike_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         4, this->dislike(i), target);
   }
 
-  // repeated .KeyTime readed = 5;
+  // repeated .module.protocol.KeyTime readed = 5;
   for (unsigned int i = 0, n = this->readed_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         5, this->readed(i), target);
   }
 
-  // repeated .KeyTime recommended = 6;
+  // repeated .module.protocol.KeyTime recommended = 6;
   for (unsigned int i = 0, n = this->recommended_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         6, this->recommended(i), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:UserInfo)
+  // @@protoc_insertion_point(serialize_to_array_end:module.protocol.UserInfo)
   return target;
 }
 
@@ -690,7 +695,7 @@ int UserInfo::ByteSize() const {
         this->last_modified());
   }
 
-  // repeated .KeyStr subscribe = 3;
+  // repeated .module.protocol.KeyStr subscribe = 3;
   total_size += 1 * this->subscribe_size();
   for (int i = 0; i < this->subscribe_size(); i++) {
     total_size +=
@@ -698,7 +703,7 @@ int UserInfo::ByteSize() const {
         this->subscribe(i));
   }
 
-  // repeated .KeyStr dislike = 4;
+  // repeated .module.protocol.KeyStr dislike = 4;
   total_size += 1 * this->dislike_size();
   for (int i = 0; i < this->dislike_size(); i++) {
     total_size +=
@@ -706,7 +711,7 @@ int UserInfo::ByteSize() const {
         this->dislike(i));
   }
 
-  // repeated .KeyTime readed = 5;
+  // repeated .module.protocol.KeyTime readed = 5;
   total_size += 1 * this->readed_size();
   for (int i = 0; i < this->readed_size(); i++) {
     total_size +=
@@ -714,7 +719,7 @@ int UserInfo::ByteSize() const {
         this->readed(i));
   }
 
-  // repeated .KeyTime recommended = 6;
+  // repeated .module.protocol.KeyTime recommended = 6;
   total_size += 1 * this->recommended_size();
   for (int i = 0; i < this->recommended_size(); i++) {
     total_size +=
@@ -802,13 +807,13 @@ void UserInfo::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
  ::google::protobuf::uint64 UserInfo::user_id() const {
-  // @@protoc_insertion_point(field_get:UserInfo.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.user_id)
   return user_id_;
 }
  void UserInfo::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:UserInfo.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.UserInfo.user_id)
 }
 
 // optional int32 last_modified = 2;
@@ -816,132 +821,132 @@ void UserInfo::clear_last_modified() {
   last_modified_ = 0;
 }
  ::google::protobuf::int32 UserInfo::last_modified() const {
-  // @@protoc_insertion_point(field_get:UserInfo.last_modified)
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.last_modified)
   return last_modified_;
 }
  void UserInfo::set_last_modified(::google::protobuf::int32 value) {
   
   last_modified_ = value;
-  // @@protoc_insertion_point(field_set:UserInfo.last_modified)
+  // @@protoc_insertion_point(field_set:module.protocol.UserInfo.last_modified)
 }
 
-// repeated .KeyStr subscribe = 3;
+// repeated .module.protocol.KeyStr subscribe = 3;
 int UserInfo::subscribe_size() const {
   return subscribe_.size();
 }
 void UserInfo::clear_subscribe() {
   subscribe_.Clear();
 }
-const ::KeyStr& UserInfo::subscribe(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.subscribe)
+const ::module::protocol::KeyStr& UserInfo::subscribe(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.subscribe)
   return subscribe_.Get(index);
 }
-::KeyStr* UserInfo::mutable_subscribe(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.subscribe)
+::module::protocol::KeyStr* UserInfo::mutable_subscribe(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.subscribe)
   return subscribe_.Mutable(index);
 }
-::KeyStr* UserInfo::add_subscribe() {
-  // @@protoc_insertion_point(field_add:UserInfo.subscribe)
+::module::protocol::KeyStr* UserInfo::add_subscribe() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.subscribe)
   return subscribe_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::KeyStr >*
+::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserInfo::mutable_subscribe() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.subscribe)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.subscribe)
   return &subscribe_;
 }
-const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserInfo::subscribe() const {
-  // @@protoc_insertion_point(field_list:UserInfo.subscribe)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.subscribe)
   return subscribe_;
 }
 
-// repeated .KeyStr dislike = 4;
+// repeated .module.protocol.KeyStr dislike = 4;
 int UserInfo::dislike_size() const {
   return dislike_.size();
 }
 void UserInfo::clear_dislike() {
   dislike_.Clear();
 }
-const ::KeyStr& UserInfo::dislike(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.dislike)
+const ::module::protocol::KeyStr& UserInfo::dislike(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.dislike)
   return dislike_.Get(index);
 }
-::KeyStr* UserInfo::mutable_dislike(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.dislike)
+::module::protocol::KeyStr* UserInfo::mutable_dislike(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.dislike)
   return dislike_.Mutable(index);
 }
-::KeyStr* UserInfo::add_dislike() {
-  // @@protoc_insertion_point(field_add:UserInfo.dislike)
+::module::protocol::KeyStr* UserInfo::add_dislike() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.dislike)
   return dislike_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::KeyStr >*
+::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserInfo::mutable_dislike() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.dislike)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.dislike)
   return &dislike_;
 }
-const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserInfo::dislike() const {
-  // @@protoc_insertion_point(field_list:UserInfo.dislike)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.dislike)
   return dislike_;
 }
 
-// repeated .KeyTime readed = 5;
+// repeated .module.protocol.KeyTime readed = 5;
 int UserInfo::readed_size() const {
   return readed_.size();
 }
 void UserInfo::clear_readed() {
   readed_.Clear();
 }
-const ::KeyTime& UserInfo::readed(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.readed)
+const ::module::protocol::KeyTime& UserInfo::readed(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.readed)
   return readed_.Get(index);
 }
-::KeyTime* UserInfo::mutable_readed(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.readed)
+::module::protocol::KeyTime* UserInfo::mutable_readed(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.readed)
   return readed_.Mutable(index);
 }
-::KeyTime* UserInfo::add_readed() {
-  // @@protoc_insertion_point(field_add:UserInfo.readed)
+::module::protocol::KeyTime* UserInfo::add_readed() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.readed)
   return readed_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::KeyTime >*
+::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserInfo::mutable_readed() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.readed)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.readed)
   return &readed_;
 }
-const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserInfo::readed() const {
-  // @@protoc_insertion_point(field_list:UserInfo.readed)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.readed)
   return readed_;
 }
 
-// repeated .KeyTime recommended = 6;
+// repeated .module.protocol.KeyTime recommended = 6;
 int UserInfo::recommended_size() const {
   return recommended_.size();
 }
 void UserInfo::clear_recommended() {
   recommended_.Clear();
 }
-const ::KeyTime& UserInfo::recommended(int index) const {
-  // @@protoc_insertion_point(field_get:UserInfo.recommended)
+const ::module::protocol::KeyTime& UserInfo::recommended(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserInfo.recommended)
   return recommended_.Get(index);
 }
-::KeyTime* UserInfo::mutable_recommended(int index) {
-  // @@protoc_insertion_point(field_mutable:UserInfo.recommended)
+::module::protocol::KeyTime* UserInfo::mutable_recommended(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserInfo.recommended)
   return recommended_.Mutable(index);
 }
-::KeyTime* UserInfo::add_recommended() {
-  // @@protoc_insertion_point(field_add:UserInfo.recommended)
+::module::protocol::KeyTime* UserInfo::add_recommended() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserInfo.recommended)
   return recommended_.Add();
 }
-::google::protobuf::RepeatedPtrField< ::KeyTime >*
+::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserInfo::mutable_recommended() {
-  // @@protoc_insertion_point(field_mutable_list:UserInfo.recommended)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserInfo.recommended)
   return &recommended_;
 }
-const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserInfo::recommended() const {
-  // @@protoc_insertion_point(field_list:UserInfo.recommended)
+  // @@protoc_insertion_point(field_list:module.protocol.UserInfo.recommended)
   return recommended_;
 }
 
@@ -956,7 +961,7 @@ const int ItemQuery::kItemIdFieldNumber;
 ItemQuery::ItemQuery()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:ItemQuery)
+  // @@protoc_insertion_point(constructor:module.protocol.ItemQuery)
 }
 
 void ItemQuery::InitAsDefaultInstance() {
@@ -968,7 +973,7 @@ ItemQuery::ItemQuery(const ItemQuery& from)
     _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:ItemQuery)
+  // @@protoc_insertion_point(copy_constructor:module.protocol.ItemQuery)
 }
 
 void ItemQuery::SharedCtor() {
@@ -978,7 +983,7 @@ void ItemQuery::SharedCtor() {
 }
 
 ItemQuery::~ItemQuery() {
-  // @@protoc_insertion_point(destructor:ItemQuery)
+  // @@protoc_insertion_point(destructor:module.protocol.ItemQuery)
   SharedDtor();
 }
 
@@ -1020,7 +1025,7 @@ bool ItemQuery::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:ItemQuery)
+  // @@protoc_insertion_point(parse_start:module.protocol.ItemQuery)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
@@ -1053,34 +1058,34 @@ bool ItemQuery::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:ItemQuery)
+  // @@protoc_insertion_point(parse_success:module.protocol.ItemQuery)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:ItemQuery)
+  // @@protoc_insertion_point(parse_failure:module.protocol.ItemQuery)
   return false;
 #undef DO_
 }
 
 void ItemQuery::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:ItemQuery)
+  // @@protoc_insertion_point(serialize_start:module.protocol.ItemQuery)
   // optional fixed64 item_id = 1;
   if (this->item_id() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteFixed64(1, this->item_id(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:ItemQuery)
+  // @@protoc_insertion_point(serialize_end:module.protocol.ItemQuery)
 }
 
 ::google::protobuf::uint8* ItemQuery::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:ItemQuery)
+  // @@protoc_insertion_point(serialize_to_array_start:module.protocol.ItemQuery)
   // optional fixed64 item_id = 1;
   if (this->item_id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFixed64ToArray(1, this->item_id(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:ItemQuery)
+  // @@protoc_insertion_point(serialize_to_array_end:module.protocol.ItemQuery)
   return target;
 }
 
@@ -1160,17 +1165,20 @@ void ItemQuery::clear_item_id() {
   item_id_ = GOOGLE_ULONGLONG(0);
 }
  ::google::protobuf::uint64 ItemQuery::item_id() const {
-  // @@protoc_insertion_point(field_get:ItemQuery.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemQuery.item_id)
   return item_id_;
 }
  void ItemQuery::set_item_id(::google::protobuf::uint64 value) {
   
   item_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemQuery.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemQuery.item_id)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
+
+}  // namespace protocol
+}  // namespace module
 
 // @@protoc_insertion_point(global_scope)

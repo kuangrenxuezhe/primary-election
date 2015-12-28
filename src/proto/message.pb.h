@@ -31,6 +31,9 @@
 #include "google/protobuf/any.pb.h"
 // @@protoc_insertion_point(includes)
 
+namespace module {
+namespace protocol {
+
 // Internal implementation detail -- do not call these.
 void protobuf_AddDesc_message_2eproto();
 void protobuf_AssignDesc_message_2eproto();
@@ -304,7 +307,7 @@ class StatusCode : public ::google::protobuf::Message {
   ::std::string* release_reason();
   void set_allocated_reason(::std::string* reason);
 
-  // @@protoc_insertion_point(class_scope:StatusCode)
+  // @@protoc_insertion_point(class_scope:module.protocol.StatusCode)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -394,7 +397,7 @@ class KeyStr : public ::google::protobuf::Message {
   ::std::string* release_str();
   void set_allocated_str(::std::string* str);
 
-  // @@protoc_insertion_point(class_scope:KeyStr)
+  // @@protoc_insertion_point(class_scope:module.protocol.KeyStr)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -467,24 +470,24 @@ class RepeatedKeyStr : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .KeyStr key_str = 1;
+  // repeated .module.protocol.KeyStr key_str = 1;
   int key_str_size() const;
   void clear_key_str();
   static const int kKeyStrFieldNumber = 1;
-  const ::KeyStr& key_str(int index) const;
-  ::KeyStr* mutable_key_str(int index);
-  ::KeyStr* add_key_str();
-  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+  const ::module::protocol::KeyStr& key_str(int index) const;
+  ::module::protocol::KeyStr* mutable_key_str(int index);
+  ::module::protocol::KeyStr* add_key_str();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
       mutable_key_str();
-  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
       key_str() const;
 
-  // @@protoc_insertion_point(class_scope:RepeatedKeyStr)
+  // @@protoc_insertion_point(class_scope:module.protocol.RepeatedKeyStr)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::RepeatedPtrField< ::KeyStr > key_str_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr > key_str_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
   friend void protobuf_AssignDesc_message_2eproto();
@@ -563,7 +566,7 @@ class KeyTime : public ::google::protobuf::Message {
   ::google::protobuf::int32 last_modified() const;
   void set_last_modified(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:KeyTime)
+  // @@protoc_insertion_point(class_scope:module.protocol.KeyTime)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -636,24 +639,24 @@ class RepeatedKeyTime : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .KeyTime key_time = 1;
+  // repeated .module.protocol.KeyTime key_time = 1;
   int key_time_size() const;
   void clear_key_time();
   static const int kKeyTimeFieldNumber = 1;
-  const ::KeyTime& key_time(int index) const;
-  ::KeyTime* mutable_key_time(int index);
-  ::KeyTime* add_key_time();
-  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+  const ::module::protocol::KeyTime& key_time(int index) const;
+  ::module::protocol::KeyTime* mutable_key_time(int index);
+  ::module::protocol::KeyTime* add_key_time();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
       mutable_key_time();
-  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
       key_time() const;
 
-  // @@protoc_insertion_point(class_scope:RepeatedKeyTime)
+  // @@protoc_insertion_point(class_scope:module.protocol.RepeatedKeyTime)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::RepeatedPtrField< ::KeyTime > key_time_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime > key_time_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
   friend void protobuf_AssignDesc_message_2eproto();
@@ -743,7 +746,7 @@ class KeyPair : public ::google::protobuf::Message {
   float power() const;
   void set_power(float value);
 
-  // @@protoc_insertion_point(class_scope:KeyPair)
+  // @@protoc_insertion_point(class_scope:module.protocol.KeyPair)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -817,24 +820,24 @@ class RepeatedKeyPair : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .KeyPair key_pair = 1;
+  // repeated .module.protocol.KeyPair key_pair = 1;
   int key_pair_size() const;
   void clear_key_pair();
   static const int kKeyPairFieldNumber = 1;
-  const ::KeyPair& key_pair(int index) const;
-  ::KeyPair* mutable_key_pair(int index);
-  ::KeyPair* add_key_pair();
-  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+  const ::module::protocol::KeyPair& key_pair(int index) const;
+  ::module::protocol::KeyPair* mutable_key_pair(int index);
+  ::module::protocol::KeyPair* add_key_pair();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
       mutable_key_pair();
-  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
       key_pair() const;
 
-  // @@protoc_insertion_point(class_scope:RepeatedKeyPair)
+  // @@protoc_insertion_point(class_scope:module.protocol.RepeatedKeyPair)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::RepeatedPtrField< ::KeyPair > key_pair_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair > key_pair_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
   friend void protobuf_AssignDesc_message_2eproto();
@@ -913,64 +916,64 @@ class UserProfile : public ::google::protobuf::Message {
   ::google::protobuf::int32 last_modified() const;
   void set_last_modified(::google::protobuf::int32 value);
 
-  // repeated .KeyStr subscribe = 3;
+  // repeated .module.protocol.KeyStr subscribe = 3;
   int subscribe_size() const;
   void clear_subscribe();
   static const int kSubscribeFieldNumber = 3;
-  const ::KeyStr& subscribe(int index) const;
-  ::KeyStr* mutable_subscribe(int index);
-  ::KeyStr* add_subscribe();
-  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+  const ::module::protocol::KeyStr& subscribe(int index) const;
+  ::module::protocol::KeyStr* mutable_subscribe(int index);
+  ::module::protocol::KeyStr* add_subscribe();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
       mutable_subscribe();
-  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
       subscribe() const;
 
-  // repeated .KeyStr dislike = 4;
+  // repeated .module.protocol.KeyStr dislike = 4;
   int dislike_size() const;
   void clear_dislike();
   static const int kDislikeFieldNumber = 4;
-  const ::KeyStr& dislike(int index) const;
-  ::KeyStr* mutable_dislike(int index);
-  ::KeyStr* add_dislike();
-  ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+  const ::module::protocol::KeyStr& dislike(int index) const;
+  ::module::protocol::KeyStr* mutable_dislike(int index);
+  ::module::protocol::KeyStr* add_dislike();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
       mutable_dislike();
-  const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
       dislike() const;
 
-  // repeated .KeyTime readed = 5;
+  // repeated .module.protocol.KeyTime readed = 5;
   int readed_size() const;
   void clear_readed();
   static const int kReadedFieldNumber = 5;
-  const ::KeyTime& readed(int index) const;
-  ::KeyTime* mutable_readed(int index);
-  ::KeyTime* add_readed();
-  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+  const ::module::protocol::KeyTime& readed(int index) const;
+  ::module::protocol::KeyTime* mutable_readed(int index);
+  ::module::protocol::KeyTime* add_readed();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
       mutable_readed();
-  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
       readed() const;
 
-  // repeated .KeyTime recommended = 6;
+  // repeated .module.protocol.KeyTime recommended = 6;
   int recommended_size() const;
   void clear_recommended();
   static const int kRecommendedFieldNumber = 6;
-  const ::KeyTime& recommended(int index) const;
-  ::KeyTime* mutable_recommended(int index);
-  ::KeyTime* add_recommended();
-  ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+  const ::module::protocol::KeyTime& recommended(int index) const;
+  ::module::protocol::KeyTime* mutable_recommended(int index);
+  ::module::protocol::KeyTime* add_recommended();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
       mutable_recommended();
-  const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
       recommended() const;
 
-  // @@protoc_insertion_point(class_scope:UserProfile)
+  // @@protoc_insertion_point(class_scope:module.protocol.UserProfile)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
   ::google::protobuf::uint64 user_id_;
-  ::google::protobuf::RepeatedPtrField< ::KeyStr > subscribe_;
-  ::google::protobuf::RepeatedPtrField< ::KeyStr > dislike_;
-  ::google::protobuf::RepeatedPtrField< ::KeyTime > readed_;
-  ::google::protobuf::RepeatedPtrField< ::KeyTime > recommended_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr > subscribe_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr > dislike_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime > readed_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime > recommended_;
   ::google::protobuf::int32 last_modified_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
@@ -1086,43 +1089,43 @@ class ItemInfo : public ::google::protobuf::Message {
   ::google::protobuf::int32 category_id() const;
   void set_category_id(::google::protobuf::int32 value);
 
-  // repeated .KeyPair region_id = 9;
+  // repeated .module.protocol.KeyPair region_id = 9;
   int region_id_size() const;
   void clear_region_id();
   static const int kRegionIdFieldNumber = 9;
-  const ::KeyPair& region_id(int index) const;
-  ::KeyPair* mutable_region_id(int index);
-  ::KeyPair* add_region_id();
-  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+  const ::module::protocol::KeyPair& region_id(int index) const;
+  ::module::protocol::KeyPair* mutable_region_id(int index);
+  ::module::protocol::KeyPair* add_region_id();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
       mutable_region_id();
-  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
       region_id() const;
 
-  // repeated .KeyPair belongs_to = 10;
+  // repeated .module.protocol.KeyPair belongs_to = 10;
   int belongs_to_size() const;
   void clear_belongs_to();
   static const int kBelongsToFieldNumber = 10;
-  const ::KeyPair& belongs_to(int index) const;
-  ::KeyPair* mutable_belongs_to(int index);
-  ::KeyPair* add_belongs_to();
-  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+  const ::module::protocol::KeyPair& belongs_to(int index) const;
+  ::module::protocol::KeyPair* mutable_belongs_to(int index);
+  ::module::protocol::KeyPair* add_belongs_to();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
       mutable_belongs_to();
-  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
       belongs_to() const;
 
-  // repeated .KeyPair top = 11;
+  // repeated .module.protocol.KeyPair top = 11;
   int top_size() const;
   void clear_top();
   static const int kTopFieldNumber = 11;
-  const ::KeyPair& top(int index) const;
-  ::KeyPair* mutable_top(int index);
-  ::KeyPair* add_top();
-  ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+  const ::module::protocol::KeyPair& top(int index) const;
+  ::module::protocol::KeyPair* mutable_top(int index);
+  ::module::protocol::KeyPair* add_top();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
       mutable_top();
-  const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
       top() const;
 
-  // @@protoc_insertion_point(class_scope:ItemInfo)
+  // @@protoc_insertion_point(class_scope:module.protocol.ItemInfo)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1134,9 +1137,9 @@ class ItemInfo : public ::google::protobuf::Message {
   ::google::protobuf::int32 picture_num_;
   ::google::protobuf::int32 click_count_;
   ::google::protobuf::int32 click_time_;
-  ::google::protobuf::RepeatedPtrField< ::KeyPair > region_id_;
-  ::google::protobuf::RepeatedPtrField< ::KeyPair > belongs_to_;
-  ::google::protobuf::RepeatedPtrField< ::KeyPair > top_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair > region_id_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair > belongs_to_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair > top_;
   ::google::protobuf::int32 category_id_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
@@ -1228,11 +1231,11 @@ class Action : public ::google::protobuf::Message {
   ::google::protobuf::int32 stay_time() const;
   void set_stay_time(::google::protobuf::int32 value);
 
-  // optional .ActionType action = 5;
+  // optional .module.protocol.ActionType action = 5;
   void clear_action();
   static const int kActionFieldNumber = 5;
-  ::ActionType action() const;
-  void set_action(::ActionType value);
+  ::module::protocol::ActionType action() const;
+  void set_action(::module::protocol::ActionType value);
 
   // optional bytes location = 6;
   void clear_location();
@@ -1296,7 +1299,7 @@ class Action : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_history_id();
 
-  // @@protoc_insertion_point(class_scope:Action)
+  // @@protoc_insertion_point(class_scope:module.protocol.Action)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1379,11 +1382,11 @@ class ItemTag : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 tag_id = 1;
+  // optional uint64 tag_id = 1;
   void clear_tag_id();
   static const int kTagIdFieldNumber = 1;
-  ::google::protobuf::int32 tag_id() const;
-  void set_tag_id(::google::protobuf::int32 value);
+  ::google::protobuf::uint64 tag_id() const;
+  void set_tag_id(::google::protobuf::uint64 value);
 
   // optional bytes tag_name = 2;
   void clear_tag_name();
@@ -1402,13 +1405,13 @@ class ItemTag : public ::google::protobuf::Message {
   float tag_power() const;
   void set_tag_power(float value);
 
-  // @@protoc_insertion_point(class_scope:ItemTag)
+  // @@protoc_insertion_point(class_scope:module.protocol.ItemTag)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
+  ::google::protobuf::uint64 tag_id_;
   ::google::protobuf::internal::ArenaStringPtr tag_name_;
-  ::google::protobuf::int32 tag_id_;
   float tag_power_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
@@ -1493,7 +1496,7 @@ class ItemWord : public ::google::protobuf::Message {
   ::google::protobuf::int32 count() const;
   void set_count(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:ItemWord)
+  // @@protoc_insertion_point(class_scope:module.protocol.ItemWord)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1566,11 +1569,11 @@ class TopInfo : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .TopType top_type = 1;
+  // optional .module.protocol.TopType top_type = 1;
   void clear_top_type();
   static const int kTopTypeFieldNumber = 1;
-  ::TopType top_type() const;
-  void set_top_type(::TopType value);
+  ::module::protocol::TopType top_type() const;
+  void set_top_type(::module::protocol::TopType value);
 
   // repeated bytes top_srp_id = 2;
   int top_srp_id_size() const;
@@ -1604,7 +1607,7 @@ class TopInfo : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& top_circle_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_top_circle_id();
 
-  // @@protoc_insertion_point(class_scope:TopInfo)
+  // @@protoc_insertion_point(class_scope:module.protocol.TopInfo)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1695,7 +1698,7 @@ class ItemSource : public ::google::protobuf::Message {
   ::std::string* release_source_name();
   void set_allocated_source_name(::std::string* source_name);
 
-  // @@protoc_insertion_point(class_scope:ItemSource)
+  // @@protoc_insertion_point(class_scope:module.protocol.ItemSource)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1798,68 +1801,68 @@ class Item : public ::google::protobuf::Message {
   float power() const;
   void set_power(float value);
 
-  // optional .ItemType item_type = 6;
+  // optional .module.protocol.ItemType item_type = 6;
   void clear_item_type();
   static const int kItemTypeFieldNumber = 6;
-  ::ItemType item_type() const;
-  void set_item_type(::ItemType value);
+  ::module::protocol::ItemType item_type() const;
+  void set_item_type(::module::protocol::ItemType value);
 
-  // repeated .ItemTag category = 7;
+  // repeated .module.protocol.ItemTag category = 7;
   int category_size() const;
   void clear_category();
   static const int kCategoryFieldNumber = 7;
-  const ::ItemTag& category(int index) const;
-  ::ItemTag* mutable_category(int index);
-  ::ItemTag* add_category();
-  ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+  const ::module::protocol::ItemTag& category(int index) const;
+  ::module::protocol::ItemTag* mutable_category(int index);
+  ::module::protocol::ItemTag* add_category();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
       mutable_category();
-  const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
       category() const;
 
-  // repeated .ItemWord word = 8;
+  // repeated .module.protocol.ItemWord word = 8;
   int word_size() const;
   void clear_word();
   static const int kWordFieldNumber = 8;
-  const ::ItemWord& word(int index) const;
-  ::ItemWord* mutable_word(int index);
-  ::ItemWord* add_word();
-  ::google::protobuf::RepeatedPtrField< ::ItemWord >*
+  const ::module::protocol::ItemWord& word(int index) const;
+  ::module::protocol::ItemWord* mutable_word(int index);
+  ::module::protocol::ItemWord* add_word();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemWord >*
       mutable_word();
-  const ::google::protobuf::RepeatedPtrField< ::ItemWord >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemWord >&
       word() const;
 
-  // repeated .ItemTag srp = 9;
+  // repeated .module.protocol.ItemTag srp = 9;
   int srp_size() const;
   void clear_srp();
   static const int kSrpFieldNumber = 9;
-  const ::ItemTag& srp(int index) const;
-  ::ItemTag* mutable_srp(int index);
-  ::ItemTag* add_srp();
-  ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+  const ::module::protocol::ItemTag& srp(int index) const;
+  ::module::protocol::ItemTag* mutable_srp(int index);
+  ::module::protocol::ItemTag* add_srp();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
       mutable_srp();
-  const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
       srp() const;
 
-  // repeated .ItemTag circle = 10;
+  // repeated .module.protocol.ItemTag circle = 10;
   int circle_size() const;
   void clear_circle();
   static const int kCircleFieldNumber = 10;
-  const ::ItemTag& circle(int index) const;
-  ::ItemTag* mutable_circle(int index);
-  ::ItemTag* add_circle();
-  ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+  const ::module::protocol::ItemTag& circle(int index) const;
+  ::module::protocol::ItemTag* mutable_circle(int index);
+  ::module::protocol::ItemTag* add_circle();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
       mutable_circle();
-  const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
       circle() const;
 
-  // optional .TopInfo top_info = 11;
+  // optional .module.protocol.TopInfo top_info = 11;
   bool has_top_info() const;
   void clear_top_info();
   static const int kTopInfoFieldNumber = 11;
-  const ::TopInfo& top_info() const;
-  ::TopInfo* mutable_top_info();
-  ::TopInfo* release_top_info();
-  void set_allocated_top_info(::TopInfo* top_info);
+  const ::module::protocol::TopInfo& top_info() const;
+  ::module::protocol::TopInfo* mutable_top_info();
+  ::module::protocol::TopInfo* release_top_info();
+  void set_allocated_top_info(::module::protocol::TopInfo* top_info);
 
   // repeated bytes zone = 12;
   int zone_size() const;
@@ -1877,16 +1880,28 @@ class Item : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& zone() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_zone();
 
-  // optional .ItemSource data_source = 13;
+  // optional .module.protocol.ItemSource data_source = 13;
   bool has_data_source() const;
   void clear_data_source();
   static const int kDataSourceFieldNumber = 13;
-  const ::ItemSource& data_source() const;
-  ::ItemSource* mutable_data_source();
-  ::ItemSource* release_data_source();
-  void set_allocated_data_source(::ItemSource* data_source);
+  const ::module::protocol::ItemSource& data_source() const;
+  ::module::protocol::ItemSource* mutable_data_source();
+  ::module::protocol::ItemSource* release_data_source();
+  void set_allocated_data_source(::module::protocol::ItemSource* data_source);
 
-  // @@protoc_insertion_point(class_scope:Item)
+  // repeated .module.protocol.ItemTag tag = 14;
+  int tag_size() const;
+  void clear_tag();
+  static const int kTagFieldNumber = 14;
+  const ::module::protocol::ItemTag& tag(int index) const;
+  ::module::protocol::ItemTag* mutable_tag(int index);
+  ::module::protocol::ItemTag* add_tag();
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
+      mutable_tag();
+  const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
+      tag() const;
+
+  // @@protoc_insertion_point(class_scope:module.protocol.Item)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -1896,13 +1911,14 @@ class Item : public ::google::protobuf::Message {
   ::google::protobuf::int32 push_time_;
   ::google::protobuf::int32 picture_num_;
   float power_;
-  ::google::protobuf::RepeatedPtrField< ::ItemTag > category_;
-  ::google::protobuf::RepeatedPtrField< ::ItemWord > word_;
-  ::google::protobuf::RepeatedPtrField< ::ItemTag > srp_;
-  ::google::protobuf::RepeatedPtrField< ::ItemTag > circle_;
-  ::TopInfo* top_info_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag > category_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemWord > word_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag > srp_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag > circle_;
+  ::module::protocol::TopInfo* top_info_;
   ::google::protobuf::RepeatedPtrField< ::std::string> zone_;
-  ::ItemSource* data_source_;
+  ::module::protocol::ItemSource* data_source_;
+  ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag > tag_;
   int item_type_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
@@ -2008,7 +2024,7 @@ class Subscribe : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& circle_id() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_circle_id();
 
-  // @@protoc_insertion_point(class_scope:Subscribe)
+  // @@protoc_insertion_point(class_scope:module.protocol.Subscribe)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2100,11 +2116,11 @@ class Recommend : public ::google::protobuf::Message {
   ::google::protobuf::int32 request_num() const;
   void set_request_num(::google::protobuf::int32 value);
 
-  // optional .RecommendType recommend_type = 4;
+  // optional .module.protocol.RecommendType recommend_type = 4;
   void clear_recommend_type();
   static const int kRecommendTypeFieldNumber = 4;
-  ::RecommendType recommend_type() const;
-  void set_recommend_type(::RecommendType value);
+  ::module::protocol::RecommendType recommend_type() const;
+  void set_recommend_type(::module::protocol::RecommendType value);
 
   // optional int32 beg_time = 5;
   void clear_beg_time();
@@ -2129,13 +2145,13 @@ class Recommend : public ::google::protobuf::Message {
   ::std::string* release_zone();
   void set_allocated_zone(::std::string* zone);
 
-  // optional .RecommendNetwork network = 8;
+  // optional .module.protocol.RecommendNetwork network = 8;
   void clear_network();
   static const int kNetworkFieldNumber = 8;
-  ::RecommendNetwork network() const;
-  void set_network(::RecommendNetwork value);
+  ::module::protocol::RecommendNetwork network() const;
+  void set_network(::module::protocol::RecommendNetwork value);
 
-  // @@protoc_insertion_point(class_scope:Recommend)
+  // @@protoc_insertion_point(class_scope:module.protocol.Recommend)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2244,7 +2260,7 @@ class CandidateSetBase : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_history_id();
 
-  // @@protoc_insertion_point(class_scope:CandidateSetBase)
+  // @@protoc_insertion_point(class_scope:module.protocol.CandidateSetBase)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2368,17 +2384,17 @@ class CandidateSetPayload : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_picture_num();
 
-  // repeated .CandidateType type = 5 [packed = true];
+  // repeated .module.protocol.CandidateType type = 5 [packed = true];
   int type_size() const;
   void clear_type();
   static const int kTypeFieldNumber = 5;
-  ::CandidateType type(int index) const;
-  void set_type(int index, ::CandidateType value);
-  void add_type(::CandidateType value);
+  ::module::protocol::CandidateType type(int index) const;
+  void set_type(int index, ::module::protocol::CandidateType value);
+  void add_type(::module::protocol::CandidateType value);
   const ::google::protobuf::RepeatedField<int>& type() const;
   ::google::protobuf::RepeatedField<int>* mutable_type();
 
-  // @@protoc_insertion_point(class_scope:CandidateSetPayload)
+  // @@protoc_insertion_point(class_scope:module.protocol.CandidateSetPayload)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2459,31 +2475,31 @@ class CandidateSet : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .CandidateSetBase base = 1;
+  // optional .module.protocol.CandidateSetBase base = 1;
   bool has_base() const;
   void clear_base();
   static const int kBaseFieldNumber = 1;
-  const ::CandidateSetBase& base() const;
-  ::CandidateSetBase* mutable_base();
-  ::CandidateSetBase* release_base();
-  void set_allocated_base(::CandidateSetBase* base);
+  const ::module::protocol::CandidateSetBase& base() const;
+  ::module::protocol::CandidateSetBase* mutable_base();
+  ::module::protocol::CandidateSetBase* release_base();
+  void set_allocated_base(::module::protocol::CandidateSetBase* base);
 
-  // optional .CandidateSetPayload payload = 2;
+  // optional .module.protocol.CandidateSetPayload payload = 2;
   bool has_payload() const;
   void clear_payload();
   static const int kPayloadFieldNumber = 2;
-  const ::CandidateSetPayload& payload() const;
-  ::CandidateSetPayload* mutable_payload();
-  ::CandidateSetPayload* release_payload();
-  void set_allocated_payload(::CandidateSetPayload* payload);
+  const ::module::protocol::CandidateSetPayload& payload() const;
+  ::module::protocol::CandidateSetPayload* mutable_payload();
+  ::module::protocol::CandidateSetPayload* release_payload();
+  void set_allocated_payload(::module::protocol::CandidateSetPayload* payload);
 
-  // @@protoc_insertion_point(class_scope:CandidateSet)
+  // @@protoc_insertion_point(class_scope:module.protocol.CandidateSet)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::CandidateSetBase* base_;
-  ::CandidateSetPayload* payload_;
+  ::module::protocol::CandidateSetBase* base_;
+  ::module::protocol::CandidateSetPayload* payload_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
   friend void protobuf_AssignDesc_message_2eproto();
@@ -2556,7 +2572,7 @@ class User : public ::google::protobuf::Message {
   ::google::protobuf::uint64 user_id() const;
   void set_user_id(::google::protobuf::uint64 value);
 
-  // @@protoc_insertion_point(class_scope:User)
+  // @@protoc_insertion_point(class_scope:module.protocol.User)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2634,7 +2650,7 @@ class UserStatus : public ::google::protobuf::Message {
   ::google::protobuf::int32 is_new_user() const;
   void set_is_new_user(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:UserStatus)
+  // @@protoc_insertion_point(class_scope:module.protocol.UserStatus)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2724,7 +2740,7 @@ class Feedback : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
       mutable_item_id();
 
-  // @@protoc_insertion_point(class_scope:Feedback)
+  // @@protoc_insertion_point(class_scope:module.protocol.Feedback)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2804,7 +2820,7 @@ class FeedbackRespond : public ::google::protobuf::Message {
   ::google::protobuf::int32 respond() const;
   void set_respond(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:FeedbackRespond)
+  // @@protoc_insertion_point(class_scope:module.protocol.FeedbackRespond)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2888,7 +2904,7 @@ class AlgorithmPower : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< float >*
       mutable_power();
 
-  // @@protoc_insertion_point(class_scope:AlgorithmPower)
+  // @@protoc_insertion_point(class_scope:module.protocol.AlgorithmPower)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -2973,7 +2989,7 @@ class Category : public ::google::protobuf::Message {
   ::google::protobuf::int32 request_num() const;
   void set_request_num(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:Category)
+  // @@protoc_insertion_point(class_scope:module.protocol.Category)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -3058,7 +3074,7 @@ class AlgorithmCategory : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_category();
 
-  // @@protoc_insertion_point(class_scope:AlgorithmCategory)
+  // @@protoc_insertion_point(class_scope:module.protocol.AlgorithmCategory)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -3152,7 +3168,7 @@ class TransferRequest : public ::google::protobuf::Message {
   ::google::protobuf::Any* release_protocol();
   void set_allocated_protocol(::google::protobuf::Any* protocol);
 
-  // @@protoc_insertion_point(class_scope:TransferRequest)
+  // @@protoc_insertion_point(class_scope:module.protocol.TransferRequest)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -3241,7 +3257,7 @@ class TransferRespond : public ::google::protobuf::Message {
   ::google::protobuf::Any* release_protocol();
   void set_allocated_protocol(::google::protobuf::Any* protocol);
 
-  // @@protoc_insertion_point(class_scope:TransferRespond)
+  // @@protoc_insertion_point(class_scope:module.protocol.TransferRespond)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -3325,7 +3341,7 @@ class HeartBeat : public ::google::protobuf::Message {
   ::std::string* release_heartbeat();
   void set_allocated_heartbeat(::std::string* heartbeat);
 
-  // @@protoc_insertion_point(class_scope:HeartBeat)
+  // @@protoc_insertion_point(class_scope:module.protocol.HeartBeat)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
@@ -3352,13 +3368,13 @@ inline void StatusCode::clear_code() {
   code_ = 0;
 }
 inline ::google::protobuf::int32 StatusCode::code() const {
-  // @@protoc_insertion_point(field_get:StatusCode.code)
+  // @@protoc_insertion_point(field_get:module.protocol.StatusCode.code)
   return code_;
 }
 inline void StatusCode::set_code(::google::protobuf::int32 value) {
   
   code_ = value;
-  // @@protoc_insertion_point(field_set:StatusCode.code)
+  // @@protoc_insertion_point(field_set:module.protocol.StatusCode.code)
 }
 
 // optional string reason = 2;
@@ -3366,28 +3382,28 @@ inline void StatusCode::clear_reason() {
   reason_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& StatusCode::reason() const {
-  // @@protoc_insertion_point(field_get:StatusCode.reason)
+  // @@protoc_insertion_point(field_get:module.protocol.StatusCode.reason)
   return reason_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void StatusCode::set_reason(const ::std::string& value) {
   
   reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:StatusCode.reason)
+  // @@protoc_insertion_point(field_set:module.protocol.StatusCode.reason)
 }
 inline void StatusCode::set_reason(const char* value) {
   
   reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:StatusCode.reason)
+  // @@protoc_insertion_point(field_set_char:module.protocol.StatusCode.reason)
 }
 inline void StatusCode::set_reason(const char* value, size_t size) {
   
   reason_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:StatusCode.reason)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.StatusCode.reason)
 }
 inline ::std::string* StatusCode::mutable_reason() {
   
-  // @@protoc_insertion_point(field_mutable:StatusCode.reason)
+  // @@protoc_insertion_point(field_mutable:module.protocol.StatusCode.reason)
   return reason_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* StatusCode::release_reason() {
@@ -3401,7 +3417,7 @@ inline void StatusCode::set_allocated_reason(::std::string* reason) {
     
   }
   reason_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), reason);
-  // @@protoc_insertion_point(field_set_allocated:StatusCode.reason)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.StatusCode.reason)
 }
 
 // -------------------------------------------------------------------
@@ -3413,13 +3429,13 @@ inline void KeyStr::clear_key() {
   key_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 KeyStr::key() const {
-  // @@protoc_insertion_point(field_get:KeyStr.key)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyStr.key)
   return key_;
 }
 inline void KeyStr::set_key(::google::protobuf::uint64 value) {
   
   key_ = value;
-  // @@protoc_insertion_point(field_set:KeyStr.key)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyStr.key)
 }
 
 // optional bytes str = 2;
@@ -3427,28 +3443,28 @@ inline void KeyStr::clear_str() {
   str_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& KeyStr::str() const {
-  // @@protoc_insertion_point(field_get:KeyStr.str)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyStr.str)
   return str_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void KeyStr::set_str(const ::std::string& value) {
   
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:KeyStr.str)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyStr.str)
 }
 inline void KeyStr::set_str(const char* value) {
   
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:KeyStr.str)
+  // @@protoc_insertion_point(field_set_char:module.protocol.KeyStr.str)
 }
 inline void KeyStr::set_str(const void* value, size_t size) {
   
   str_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:KeyStr.str)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.KeyStr.str)
 }
 inline ::std::string* KeyStr::mutable_str() {
   
-  // @@protoc_insertion_point(field_mutable:KeyStr.str)
+  // @@protoc_insertion_point(field_mutable:module.protocol.KeyStr.str)
   return str_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* KeyStr::release_str() {
@@ -3462,40 +3478,40 @@ inline void KeyStr::set_allocated_str(::std::string* str) {
     
   }
   str_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), str);
-  // @@protoc_insertion_point(field_set_allocated:KeyStr.str)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.KeyStr.str)
 }
 
 // -------------------------------------------------------------------
 
 // RepeatedKeyStr
 
-// repeated .KeyStr key_str = 1;
+// repeated .module.protocol.KeyStr key_str = 1;
 inline int RepeatedKeyStr::key_str_size() const {
   return key_str_.size();
 }
 inline void RepeatedKeyStr::clear_key_str() {
   key_str_.Clear();
 }
-inline const ::KeyStr& RepeatedKeyStr::key_str(int index) const {
-  // @@protoc_insertion_point(field_get:RepeatedKeyStr.key_str)
+inline const ::module::protocol::KeyStr& RepeatedKeyStr::key_str(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.RepeatedKeyStr.key_str)
   return key_str_.Get(index);
 }
-inline ::KeyStr* RepeatedKeyStr::mutable_key_str(int index) {
-  // @@protoc_insertion_point(field_mutable:RepeatedKeyStr.key_str)
+inline ::module::protocol::KeyStr* RepeatedKeyStr::mutable_key_str(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.RepeatedKeyStr.key_str)
   return key_str_.Mutable(index);
 }
-inline ::KeyStr* RepeatedKeyStr::add_key_str() {
-  // @@protoc_insertion_point(field_add:RepeatedKeyStr.key_str)
+inline ::module::protocol::KeyStr* RepeatedKeyStr::add_key_str() {
+  // @@protoc_insertion_point(field_add:module.protocol.RepeatedKeyStr.key_str)
   return key_str_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 RepeatedKeyStr::mutable_key_str() {
-  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyStr.key_str)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.RepeatedKeyStr.key_str)
   return &key_str_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 RepeatedKeyStr::key_str() const {
-  // @@protoc_insertion_point(field_list:RepeatedKeyStr.key_str)
+  // @@protoc_insertion_point(field_list:module.protocol.RepeatedKeyStr.key_str)
   return key_str_;
 }
 
@@ -3508,13 +3524,13 @@ inline void KeyTime::clear_key() {
   key_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 KeyTime::key() const {
-  // @@protoc_insertion_point(field_get:KeyTime.key)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyTime.key)
   return key_;
 }
 inline void KeyTime::set_key(::google::protobuf::uint64 value) {
   
   key_ = value;
-  // @@protoc_insertion_point(field_set:KeyTime.key)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyTime.key)
 }
 
 // optional int32 last_modified = 2;
@@ -3522,46 +3538,46 @@ inline void KeyTime::clear_last_modified() {
   last_modified_ = 0;
 }
 inline ::google::protobuf::int32 KeyTime::last_modified() const {
-  // @@protoc_insertion_point(field_get:KeyTime.last_modified)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyTime.last_modified)
   return last_modified_;
 }
 inline void KeyTime::set_last_modified(::google::protobuf::int32 value) {
   
   last_modified_ = value;
-  // @@protoc_insertion_point(field_set:KeyTime.last_modified)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyTime.last_modified)
 }
 
 // -------------------------------------------------------------------
 
 // RepeatedKeyTime
 
-// repeated .KeyTime key_time = 1;
+// repeated .module.protocol.KeyTime key_time = 1;
 inline int RepeatedKeyTime::key_time_size() const {
   return key_time_.size();
 }
 inline void RepeatedKeyTime::clear_key_time() {
   key_time_.Clear();
 }
-inline const ::KeyTime& RepeatedKeyTime::key_time(int index) const {
-  // @@protoc_insertion_point(field_get:RepeatedKeyTime.key_time)
+inline const ::module::protocol::KeyTime& RepeatedKeyTime::key_time(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.RepeatedKeyTime.key_time)
   return key_time_.Get(index);
 }
-inline ::KeyTime* RepeatedKeyTime::mutable_key_time(int index) {
-  // @@protoc_insertion_point(field_mutable:RepeatedKeyTime.key_time)
+inline ::module::protocol::KeyTime* RepeatedKeyTime::mutable_key_time(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.RepeatedKeyTime.key_time)
   return key_time_.Mutable(index);
 }
-inline ::KeyTime* RepeatedKeyTime::add_key_time() {
-  // @@protoc_insertion_point(field_add:RepeatedKeyTime.key_time)
+inline ::module::protocol::KeyTime* RepeatedKeyTime::add_key_time() {
+  // @@protoc_insertion_point(field_add:module.protocol.RepeatedKeyTime.key_time)
   return key_time_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 RepeatedKeyTime::mutable_key_time() {
-  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyTime.key_time)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.RepeatedKeyTime.key_time)
   return &key_time_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 RepeatedKeyTime::key_time() const {
-  // @@protoc_insertion_point(field_list:RepeatedKeyTime.key_time)
+  // @@protoc_insertion_point(field_list:module.protocol.RepeatedKeyTime.key_time)
   return key_time_;
 }
 
@@ -3574,13 +3590,13 @@ inline void KeyPair::clear_key() {
   key_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 KeyPair::key() const {
-  // @@protoc_insertion_point(field_get:KeyPair.key)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyPair.key)
   return key_;
 }
 inline void KeyPair::set_key(::google::protobuf::uint64 value) {
   
   key_ = value;
-  // @@protoc_insertion_point(field_set:KeyPair.key)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyPair.key)
 }
 
 // optional bytes name = 2;
@@ -3588,28 +3604,28 @@ inline void KeyPair::clear_name() {
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& KeyPair::name() const {
-  // @@protoc_insertion_point(field_get:KeyPair.name)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyPair.name)
   return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void KeyPair::set_name(const ::std::string& value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:KeyPair.name)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyPair.name)
 }
 inline void KeyPair::set_name(const char* value) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:KeyPair.name)
+  // @@protoc_insertion_point(field_set_char:module.protocol.KeyPair.name)
 }
 inline void KeyPair::set_name(const void* value, size_t size) {
   
   name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:KeyPair.name)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.KeyPair.name)
 }
 inline ::std::string* KeyPair::mutable_name() {
   
-  // @@protoc_insertion_point(field_mutable:KeyPair.name)
+  // @@protoc_insertion_point(field_mutable:module.protocol.KeyPair.name)
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* KeyPair::release_name() {
@@ -3623,7 +3639,7 @@ inline void KeyPair::set_allocated_name(::std::string* name) {
     
   }
   name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
-  // @@protoc_insertion_point(field_set_allocated:KeyPair.name)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.KeyPair.name)
 }
 
 // optional float power = 3;
@@ -3631,46 +3647,46 @@ inline void KeyPair::clear_power() {
   power_ = 0;
 }
 inline float KeyPair::power() const {
-  // @@protoc_insertion_point(field_get:KeyPair.power)
+  // @@protoc_insertion_point(field_get:module.protocol.KeyPair.power)
   return power_;
 }
 inline void KeyPair::set_power(float value) {
   
   power_ = value;
-  // @@protoc_insertion_point(field_set:KeyPair.power)
+  // @@protoc_insertion_point(field_set:module.protocol.KeyPair.power)
 }
 
 // -------------------------------------------------------------------
 
 // RepeatedKeyPair
 
-// repeated .KeyPair key_pair = 1;
+// repeated .module.protocol.KeyPair key_pair = 1;
 inline int RepeatedKeyPair::key_pair_size() const {
   return key_pair_.size();
 }
 inline void RepeatedKeyPair::clear_key_pair() {
   key_pair_.Clear();
 }
-inline const ::KeyPair& RepeatedKeyPair::key_pair(int index) const {
-  // @@protoc_insertion_point(field_get:RepeatedKeyPair.key_pair)
+inline const ::module::protocol::KeyPair& RepeatedKeyPair::key_pair(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.RepeatedKeyPair.key_pair)
   return key_pair_.Get(index);
 }
-inline ::KeyPair* RepeatedKeyPair::mutable_key_pair(int index) {
-  // @@protoc_insertion_point(field_mutable:RepeatedKeyPair.key_pair)
+inline ::module::protocol::KeyPair* RepeatedKeyPair::mutable_key_pair(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.RepeatedKeyPair.key_pair)
   return key_pair_.Mutable(index);
 }
-inline ::KeyPair* RepeatedKeyPair::add_key_pair() {
-  // @@protoc_insertion_point(field_add:RepeatedKeyPair.key_pair)
+inline ::module::protocol::KeyPair* RepeatedKeyPair::add_key_pair() {
+  // @@protoc_insertion_point(field_add:module.protocol.RepeatedKeyPair.key_pair)
   return key_pair_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
 RepeatedKeyPair::mutable_key_pair() {
-  // @@protoc_insertion_point(field_mutable_list:RepeatedKeyPair.key_pair)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.RepeatedKeyPair.key_pair)
   return &key_pair_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
 RepeatedKeyPair::key_pair() const {
-  // @@protoc_insertion_point(field_list:RepeatedKeyPair.key_pair)
+  // @@protoc_insertion_point(field_list:module.protocol.RepeatedKeyPair.key_pair)
   return key_pair_;
 }
 
@@ -3683,13 +3699,13 @@ inline void UserProfile::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 UserProfile::user_id() const {
-  // @@protoc_insertion_point(field_get:UserProfile.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.user_id)
   return user_id_;
 }
 inline void UserProfile::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:UserProfile.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.UserProfile.user_id)
 }
 
 // optional int32 last_modified = 2;
@@ -3697,132 +3713,132 @@ inline void UserProfile::clear_last_modified() {
   last_modified_ = 0;
 }
 inline ::google::protobuf::int32 UserProfile::last_modified() const {
-  // @@protoc_insertion_point(field_get:UserProfile.last_modified)
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.last_modified)
   return last_modified_;
 }
 inline void UserProfile::set_last_modified(::google::protobuf::int32 value) {
   
   last_modified_ = value;
-  // @@protoc_insertion_point(field_set:UserProfile.last_modified)
+  // @@protoc_insertion_point(field_set:module.protocol.UserProfile.last_modified)
 }
 
-// repeated .KeyStr subscribe = 3;
+// repeated .module.protocol.KeyStr subscribe = 3;
 inline int UserProfile::subscribe_size() const {
   return subscribe_.size();
 }
 inline void UserProfile::clear_subscribe() {
   subscribe_.Clear();
 }
-inline const ::KeyStr& UserProfile::subscribe(int index) const {
-  // @@protoc_insertion_point(field_get:UserProfile.subscribe)
+inline const ::module::protocol::KeyStr& UserProfile::subscribe(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.subscribe)
   return subscribe_.Get(index);
 }
-inline ::KeyStr* UserProfile::mutable_subscribe(int index) {
-  // @@protoc_insertion_point(field_mutable:UserProfile.subscribe)
+inline ::module::protocol::KeyStr* UserProfile::mutable_subscribe(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserProfile.subscribe)
   return subscribe_.Mutable(index);
 }
-inline ::KeyStr* UserProfile::add_subscribe() {
-  // @@protoc_insertion_point(field_add:UserProfile.subscribe)
+inline ::module::protocol::KeyStr* UserProfile::add_subscribe() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserProfile.subscribe)
   return subscribe_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserProfile::mutable_subscribe() {
-  // @@protoc_insertion_point(field_mutable_list:UserProfile.subscribe)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserProfile.subscribe)
   return &subscribe_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserProfile::subscribe() const {
-  // @@protoc_insertion_point(field_list:UserProfile.subscribe)
+  // @@protoc_insertion_point(field_list:module.protocol.UserProfile.subscribe)
   return subscribe_;
 }
 
-// repeated .KeyStr dislike = 4;
+// repeated .module.protocol.KeyStr dislike = 4;
 inline int UserProfile::dislike_size() const {
   return dislike_.size();
 }
 inline void UserProfile::clear_dislike() {
   dislike_.Clear();
 }
-inline const ::KeyStr& UserProfile::dislike(int index) const {
-  // @@protoc_insertion_point(field_get:UserProfile.dislike)
+inline const ::module::protocol::KeyStr& UserProfile::dislike(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.dislike)
   return dislike_.Get(index);
 }
-inline ::KeyStr* UserProfile::mutable_dislike(int index) {
-  // @@protoc_insertion_point(field_mutable:UserProfile.dislike)
+inline ::module::protocol::KeyStr* UserProfile::mutable_dislike(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserProfile.dislike)
   return dislike_.Mutable(index);
 }
-inline ::KeyStr* UserProfile::add_dislike() {
-  // @@protoc_insertion_point(field_add:UserProfile.dislike)
+inline ::module::protocol::KeyStr* UserProfile::add_dislike() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserProfile.dislike)
   return dislike_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyStr >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >*
 UserProfile::mutable_dislike() {
-  // @@protoc_insertion_point(field_mutable_list:UserProfile.dislike)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserProfile.dislike)
   return &dislike_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyStr >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyStr >&
 UserProfile::dislike() const {
-  // @@protoc_insertion_point(field_list:UserProfile.dislike)
+  // @@protoc_insertion_point(field_list:module.protocol.UserProfile.dislike)
   return dislike_;
 }
 
-// repeated .KeyTime readed = 5;
+// repeated .module.protocol.KeyTime readed = 5;
 inline int UserProfile::readed_size() const {
   return readed_.size();
 }
 inline void UserProfile::clear_readed() {
   readed_.Clear();
 }
-inline const ::KeyTime& UserProfile::readed(int index) const {
-  // @@protoc_insertion_point(field_get:UserProfile.readed)
+inline const ::module::protocol::KeyTime& UserProfile::readed(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.readed)
   return readed_.Get(index);
 }
-inline ::KeyTime* UserProfile::mutable_readed(int index) {
-  // @@protoc_insertion_point(field_mutable:UserProfile.readed)
+inline ::module::protocol::KeyTime* UserProfile::mutable_readed(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserProfile.readed)
   return readed_.Mutable(index);
 }
-inline ::KeyTime* UserProfile::add_readed() {
-  // @@protoc_insertion_point(field_add:UserProfile.readed)
+inline ::module::protocol::KeyTime* UserProfile::add_readed() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserProfile.readed)
   return readed_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserProfile::mutable_readed() {
-  // @@protoc_insertion_point(field_mutable_list:UserProfile.readed)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserProfile.readed)
   return &readed_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserProfile::readed() const {
-  // @@protoc_insertion_point(field_list:UserProfile.readed)
+  // @@protoc_insertion_point(field_list:module.protocol.UserProfile.readed)
   return readed_;
 }
 
-// repeated .KeyTime recommended = 6;
+// repeated .module.protocol.KeyTime recommended = 6;
 inline int UserProfile::recommended_size() const {
   return recommended_.size();
 }
 inline void UserProfile::clear_recommended() {
   recommended_.Clear();
 }
-inline const ::KeyTime& UserProfile::recommended(int index) const {
-  // @@protoc_insertion_point(field_get:UserProfile.recommended)
+inline const ::module::protocol::KeyTime& UserProfile::recommended(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.UserProfile.recommended)
   return recommended_.Get(index);
 }
-inline ::KeyTime* UserProfile::mutable_recommended(int index) {
-  // @@protoc_insertion_point(field_mutable:UserProfile.recommended)
+inline ::module::protocol::KeyTime* UserProfile::mutable_recommended(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.UserProfile.recommended)
   return recommended_.Mutable(index);
 }
-inline ::KeyTime* UserProfile::add_recommended() {
-  // @@protoc_insertion_point(field_add:UserProfile.recommended)
+inline ::module::protocol::KeyTime* UserProfile::add_recommended() {
+  // @@protoc_insertion_point(field_add:module.protocol.UserProfile.recommended)
   return recommended_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyTime >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >*
 UserProfile::mutable_recommended() {
-  // @@protoc_insertion_point(field_mutable_list:UserProfile.recommended)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.UserProfile.recommended)
   return &recommended_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyTime >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyTime >&
 UserProfile::recommended() const {
-  // @@protoc_insertion_point(field_list:UserProfile.recommended)
+  // @@protoc_insertion_point(field_list:module.protocol.UserProfile.recommended)
   return recommended_;
 }
 
@@ -3835,13 +3851,13 @@ inline void ItemInfo::clear_item_id() {
   item_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 ItemInfo::item_id() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.item_id)
   return item_id_;
 }
 inline void ItemInfo::set_item_id(::google::protobuf::uint64 value) {
   
   item_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.item_id)
 }
 
 // optional float power = 2;
@@ -3849,13 +3865,13 @@ inline void ItemInfo::clear_power() {
   power_ = 0;
 }
 inline float ItemInfo::power() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.power)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.power)
   return power_;
 }
 inline void ItemInfo::set_power(float value) {
   
   power_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.power)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.power)
 }
 
 // optional int32 publish_time = 3;
@@ -3863,13 +3879,13 @@ inline void ItemInfo::clear_publish_time() {
   publish_time_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::publish_time() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.publish_time)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.publish_time)
   return publish_time_;
 }
 inline void ItemInfo::set_publish_time(::google::protobuf::int32 value) {
   
   publish_time_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.publish_time)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.publish_time)
 }
 
 // optional int32 item_type = 4;
@@ -3877,13 +3893,13 @@ inline void ItemInfo::clear_item_type() {
   item_type_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::item_type() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.item_type)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.item_type)
   return item_type_;
 }
 inline void ItemInfo::set_item_type(::google::protobuf::int32 value) {
   
   item_type_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.item_type)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.item_type)
 }
 
 // optional int32 picture_num = 5;
@@ -3891,13 +3907,13 @@ inline void ItemInfo::clear_picture_num() {
   picture_num_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::picture_num() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.picture_num)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.picture_num)
   return picture_num_;
 }
 inline void ItemInfo::set_picture_num(::google::protobuf::int32 value) {
   
   picture_num_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.picture_num)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.picture_num)
 }
 
 // optional int32 click_count = 6;
@@ -3905,13 +3921,13 @@ inline void ItemInfo::clear_click_count() {
   click_count_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::click_count() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.click_count)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.click_count)
   return click_count_;
 }
 inline void ItemInfo::set_click_count(::google::protobuf::int32 value) {
   
   click_count_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.click_count)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.click_count)
 }
 
 // optional int32 click_time = 7;
@@ -3919,13 +3935,13 @@ inline void ItemInfo::clear_click_time() {
   click_time_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::click_time() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.click_time)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.click_time)
   return click_time_;
 }
 inline void ItemInfo::set_click_time(::google::protobuf::int32 value) {
   
   click_time_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.click_time)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.click_time)
 }
 
 // optional int32 category_id = 8;
@@ -3933,102 +3949,102 @@ inline void ItemInfo::clear_category_id() {
   category_id_ = 0;
 }
 inline ::google::protobuf::int32 ItemInfo::category_id() const {
-  // @@protoc_insertion_point(field_get:ItemInfo.category_id)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.category_id)
   return category_id_;
 }
 inline void ItemInfo::set_category_id(::google::protobuf::int32 value) {
   
   category_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemInfo.category_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemInfo.category_id)
 }
 
-// repeated .KeyPair region_id = 9;
+// repeated .module.protocol.KeyPair region_id = 9;
 inline int ItemInfo::region_id_size() const {
   return region_id_.size();
 }
 inline void ItemInfo::clear_region_id() {
   region_id_.Clear();
 }
-inline const ::KeyPair& ItemInfo::region_id(int index) const {
-  // @@protoc_insertion_point(field_get:ItemInfo.region_id)
+inline const ::module::protocol::KeyPair& ItemInfo::region_id(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.region_id)
   return region_id_.Get(index);
 }
-inline ::KeyPair* ItemInfo::mutable_region_id(int index) {
-  // @@protoc_insertion_point(field_mutable:ItemInfo.region_id)
+inline ::module::protocol::KeyPair* ItemInfo::mutable_region_id(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemInfo.region_id)
   return region_id_.Mutable(index);
 }
-inline ::KeyPair* ItemInfo::add_region_id() {
-  // @@protoc_insertion_point(field_add:ItemInfo.region_id)
+inline ::module::protocol::KeyPair* ItemInfo::add_region_id() {
+  // @@protoc_insertion_point(field_add:module.protocol.ItemInfo.region_id)
   return region_id_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
 ItemInfo::mutable_region_id() {
-  // @@protoc_insertion_point(field_mutable_list:ItemInfo.region_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.ItemInfo.region_id)
   return &region_id_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
 ItemInfo::region_id() const {
-  // @@protoc_insertion_point(field_list:ItemInfo.region_id)
+  // @@protoc_insertion_point(field_list:module.protocol.ItemInfo.region_id)
   return region_id_;
 }
 
-// repeated .KeyPair belongs_to = 10;
+// repeated .module.protocol.KeyPair belongs_to = 10;
 inline int ItemInfo::belongs_to_size() const {
   return belongs_to_.size();
 }
 inline void ItemInfo::clear_belongs_to() {
   belongs_to_.Clear();
 }
-inline const ::KeyPair& ItemInfo::belongs_to(int index) const {
-  // @@protoc_insertion_point(field_get:ItemInfo.belongs_to)
+inline const ::module::protocol::KeyPair& ItemInfo::belongs_to(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.belongs_to)
   return belongs_to_.Get(index);
 }
-inline ::KeyPair* ItemInfo::mutable_belongs_to(int index) {
-  // @@protoc_insertion_point(field_mutable:ItemInfo.belongs_to)
+inline ::module::protocol::KeyPair* ItemInfo::mutable_belongs_to(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemInfo.belongs_to)
   return belongs_to_.Mutable(index);
 }
-inline ::KeyPair* ItemInfo::add_belongs_to() {
-  // @@protoc_insertion_point(field_add:ItemInfo.belongs_to)
+inline ::module::protocol::KeyPair* ItemInfo::add_belongs_to() {
+  // @@protoc_insertion_point(field_add:module.protocol.ItemInfo.belongs_to)
   return belongs_to_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
 ItemInfo::mutable_belongs_to() {
-  // @@protoc_insertion_point(field_mutable_list:ItemInfo.belongs_to)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.ItemInfo.belongs_to)
   return &belongs_to_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
 ItemInfo::belongs_to() const {
-  // @@protoc_insertion_point(field_list:ItemInfo.belongs_to)
+  // @@protoc_insertion_point(field_list:module.protocol.ItemInfo.belongs_to)
   return belongs_to_;
 }
 
-// repeated .KeyPair top = 11;
+// repeated .module.protocol.KeyPair top = 11;
 inline int ItemInfo::top_size() const {
   return top_.size();
 }
 inline void ItemInfo::clear_top() {
   top_.Clear();
 }
-inline const ::KeyPair& ItemInfo::top(int index) const {
-  // @@protoc_insertion_point(field_get:ItemInfo.top)
+inline const ::module::protocol::KeyPair& ItemInfo::top(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.ItemInfo.top)
   return top_.Get(index);
 }
-inline ::KeyPair* ItemInfo::mutable_top(int index) {
-  // @@protoc_insertion_point(field_mutable:ItemInfo.top)
+inline ::module::protocol::KeyPair* ItemInfo::mutable_top(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemInfo.top)
   return top_.Mutable(index);
 }
-inline ::KeyPair* ItemInfo::add_top() {
-  // @@protoc_insertion_point(field_add:ItemInfo.top)
+inline ::module::protocol::KeyPair* ItemInfo::add_top() {
+  // @@protoc_insertion_point(field_add:module.protocol.ItemInfo.top)
   return top_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::KeyPair >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >*
 ItemInfo::mutable_top() {
-  // @@protoc_insertion_point(field_mutable_list:ItemInfo.top)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.ItemInfo.top)
   return &top_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::KeyPair >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::KeyPair >&
 ItemInfo::top() const {
-  // @@protoc_insertion_point(field_list:ItemInfo.top)
+  // @@protoc_insertion_point(field_list:module.protocol.ItemInfo.top)
   return top_;
 }
 
@@ -4041,13 +4057,13 @@ inline void Action::clear_click_time() {
   click_time_ = 0;
 }
 inline ::google::protobuf::int32 Action::click_time() const {
-  // @@protoc_insertion_point(field_get:Action.click_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.click_time)
   return click_time_;
 }
 inline void Action::set_click_time(::google::protobuf::int32 value) {
   
   click_time_ = value;
-  // @@protoc_insertion_point(field_set:Action.click_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.click_time)
 }
 
 // optional uint64 user_id = 2;
@@ -4055,13 +4071,13 @@ inline void Action::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Action::user_id() const {
-  // @@protoc_insertion_point(field_get:Action.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.user_id)
   return user_id_;
 }
 inline void Action::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:Action.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.user_id)
 }
 
 // optional fixed64 item_id = 3;
@@ -4069,13 +4085,13 @@ inline void Action::clear_item_id() {
   item_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Action::item_id() const {
-  // @@protoc_insertion_point(field_get:Action.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.item_id)
   return item_id_;
 }
 inline void Action::set_item_id(::google::protobuf::uint64 value) {
   
   item_id_ = value;
-  // @@protoc_insertion_point(field_set:Action.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.item_id)
 }
 
 // optional int32 stay_time = 4;
@@ -4083,27 +4099,27 @@ inline void Action::clear_stay_time() {
   stay_time_ = 0;
 }
 inline ::google::protobuf::int32 Action::stay_time() const {
-  // @@protoc_insertion_point(field_get:Action.stay_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.stay_time)
   return stay_time_;
 }
 inline void Action::set_stay_time(::google::protobuf::int32 value) {
   
   stay_time_ = value;
-  // @@protoc_insertion_point(field_set:Action.stay_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.stay_time)
 }
 
-// optional .ActionType action = 5;
+// optional .module.protocol.ActionType action = 5;
 inline void Action::clear_action() {
   action_ = 0;
 }
-inline ::ActionType Action::action() const {
-  // @@protoc_insertion_point(field_get:Action.action)
-  return static_cast< ::ActionType >(action_);
+inline ::module::protocol::ActionType Action::action() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Action.action)
+  return static_cast< ::module::protocol::ActionType >(action_);
 }
-inline void Action::set_action(::ActionType value) {
+inline void Action::set_action(::module::protocol::ActionType value) {
   
   action_ = value;
-  // @@protoc_insertion_point(field_set:Action.action)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.action)
 }
 
 // optional bytes location = 6;
@@ -4111,28 +4127,28 @@ inline void Action::clear_location() {
   location_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Action::location() const {
-  // @@protoc_insertion_point(field_get:Action.location)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.location)
   return location_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Action::set_location(const ::std::string& value) {
   
   location_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:Action.location)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.location)
 }
 inline void Action::set_location(const char* value) {
   
   location_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:Action.location)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Action.location)
 }
 inline void Action::set_location(const void* value, size_t size) {
   
   location_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:Action.location)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Action.location)
 }
 inline ::std::string* Action::mutable_location() {
   
-  // @@protoc_insertion_point(field_mutable:Action.location)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Action.location)
   return location_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Action::release_location() {
@@ -4146,7 +4162,7 @@ inline void Action::set_allocated_location(::std::string* location) {
     
   }
   location_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), location);
-  // @@protoc_insertion_point(field_set_allocated:Action.location)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Action.location)
 }
 
 // optional bytes srp_id = 7;
@@ -4154,28 +4170,28 @@ inline void Action::clear_srp_id() {
   srp_id_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Action::srp_id() const {
-  // @@protoc_insertion_point(field_get:Action.srp_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.srp_id)
   return srp_id_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Action::set_srp_id(const ::std::string& value) {
   
   srp_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:Action.srp_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.srp_id)
 }
 inline void Action::set_srp_id(const char* value) {
   
   srp_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:Action.srp_id)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Action.srp_id)
 }
 inline void Action::set_srp_id(const void* value, size_t size) {
   
   srp_id_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:Action.srp_id)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Action.srp_id)
 }
 inline ::std::string* Action::mutable_srp_id() {
   
-  // @@protoc_insertion_point(field_mutable:Action.srp_id)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Action.srp_id)
   return srp_id_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Action::release_srp_id() {
@@ -4189,7 +4205,7 @@ inline void Action::set_allocated_srp_id(::std::string* srp_id) {
     
   }
   srp_id_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), srp_id);
-  // @@protoc_insertion_point(field_set_allocated:Action.srp_id)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Action.srp_id)
 }
 
 // optional int32 click_source = 8;
@@ -4197,13 +4213,13 @@ inline void Action::clear_click_source() {
   click_source_ = 0;
 }
 inline ::google::protobuf::int32 Action::click_source() const {
-  // @@protoc_insertion_point(field_get:Action.click_source)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.click_source)
   return click_source_;
 }
 inline void Action::set_click_source(::google::protobuf::int32 value) {
   
   click_source_ = value;
-  // @@protoc_insertion_point(field_set:Action.click_source)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.click_source)
 }
 
 // optional bytes dislike = 9;
@@ -4211,28 +4227,28 @@ inline void Action::clear_dislike() {
   dislike_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Action::dislike() const {
-  // @@protoc_insertion_point(field_get:Action.dislike)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.dislike)
   return dislike_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Action::set_dislike(const ::std::string& value) {
   
   dislike_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:Action.dislike)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.dislike)
 }
 inline void Action::set_dislike(const char* value) {
   
   dislike_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:Action.dislike)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Action.dislike)
 }
 inline void Action::set_dislike(const void* value, size_t size) {
   
   dislike_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:Action.dislike)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Action.dislike)
 }
 inline ::std::string* Action::mutable_dislike() {
   
-  // @@protoc_insertion_point(field_mutable:Action.dislike)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Action.dislike)
   return dislike_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Action::release_dislike() {
@@ -4246,7 +4262,7 @@ inline void Action::set_allocated_dislike(::std::string* dislike) {
     
   }
   dislike_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), dislike);
-  // @@protoc_insertion_point(field_set_allocated:Action.dislike)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Action.dislike)
 }
 
 // optional bytes zone = 10;
@@ -4254,28 +4270,28 @@ inline void Action::clear_zone() {
   zone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Action::zone() const {
-  // @@protoc_insertion_point(field_get:Action.zone)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.zone)
   return zone_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Action::set_zone(const ::std::string& value) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:Action.zone)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.zone)
 }
 inline void Action::set_zone(const char* value) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:Action.zone)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Action.zone)
 }
 inline void Action::set_zone(const void* value, size_t size) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:Action.zone)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Action.zone)
 }
 inline ::std::string* Action::mutable_zone() {
   
-  // @@protoc_insertion_point(field_mutable:Action.zone)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Action.zone)
   return zone_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Action::release_zone() {
@@ -4289,7 +4305,7 @@ inline void Action::set_allocated_zone(::std::string* zone) {
     
   }
   zone_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), zone);
-  // @@protoc_insertion_point(field_set_allocated:Action.zone)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Action.zone)
 }
 
 // repeated fixed64 history_id = 11;
@@ -4300,25 +4316,25 @@ inline void Action::clear_history_id() {
   history_id_.Clear();
 }
 inline ::google::protobuf::uint64 Action::history_id(int index) const {
-  // @@protoc_insertion_point(field_get:Action.history_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Action.history_id)
   return history_id_.Get(index);
 }
 inline void Action::set_history_id(int index, ::google::protobuf::uint64 value) {
   history_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:Action.history_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Action.history_id)
 }
 inline void Action::add_history_id(::google::protobuf::uint64 value) {
   history_id_.Add(value);
-  // @@protoc_insertion_point(field_add:Action.history_id)
+  // @@protoc_insertion_point(field_add:module.protocol.Action.history_id)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
 Action::history_id() const {
-  // @@protoc_insertion_point(field_list:Action.history_id)
+  // @@protoc_insertion_point(field_list:module.protocol.Action.history_id)
   return history_id_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 Action::mutable_history_id() {
-  // @@protoc_insertion_point(field_mutable_list:Action.history_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Action.history_id)
   return &history_id_;
 }
 
@@ -4326,18 +4342,18 @@ Action::mutable_history_id() {
 
 // ItemTag
 
-// optional int32 tag_id = 1;
+// optional uint64 tag_id = 1;
 inline void ItemTag::clear_tag_id() {
-  tag_id_ = 0;
+  tag_id_ = GOOGLE_ULONGLONG(0);
 }
-inline ::google::protobuf::int32 ItemTag::tag_id() const {
-  // @@protoc_insertion_point(field_get:ItemTag.tag_id)
+inline ::google::protobuf::uint64 ItemTag::tag_id() const {
+  // @@protoc_insertion_point(field_get:module.protocol.ItemTag.tag_id)
   return tag_id_;
 }
-inline void ItemTag::set_tag_id(::google::protobuf::int32 value) {
+inline void ItemTag::set_tag_id(::google::protobuf::uint64 value) {
   
   tag_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemTag.tag_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemTag.tag_id)
 }
 
 // optional bytes tag_name = 2;
@@ -4345,28 +4361,28 @@ inline void ItemTag::clear_tag_name() {
   tag_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& ItemTag::tag_name() const {
-  // @@protoc_insertion_point(field_get:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemTag.tag_name)
   return tag_name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void ItemTag::set_tag_name(const ::std::string& value) {
   
   tag_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemTag.tag_name)
 }
 inline void ItemTag::set_tag_name(const char* value) {
   
   tag_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_set_char:module.protocol.ItemTag.tag_name)
 }
 inline void ItemTag::set_tag_name(const void* value, size_t size) {
   
   tag_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.ItemTag.tag_name)
 }
 inline ::std::string* ItemTag::mutable_tag_name() {
   
-  // @@protoc_insertion_point(field_mutable:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemTag.tag_name)
   return tag_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* ItemTag::release_tag_name() {
@@ -4380,7 +4396,7 @@ inline void ItemTag::set_allocated_tag_name(::std::string* tag_name) {
     
   }
   tag_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tag_name);
-  // @@protoc_insertion_point(field_set_allocated:ItemTag.tag_name)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.ItemTag.tag_name)
 }
 
 // optional float tag_power = 3;
@@ -4388,13 +4404,13 @@ inline void ItemTag::clear_tag_power() {
   tag_power_ = 0;
 }
 inline float ItemTag::tag_power() const {
-  // @@protoc_insertion_point(field_get:ItemTag.tag_power)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemTag.tag_power)
   return tag_power_;
 }
 inline void ItemTag::set_tag_power(float value) {
   
   tag_power_ = value;
-  // @@protoc_insertion_point(field_set:ItemTag.tag_power)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemTag.tag_power)
 }
 
 // -------------------------------------------------------------------
@@ -4406,28 +4422,28 @@ inline void ItemWord::clear_word() {
   word_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& ItemWord::word() const {
-  // @@protoc_insertion_point(field_get:ItemWord.word)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemWord.word)
   return word_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void ItemWord::set_word(const ::std::string& value) {
   
   word_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ItemWord.word)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemWord.word)
 }
 inline void ItemWord::set_word(const char* value) {
   
   word_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ItemWord.word)
+  // @@protoc_insertion_point(field_set_char:module.protocol.ItemWord.word)
 }
 inline void ItemWord::set_word(const void* value, size_t size) {
   
   word_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ItemWord.word)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.ItemWord.word)
 }
 inline ::std::string* ItemWord::mutable_word() {
   
-  // @@protoc_insertion_point(field_mutable:ItemWord.word)
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemWord.word)
   return word_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* ItemWord::release_word() {
@@ -4441,7 +4457,7 @@ inline void ItemWord::set_allocated_word(::std::string* word) {
     
   }
   word_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), word);
-  // @@protoc_insertion_point(field_set_allocated:ItemWord.word)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.ItemWord.word)
 }
 
 // optional int32 count = 2;
@@ -4449,31 +4465,31 @@ inline void ItemWord::clear_count() {
   count_ = 0;
 }
 inline ::google::protobuf::int32 ItemWord::count() const {
-  // @@protoc_insertion_point(field_get:ItemWord.count)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemWord.count)
   return count_;
 }
 inline void ItemWord::set_count(::google::protobuf::int32 value) {
   
   count_ = value;
-  // @@protoc_insertion_point(field_set:ItemWord.count)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemWord.count)
 }
 
 // -------------------------------------------------------------------
 
 // TopInfo
 
-// optional .TopType top_type = 1;
+// optional .module.protocol.TopType top_type = 1;
 inline void TopInfo::clear_top_type() {
   top_type_ = 0;
 }
-inline ::TopType TopInfo::top_type() const {
-  // @@protoc_insertion_point(field_get:TopInfo.top_type)
-  return static_cast< ::TopType >(top_type_);
+inline ::module::protocol::TopType TopInfo::top_type() const {
+  // @@protoc_insertion_point(field_get:module.protocol.TopInfo.top_type)
+  return static_cast< ::module::protocol::TopType >(top_type_);
 }
-inline void TopInfo::set_top_type(::TopType value) {
+inline void TopInfo::set_top_type(::module::protocol::TopType value) {
   
   top_type_ = value;
-  // @@protoc_insertion_point(field_set:TopInfo.top_type)
+  // @@protoc_insertion_point(field_set:module.protocol.TopInfo.top_type)
 }
 
 // repeated bytes top_srp_id = 2;
@@ -4484,49 +4500,49 @@ inline void TopInfo::clear_top_srp_id() {
   top_srp_id_.Clear();
 }
 inline const ::std::string& TopInfo::top_srp_id(int index) const {
-  // @@protoc_insertion_point(field_get:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_get:module.protocol.TopInfo.top_srp_id)
   return top_srp_id_.Get(index);
 }
 inline ::std::string* TopInfo::mutable_top_srp_id(int index) {
-  // @@protoc_insertion_point(field_mutable:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_mutable:module.protocol.TopInfo.top_srp_id)
   return top_srp_id_.Mutable(index);
 }
 inline void TopInfo::set_top_srp_id(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_set:module.protocol.TopInfo.top_srp_id)
   top_srp_id_.Mutable(index)->assign(value);
 }
 inline void TopInfo::set_top_srp_id(int index, const char* value) {
   top_srp_id_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_set_char:module.protocol.TopInfo.top_srp_id)
 }
 inline void TopInfo::set_top_srp_id(int index, const void* value, size_t size) {
   top_srp_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.TopInfo.top_srp_id)
 }
 inline ::std::string* TopInfo::add_top_srp_id() {
   return top_srp_id_.Add();
 }
 inline void TopInfo::add_top_srp_id(const ::std::string& value) {
   top_srp_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_add:module.protocol.TopInfo.top_srp_id)
 }
 inline void TopInfo::add_top_srp_id(const char* value) {
   top_srp_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_add_char:module.protocol.TopInfo.top_srp_id)
 }
 inline void TopInfo::add_top_srp_id(const void* value, size_t size) {
   top_srp_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_add_pointer:module.protocol.TopInfo.top_srp_id)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 TopInfo::top_srp_id() const {
-  // @@protoc_insertion_point(field_list:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_list:module.protocol.TopInfo.top_srp_id)
   return top_srp_id_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 TopInfo::mutable_top_srp_id() {
-  // @@protoc_insertion_point(field_mutable_list:TopInfo.top_srp_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.TopInfo.top_srp_id)
   return &top_srp_id_;
 }
 
@@ -4538,49 +4554,49 @@ inline void TopInfo::clear_top_circle_id() {
   top_circle_id_.Clear();
 }
 inline const ::std::string& TopInfo::top_circle_id(int index) const {
-  // @@protoc_insertion_point(field_get:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_get:module.protocol.TopInfo.top_circle_id)
   return top_circle_id_.Get(index);
 }
 inline ::std::string* TopInfo::mutable_top_circle_id(int index) {
-  // @@protoc_insertion_point(field_mutable:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_mutable:module.protocol.TopInfo.top_circle_id)
   return top_circle_id_.Mutable(index);
 }
 inline void TopInfo::set_top_circle_id(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_set:module.protocol.TopInfo.top_circle_id)
   top_circle_id_.Mutable(index)->assign(value);
 }
 inline void TopInfo::set_top_circle_id(int index, const char* value) {
   top_circle_id_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_set_char:module.protocol.TopInfo.top_circle_id)
 }
 inline void TopInfo::set_top_circle_id(int index, const void* value, size_t size) {
   top_circle_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.TopInfo.top_circle_id)
 }
 inline ::std::string* TopInfo::add_top_circle_id() {
   return top_circle_id_.Add();
 }
 inline void TopInfo::add_top_circle_id(const ::std::string& value) {
   top_circle_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_add:module.protocol.TopInfo.top_circle_id)
 }
 inline void TopInfo::add_top_circle_id(const char* value) {
   top_circle_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_add_char:module.protocol.TopInfo.top_circle_id)
 }
 inline void TopInfo::add_top_circle_id(const void* value, size_t size) {
   top_circle_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_add_pointer:module.protocol.TopInfo.top_circle_id)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 TopInfo::top_circle_id() const {
-  // @@protoc_insertion_point(field_list:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_list:module.protocol.TopInfo.top_circle_id)
   return top_circle_id_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 TopInfo::mutable_top_circle_id() {
-  // @@protoc_insertion_point(field_mutable_list:TopInfo.top_circle_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.TopInfo.top_circle_id)
   return &top_circle_id_;
 }
 
@@ -4593,13 +4609,13 @@ inline void ItemSource::clear_source_id() {
   source_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 ItemSource::source_id() const {
-  // @@protoc_insertion_point(field_get:ItemSource.source_id)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemSource.source_id)
   return source_id_;
 }
 inline void ItemSource::set_source_id(::google::protobuf::uint64 value) {
   
   source_id_ = value;
-  // @@protoc_insertion_point(field_set:ItemSource.source_id)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemSource.source_id)
 }
 
 // optional bytes source_name = 2;
@@ -4607,28 +4623,28 @@ inline void ItemSource::clear_source_name() {
   source_name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& ItemSource::source_name() const {
-  // @@protoc_insertion_point(field_get:ItemSource.source_name)
+  // @@protoc_insertion_point(field_get:module.protocol.ItemSource.source_name)
   return source_name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void ItemSource::set_source_name(const ::std::string& value) {
   
   source_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ItemSource.source_name)
+  // @@protoc_insertion_point(field_set:module.protocol.ItemSource.source_name)
 }
 inline void ItemSource::set_source_name(const char* value) {
   
   source_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ItemSource.source_name)
+  // @@protoc_insertion_point(field_set_char:module.protocol.ItemSource.source_name)
 }
 inline void ItemSource::set_source_name(const void* value, size_t size) {
   
   source_name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ItemSource.source_name)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.ItemSource.source_name)
 }
 inline ::std::string* ItemSource::mutable_source_name() {
   
-  // @@protoc_insertion_point(field_mutable:ItemSource.source_name)
+  // @@protoc_insertion_point(field_mutable:module.protocol.ItemSource.source_name)
   return source_name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* ItemSource::release_source_name() {
@@ -4642,7 +4658,7 @@ inline void ItemSource::set_allocated_source_name(::std::string* source_name) {
     
   }
   source_name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), source_name);
-  // @@protoc_insertion_point(field_set_allocated:ItemSource.source_name)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.ItemSource.source_name)
 }
 
 // -------------------------------------------------------------------
@@ -4654,13 +4670,13 @@ inline void Item::clear_item_id() {
   item_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Item::item_id() const {
-  // @@protoc_insertion_point(field_get:Item.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.item_id)
   return item_id_;
 }
 inline void Item::set_item_id(::google::protobuf::uint64 value) {
   
   item_id_ = value;
-  // @@protoc_insertion_point(field_set:Item.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.item_id)
 }
 
 // optional int32 publish_time = 2;
@@ -4668,13 +4684,13 @@ inline void Item::clear_publish_time() {
   publish_time_ = 0;
 }
 inline ::google::protobuf::int32 Item::publish_time() const {
-  // @@protoc_insertion_point(field_get:Item.publish_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.publish_time)
   return publish_time_;
 }
 inline void Item::set_publish_time(::google::protobuf::int32 value) {
   
   publish_time_ = value;
-  // @@protoc_insertion_point(field_set:Item.publish_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.publish_time)
 }
 
 // optional int32 push_time = 3;
@@ -4682,13 +4698,13 @@ inline void Item::clear_push_time() {
   push_time_ = 0;
 }
 inline ::google::protobuf::int32 Item::push_time() const {
-  // @@protoc_insertion_point(field_get:Item.push_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.push_time)
   return push_time_;
 }
 inline void Item::set_push_time(::google::protobuf::int32 value) {
   
   push_time_ = value;
-  // @@protoc_insertion_point(field_set:Item.push_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.push_time)
 }
 
 // optional int32 picture_num = 4;
@@ -4696,13 +4712,13 @@ inline void Item::clear_picture_num() {
   picture_num_ = 0;
 }
 inline ::google::protobuf::int32 Item::picture_num() const {
-  // @@protoc_insertion_point(field_get:Item.picture_num)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.picture_num)
   return picture_num_;
 }
 inline void Item::set_picture_num(::google::protobuf::int32 value) {
   
   picture_num_ = value;
-  // @@protoc_insertion_point(field_set:Item.picture_num)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.picture_num)
 }
 
 // optional float power = 5;
@@ -4710,150 +4726,150 @@ inline void Item::clear_power() {
   power_ = 0;
 }
 inline float Item::power() const {
-  // @@protoc_insertion_point(field_get:Item.power)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.power)
   return power_;
 }
 inline void Item::set_power(float value) {
   
   power_ = value;
-  // @@protoc_insertion_point(field_set:Item.power)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.power)
 }
 
-// optional .ItemType item_type = 6;
+// optional .module.protocol.ItemType item_type = 6;
 inline void Item::clear_item_type() {
   item_type_ = 0;
 }
-inline ::ItemType Item::item_type() const {
-  // @@protoc_insertion_point(field_get:Item.item_type)
-  return static_cast< ::ItemType >(item_type_);
+inline ::module::protocol::ItemType Item::item_type() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.item_type)
+  return static_cast< ::module::protocol::ItemType >(item_type_);
 }
-inline void Item::set_item_type(::ItemType value) {
+inline void Item::set_item_type(::module::protocol::ItemType value) {
   
   item_type_ = value;
-  // @@protoc_insertion_point(field_set:Item.item_type)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.item_type)
 }
 
-// repeated .ItemTag category = 7;
+// repeated .module.protocol.ItemTag category = 7;
 inline int Item::category_size() const {
   return category_.size();
 }
 inline void Item::clear_category() {
   category_.Clear();
 }
-inline const ::ItemTag& Item::category(int index) const {
-  // @@protoc_insertion_point(field_get:Item.category)
+inline const ::module::protocol::ItemTag& Item::category(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.category)
   return category_.Get(index);
 }
-inline ::ItemTag* Item::mutable_category(int index) {
-  // @@protoc_insertion_point(field_mutable:Item.category)
+inline ::module::protocol::ItemTag* Item::mutable_category(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.category)
   return category_.Mutable(index);
 }
-inline ::ItemTag* Item::add_category() {
-  // @@protoc_insertion_point(field_add:Item.category)
+inline ::module::protocol::ItemTag* Item::add_category() {
+  // @@protoc_insertion_point(field_add:module.protocol.Item.category)
   return category_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
 Item::mutable_category() {
-  // @@protoc_insertion_point(field_mutable_list:Item.category)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.category)
   return &category_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
 Item::category() const {
-  // @@protoc_insertion_point(field_list:Item.category)
+  // @@protoc_insertion_point(field_list:module.protocol.Item.category)
   return category_;
 }
 
-// repeated .ItemWord word = 8;
+// repeated .module.protocol.ItemWord word = 8;
 inline int Item::word_size() const {
   return word_.size();
 }
 inline void Item::clear_word() {
   word_.Clear();
 }
-inline const ::ItemWord& Item::word(int index) const {
-  // @@protoc_insertion_point(field_get:Item.word)
+inline const ::module::protocol::ItemWord& Item::word(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.word)
   return word_.Get(index);
 }
-inline ::ItemWord* Item::mutable_word(int index) {
-  // @@protoc_insertion_point(field_mutable:Item.word)
+inline ::module::protocol::ItemWord* Item::mutable_word(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.word)
   return word_.Mutable(index);
 }
-inline ::ItemWord* Item::add_word() {
-  // @@protoc_insertion_point(field_add:Item.word)
+inline ::module::protocol::ItemWord* Item::add_word() {
+  // @@protoc_insertion_point(field_add:module.protocol.Item.word)
   return word_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::ItemWord >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemWord >*
 Item::mutable_word() {
-  // @@protoc_insertion_point(field_mutable_list:Item.word)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.word)
   return &word_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ItemWord >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemWord >&
 Item::word() const {
-  // @@protoc_insertion_point(field_list:Item.word)
+  // @@protoc_insertion_point(field_list:module.protocol.Item.word)
   return word_;
 }
 
-// repeated .ItemTag srp = 9;
+// repeated .module.protocol.ItemTag srp = 9;
 inline int Item::srp_size() const {
   return srp_.size();
 }
 inline void Item::clear_srp() {
   srp_.Clear();
 }
-inline const ::ItemTag& Item::srp(int index) const {
-  // @@protoc_insertion_point(field_get:Item.srp)
+inline const ::module::protocol::ItemTag& Item::srp(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.srp)
   return srp_.Get(index);
 }
-inline ::ItemTag* Item::mutable_srp(int index) {
-  // @@protoc_insertion_point(field_mutable:Item.srp)
+inline ::module::protocol::ItemTag* Item::mutable_srp(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.srp)
   return srp_.Mutable(index);
 }
-inline ::ItemTag* Item::add_srp() {
-  // @@protoc_insertion_point(field_add:Item.srp)
+inline ::module::protocol::ItemTag* Item::add_srp() {
+  // @@protoc_insertion_point(field_add:module.protocol.Item.srp)
   return srp_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
 Item::mutable_srp() {
-  // @@protoc_insertion_point(field_mutable_list:Item.srp)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.srp)
   return &srp_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
 Item::srp() const {
-  // @@protoc_insertion_point(field_list:Item.srp)
+  // @@protoc_insertion_point(field_list:module.protocol.Item.srp)
   return srp_;
 }
 
-// repeated .ItemTag circle = 10;
+// repeated .module.protocol.ItemTag circle = 10;
 inline int Item::circle_size() const {
   return circle_.size();
 }
 inline void Item::clear_circle() {
   circle_.Clear();
 }
-inline const ::ItemTag& Item::circle(int index) const {
-  // @@protoc_insertion_point(field_get:Item.circle)
+inline const ::module::protocol::ItemTag& Item::circle(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.circle)
   return circle_.Get(index);
 }
-inline ::ItemTag* Item::mutable_circle(int index) {
-  // @@protoc_insertion_point(field_mutable:Item.circle)
+inline ::module::protocol::ItemTag* Item::mutable_circle(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.circle)
   return circle_.Mutable(index);
 }
-inline ::ItemTag* Item::add_circle() {
-  // @@protoc_insertion_point(field_add:Item.circle)
+inline ::module::protocol::ItemTag* Item::add_circle() {
+  // @@protoc_insertion_point(field_add:module.protocol.Item.circle)
   return circle_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::ItemTag >*
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
 Item::mutable_circle() {
-  // @@protoc_insertion_point(field_mutable_list:Item.circle)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.circle)
   return &circle_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::ItemTag >&
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
 Item::circle() const {
-  // @@protoc_insertion_point(field_list:Item.circle)
+  // @@protoc_insertion_point(field_list:module.protocol.Item.circle)
   return circle_;
 }
 
-// optional .TopInfo top_info = 11;
+// optional .module.protocol.TopInfo top_info = 11;
 inline bool Item::has_top_info() const {
   return !_is_default_instance_ && top_info_ != NULL;
 }
@@ -4861,25 +4877,25 @@ inline void Item::clear_top_info() {
   if (GetArenaNoVirtual() == NULL && top_info_ != NULL) delete top_info_;
   top_info_ = NULL;
 }
-inline const ::TopInfo& Item::top_info() const {
-  // @@protoc_insertion_point(field_get:Item.top_info)
+inline const ::module::protocol::TopInfo& Item::top_info() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.top_info)
   return top_info_ != NULL ? *top_info_ : *default_instance_->top_info_;
 }
-inline ::TopInfo* Item::mutable_top_info() {
+inline ::module::protocol::TopInfo* Item::mutable_top_info() {
   
   if (top_info_ == NULL) {
-    top_info_ = new ::TopInfo;
+    top_info_ = new ::module::protocol::TopInfo;
   }
-  // @@protoc_insertion_point(field_mutable:Item.top_info)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.top_info)
   return top_info_;
 }
-inline ::TopInfo* Item::release_top_info() {
+inline ::module::protocol::TopInfo* Item::release_top_info() {
   
-  ::TopInfo* temp = top_info_;
+  ::module::protocol::TopInfo* temp = top_info_;
   top_info_ = NULL;
   return temp;
 }
-inline void Item::set_allocated_top_info(::TopInfo* top_info) {
+inline void Item::set_allocated_top_info(::module::protocol::TopInfo* top_info) {
   delete top_info_;
   top_info_ = top_info;
   if (top_info) {
@@ -4887,7 +4903,7 @@ inline void Item::set_allocated_top_info(::TopInfo* top_info) {
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:Item.top_info)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Item.top_info)
 }
 
 // repeated bytes zone = 12;
@@ -4898,53 +4914,53 @@ inline void Item::clear_zone() {
   zone_.Clear();
 }
 inline const ::std::string& Item::zone(int index) const {
-  // @@protoc_insertion_point(field_get:Item.zone)
+  // @@protoc_insertion_point(field_get:module.protocol.Item.zone)
   return zone_.Get(index);
 }
 inline ::std::string* Item::mutable_zone(int index) {
-  // @@protoc_insertion_point(field_mutable:Item.zone)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.zone)
   return zone_.Mutable(index);
 }
 inline void Item::set_zone(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:Item.zone)
+  // @@protoc_insertion_point(field_set:module.protocol.Item.zone)
   zone_.Mutable(index)->assign(value);
 }
 inline void Item::set_zone(int index, const char* value) {
   zone_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:Item.zone)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Item.zone)
 }
 inline void Item::set_zone(int index, const void* value, size_t size) {
   zone_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:Item.zone)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Item.zone)
 }
 inline ::std::string* Item::add_zone() {
   return zone_.Add();
 }
 inline void Item::add_zone(const ::std::string& value) {
   zone_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:Item.zone)
+  // @@protoc_insertion_point(field_add:module.protocol.Item.zone)
 }
 inline void Item::add_zone(const char* value) {
   zone_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:Item.zone)
+  // @@protoc_insertion_point(field_add_char:module.protocol.Item.zone)
 }
 inline void Item::add_zone(const void* value, size_t size) {
   zone_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:Item.zone)
+  // @@protoc_insertion_point(field_add_pointer:module.protocol.Item.zone)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 Item::zone() const {
-  // @@protoc_insertion_point(field_list:Item.zone)
+  // @@protoc_insertion_point(field_list:module.protocol.Item.zone)
   return zone_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 Item::mutable_zone() {
-  // @@protoc_insertion_point(field_mutable_list:Item.zone)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.zone)
   return &zone_;
 }
 
-// optional .ItemSource data_source = 13;
+// optional .module.protocol.ItemSource data_source = 13;
 inline bool Item::has_data_source() const {
   return !_is_default_instance_ && data_source_ != NULL;
 }
@@ -4952,25 +4968,25 @@ inline void Item::clear_data_source() {
   if (GetArenaNoVirtual() == NULL && data_source_ != NULL) delete data_source_;
   data_source_ = NULL;
 }
-inline const ::ItemSource& Item::data_source() const {
-  // @@protoc_insertion_point(field_get:Item.data_source)
+inline const ::module::protocol::ItemSource& Item::data_source() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.data_source)
   return data_source_ != NULL ? *data_source_ : *default_instance_->data_source_;
 }
-inline ::ItemSource* Item::mutable_data_source() {
+inline ::module::protocol::ItemSource* Item::mutable_data_source() {
   
   if (data_source_ == NULL) {
-    data_source_ = new ::ItemSource;
+    data_source_ = new ::module::protocol::ItemSource;
   }
-  // @@protoc_insertion_point(field_mutable:Item.data_source)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.data_source)
   return data_source_;
 }
-inline ::ItemSource* Item::release_data_source() {
+inline ::module::protocol::ItemSource* Item::release_data_source() {
   
-  ::ItemSource* temp = data_source_;
+  ::module::protocol::ItemSource* temp = data_source_;
   data_source_ = NULL;
   return temp;
 }
-inline void Item::set_allocated_data_source(::ItemSource* data_source) {
+inline void Item::set_allocated_data_source(::module::protocol::ItemSource* data_source) {
   delete data_source_;
   data_source_ = data_source;
   if (data_source) {
@@ -4978,7 +4994,37 @@ inline void Item::set_allocated_data_source(::ItemSource* data_source) {
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:Item.data_source)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Item.data_source)
+}
+
+// repeated .module.protocol.ItemTag tag = 14;
+inline int Item::tag_size() const {
+  return tag_.size();
+}
+inline void Item::clear_tag() {
+  tag_.Clear();
+}
+inline const ::module::protocol::ItemTag& Item::tag(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.Item.tag)
+  return tag_.Get(index);
+}
+inline ::module::protocol::ItemTag* Item::mutable_tag(int index) {
+  // @@protoc_insertion_point(field_mutable:module.protocol.Item.tag)
+  return tag_.Mutable(index);
+}
+inline ::module::protocol::ItemTag* Item::add_tag() {
+  // @@protoc_insertion_point(field_add:module.protocol.Item.tag)
+  return tag_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >*
+Item::mutable_tag() {
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Item.tag)
+  return &tag_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::module::protocol::ItemTag >&
+Item::tag() const {
+  // @@protoc_insertion_point(field_list:module.protocol.Item.tag)
+  return tag_;
 }
 
 // -------------------------------------------------------------------
@@ -4990,13 +5036,13 @@ inline void Subscribe::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Subscribe::user_id() const {
-  // @@protoc_insertion_point(field_get:Subscribe.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Subscribe.user_id)
   return user_id_;
 }
 inline void Subscribe::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:Subscribe.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Subscribe.user_id)
 }
 
 // repeated bytes srp_id = 2;
@@ -5007,49 +5053,49 @@ inline void Subscribe::clear_srp_id() {
   srp_id_.Clear();
 }
 inline const ::std::string& Subscribe::srp_id(int index) const {
-  // @@protoc_insertion_point(field_get:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Subscribe.srp_id)
   return srp_id_.Get(index);
 }
 inline ::std::string* Subscribe::mutable_srp_id(int index) {
-  // @@protoc_insertion_point(field_mutable:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Subscribe.srp_id)
   return srp_id_.Mutable(index);
 }
 inline void Subscribe::set_srp_id(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Subscribe.srp_id)
   srp_id_.Mutable(index)->assign(value);
 }
 inline void Subscribe::set_srp_id(int index, const char* value) {
   srp_id_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Subscribe.srp_id)
 }
 inline void Subscribe::set_srp_id(int index, const void* value, size_t size) {
   srp_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Subscribe.srp_id)
 }
 inline ::std::string* Subscribe::add_srp_id() {
   return srp_id_.Add();
 }
 inline void Subscribe::add_srp_id(const ::std::string& value) {
   srp_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_add:module.protocol.Subscribe.srp_id)
 }
 inline void Subscribe::add_srp_id(const char* value) {
   srp_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_add_char:module.protocol.Subscribe.srp_id)
 }
 inline void Subscribe::add_srp_id(const void* value, size_t size) {
   srp_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_add_pointer:module.protocol.Subscribe.srp_id)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 Subscribe::srp_id() const {
-  // @@protoc_insertion_point(field_list:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_list:module.protocol.Subscribe.srp_id)
   return srp_id_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 Subscribe::mutable_srp_id() {
-  // @@protoc_insertion_point(field_mutable_list:Subscribe.srp_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Subscribe.srp_id)
   return &srp_id_;
 }
 
@@ -5061,49 +5107,49 @@ inline void Subscribe::clear_circle_id() {
   circle_id_.Clear();
 }
 inline const ::std::string& Subscribe::circle_id(int index) const {
-  // @@protoc_insertion_point(field_get:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Subscribe.circle_id)
   return circle_id_.Get(index);
 }
 inline ::std::string* Subscribe::mutable_circle_id(int index) {
-  // @@protoc_insertion_point(field_mutable:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Subscribe.circle_id)
   return circle_id_.Mutable(index);
 }
 inline void Subscribe::set_circle_id(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Subscribe.circle_id)
   circle_id_.Mutable(index)->assign(value);
 }
 inline void Subscribe::set_circle_id(int index, const char* value) {
   circle_id_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Subscribe.circle_id)
 }
 inline void Subscribe::set_circle_id(int index, const void* value, size_t size) {
   circle_id_.Mutable(index)->assign(
     reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Subscribe.circle_id)
 }
 inline ::std::string* Subscribe::add_circle_id() {
   return circle_id_.Add();
 }
 inline void Subscribe::add_circle_id(const ::std::string& value) {
   circle_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_add:module.protocol.Subscribe.circle_id)
 }
 inline void Subscribe::add_circle_id(const char* value) {
   circle_id_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_add_char:module.protocol.Subscribe.circle_id)
 }
 inline void Subscribe::add_circle_id(const void* value, size_t size) {
   circle_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_add_pointer:module.protocol.Subscribe.circle_id)
 }
 inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 Subscribe::circle_id() const {
-  // @@protoc_insertion_point(field_list:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_list:module.protocol.Subscribe.circle_id)
   return circle_id_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 Subscribe::mutable_circle_id() {
-  // @@protoc_insertion_point(field_mutable_list:Subscribe.circle_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Subscribe.circle_id)
   return &circle_id_;
 }
 
@@ -5116,13 +5162,13 @@ inline void Recommend::clear_log() {
   log_ = 0;
 }
 inline ::google::protobuf::int32 Recommend::log() const {
-  // @@protoc_insertion_point(field_get:Recommend.log)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.log)
   return log_;
 }
 inline void Recommend::set_log(::google::protobuf::int32 value) {
   
   log_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.log)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.log)
 }
 
 // optional uint64 user_id = 2;
@@ -5130,13 +5176,13 @@ inline void Recommend::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Recommend::user_id() const {
-  // @@protoc_insertion_point(field_get:Recommend.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.user_id)
   return user_id_;
 }
 inline void Recommend::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.user_id)
 }
 
 // optional int32 request_num = 3;
@@ -5144,27 +5190,27 @@ inline void Recommend::clear_request_num() {
   request_num_ = 0;
 }
 inline ::google::protobuf::int32 Recommend::request_num() const {
-  // @@protoc_insertion_point(field_get:Recommend.request_num)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.request_num)
   return request_num_;
 }
 inline void Recommend::set_request_num(::google::protobuf::int32 value) {
   
   request_num_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.request_num)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.request_num)
 }
 
-// optional .RecommendType recommend_type = 4;
+// optional .module.protocol.RecommendType recommend_type = 4;
 inline void Recommend::clear_recommend_type() {
   recommend_type_ = 0;
 }
-inline ::RecommendType Recommend::recommend_type() const {
-  // @@protoc_insertion_point(field_get:Recommend.recommend_type)
-  return static_cast< ::RecommendType >(recommend_type_);
+inline ::module::protocol::RecommendType Recommend::recommend_type() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.recommend_type)
+  return static_cast< ::module::protocol::RecommendType >(recommend_type_);
 }
-inline void Recommend::set_recommend_type(::RecommendType value) {
+inline void Recommend::set_recommend_type(::module::protocol::RecommendType value) {
   
   recommend_type_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.recommend_type)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.recommend_type)
 }
 
 // optional int32 beg_time = 5;
@@ -5172,13 +5218,13 @@ inline void Recommend::clear_beg_time() {
   beg_time_ = 0;
 }
 inline ::google::protobuf::int32 Recommend::beg_time() const {
-  // @@protoc_insertion_point(field_get:Recommend.beg_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.beg_time)
   return beg_time_;
 }
 inline void Recommend::set_beg_time(::google::protobuf::int32 value) {
   
   beg_time_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.beg_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.beg_time)
 }
 
 // optional int32 end_time = 6;
@@ -5186,13 +5232,13 @@ inline void Recommend::clear_end_time() {
   end_time_ = 0;
 }
 inline ::google::protobuf::int32 Recommend::end_time() const {
-  // @@protoc_insertion_point(field_get:Recommend.end_time)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.end_time)
   return end_time_;
 }
 inline void Recommend::set_end_time(::google::protobuf::int32 value) {
   
   end_time_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.end_time)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.end_time)
 }
 
 // optional bytes zone = 7;
@@ -5200,28 +5246,28 @@ inline void Recommend::clear_zone() {
   zone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& Recommend::zone() const {
-  // @@protoc_insertion_point(field_get:Recommend.zone)
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.zone)
   return zone_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Recommend::set_zone(const ::std::string& value) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:Recommend.zone)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.zone)
 }
 inline void Recommend::set_zone(const char* value) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:Recommend.zone)
+  // @@protoc_insertion_point(field_set_char:module.protocol.Recommend.zone)
 }
 inline void Recommend::set_zone(const void* value, size_t size) {
   
   zone_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:Recommend.zone)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.Recommend.zone)
 }
 inline ::std::string* Recommend::mutable_zone() {
   
-  // @@protoc_insertion_point(field_mutable:Recommend.zone)
+  // @@protoc_insertion_point(field_mutable:module.protocol.Recommend.zone)
   return zone_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Recommend::release_zone() {
@@ -5235,21 +5281,21 @@ inline void Recommend::set_allocated_zone(::std::string* zone) {
     
   }
   zone_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), zone);
-  // @@protoc_insertion_point(field_set_allocated:Recommend.zone)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.Recommend.zone)
 }
 
-// optional .RecommendNetwork network = 8;
+// optional .module.protocol.RecommendNetwork network = 8;
 inline void Recommend::clear_network() {
   network_ = 0;
 }
-inline ::RecommendNetwork Recommend::network() const {
-  // @@protoc_insertion_point(field_get:Recommend.network)
-  return static_cast< ::RecommendNetwork >(network_);
+inline ::module::protocol::RecommendNetwork Recommend::network() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.network)
+  return static_cast< ::module::protocol::RecommendNetwork >(network_);
 }
-inline void Recommend::set_network(::RecommendNetwork value) {
+inline void Recommend::set_network(::module::protocol::RecommendNetwork value) {
   
   network_ = value;
-  // @@protoc_insertion_point(field_set:Recommend.network)
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.network)
 }
 
 // -------------------------------------------------------------------
@@ -5261,13 +5307,13 @@ inline void CandidateSetBase::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 CandidateSetBase::user_id() const {
-  // @@protoc_insertion_point(field_get:CandidateSetBase.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetBase.user_id)
   return user_id_;
 }
 inline void CandidateSetBase::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:CandidateSetBase.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetBase.user_id)
 }
 
 // repeated fixed64 item_id = 2;
@@ -5278,25 +5324,25 @@ inline void CandidateSetBase::clear_item_id() {
   item_id_.Clear();
 }
 inline ::google::protobuf::uint64 CandidateSetBase::item_id(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetBase.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetBase.item_id)
   return item_id_.Get(index);
 }
 inline void CandidateSetBase::set_item_id(int index, ::google::protobuf::uint64 value) {
   item_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetBase.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetBase.item_id)
 }
 inline void CandidateSetBase::add_item_id(::google::protobuf::uint64 value) {
   item_id_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetBase.item_id)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetBase.item_id)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
 CandidateSetBase::item_id() const {
-  // @@protoc_insertion_point(field_list:CandidateSetBase.item_id)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetBase.item_id)
   return item_id_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 CandidateSetBase::mutable_item_id() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetBase.item_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetBase.item_id)
   return &item_id_;
 }
 
@@ -5308,25 +5354,25 @@ inline void CandidateSetBase::clear_history_id() {
   history_id_.Clear();
 }
 inline ::google::protobuf::uint64 CandidateSetBase::history_id(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetBase.history_id)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetBase.history_id)
   return history_id_.Get(index);
 }
 inline void CandidateSetBase::set_history_id(int index, ::google::protobuf::uint64 value) {
   history_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetBase.history_id)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetBase.history_id)
 }
 inline void CandidateSetBase::add_history_id(::google::protobuf::uint64 value) {
   history_id_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetBase.history_id)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetBase.history_id)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
 CandidateSetBase::history_id() const {
-  // @@protoc_insertion_point(field_list:CandidateSetBase.history_id)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetBase.history_id)
   return history_id_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 CandidateSetBase::mutable_history_id() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetBase.history_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetBase.history_id)
   return &history_id_;
 }
 
@@ -5342,25 +5388,25 @@ inline void CandidateSetPayload::clear_power() {
   power_.Clear();
 }
 inline float CandidateSetPayload::power(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetPayload.power)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetPayload.power)
   return power_.Get(index);
 }
 inline void CandidateSetPayload::set_power(int index, float value) {
   power_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetPayload.power)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetPayload.power)
 }
 inline void CandidateSetPayload::add_power(float value) {
   power_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetPayload.power)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetPayload.power)
 }
 inline const ::google::protobuf::RepeatedField< float >&
 CandidateSetPayload::power() const {
-  // @@protoc_insertion_point(field_list:CandidateSetPayload.power)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetPayload.power)
   return power_;
 }
 inline ::google::protobuf::RepeatedField< float >*
 CandidateSetPayload::mutable_power() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetPayload.power)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetPayload.power)
   return &power_;
 }
 
@@ -5372,25 +5418,25 @@ inline void CandidateSetPayload::clear_publish_time() {
   publish_time_.Clear();
 }
 inline ::google::protobuf::int32 CandidateSetPayload::publish_time(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetPayload.publish_time)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetPayload.publish_time)
   return publish_time_.Get(index);
 }
 inline void CandidateSetPayload::set_publish_time(int index, ::google::protobuf::int32 value) {
   publish_time_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetPayload.publish_time)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetPayload.publish_time)
 }
 inline void CandidateSetPayload::add_publish_time(::google::protobuf::int32 value) {
   publish_time_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetPayload.publish_time)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetPayload.publish_time)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
 CandidateSetPayload::publish_time() const {
-  // @@protoc_insertion_point(field_list:CandidateSetPayload.publish_time)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetPayload.publish_time)
   return publish_time_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 CandidateSetPayload::mutable_publish_time() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetPayload.publish_time)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetPayload.publish_time)
   return &publish_time_;
 }
 
@@ -5402,25 +5448,25 @@ inline void CandidateSetPayload::clear_category_id() {
   category_id_.Clear();
 }
 inline ::google::protobuf::int32 CandidateSetPayload::category_id(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetPayload.category_id)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetPayload.category_id)
   return category_id_.Get(index);
 }
 inline void CandidateSetPayload::set_category_id(int index, ::google::protobuf::int32 value) {
   category_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetPayload.category_id)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetPayload.category_id)
 }
 inline void CandidateSetPayload::add_category_id(::google::protobuf::int32 value) {
   category_id_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetPayload.category_id)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetPayload.category_id)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
 CandidateSetPayload::category_id() const {
-  // @@protoc_insertion_point(field_list:CandidateSetPayload.category_id)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetPayload.category_id)
   return category_id_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 CandidateSetPayload::mutable_category_id() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetPayload.category_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetPayload.category_id)
   return &category_id_;
 }
 
@@ -5432,55 +5478,55 @@ inline void CandidateSetPayload::clear_picture_num() {
   picture_num_.Clear();
 }
 inline ::google::protobuf::int32 CandidateSetPayload::picture_num(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetPayload.picture_num)
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetPayload.picture_num)
   return picture_num_.Get(index);
 }
 inline void CandidateSetPayload::set_picture_num(int index, ::google::protobuf::int32 value) {
   picture_num_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetPayload.picture_num)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetPayload.picture_num)
 }
 inline void CandidateSetPayload::add_picture_num(::google::protobuf::int32 value) {
   picture_num_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetPayload.picture_num)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetPayload.picture_num)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
 CandidateSetPayload::picture_num() const {
-  // @@protoc_insertion_point(field_list:CandidateSetPayload.picture_num)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetPayload.picture_num)
   return picture_num_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 CandidateSetPayload::mutable_picture_num() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetPayload.picture_num)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetPayload.picture_num)
   return &picture_num_;
 }
 
-// repeated .CandidateType type = 5 [packed = true];
+// repeated .module.protocol.CandidateType type = 5 [packed = true];
 inline int CandidateSetPayload::type_size() const {
   return type_.size();
 }
 inline void CandidateSetPayload::clear_type() {
   type_.Clear();
 }
-inline ::CandidateType CandidateSetPayload::type(int index) const {
-  // @@protoc_insertion_point(field_get:CandidateSetPayload.type)
-  return static_cast< ::CandidateType >(type_.Get(index));
+inline ::module::protocol::CandidateType CandidateSetPayload::type(int index) const {
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSetPayload.type)
+  return static_cast< ::module::protocol::CandidateType >(type_.Get(index));
 }
-inline void CandidateSetPayload::set_type(int index, ::CandidateType value) {
+inline void CandidateSetPayload::set_type(int index, ::module::protocol::CandidateType value) {
   type_.Set(index, value);
-  // @@protoc_insertion_point(field_set:CandidateSetPayload.type)
+  // @@protoc_insertion_point(field_set:module.protocol.CandidateSetPayload.type)
 }
-inline void CandidateSetPayload::add_type(::CandidateType value) {
+inline void CandidateSetPayload::add_type(::module::protocol::CandidateType value) {
   type_.Add(value);
-  // @@protoc_insertion_point(field_add:CandidateSetPayload.type)
+  // @@protoc_insertion_point(field_add:module.protocol.CandidateSetPayload.type)
 }
 inline const ::google::protobuf::RepeatedField<int>&
 CandidateSetPayload::type() const {
-  // @@protoc_insertion_point(field_list:CandidateSetPayload.type)
+  // @@protoc_insertion_point(field_list:module.protocol.CandidateSetPayload.type)
   return type_;
 }
 inline ::google::protobuf::RepeatedField<int>*
 CandidateSetPayload::mutable_type() {
-  // @@protoc_insertion_point(field_mutable_list:CandidateSetPayload.type)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.CandidateSetPayload.type)
   return &type_;
 }
 
@@ -5488,7 +5534,7 @@ CandidateSetPayload::mutable_type() {
 
 // CandidateSet
 
-// optional .CandidateSetBase base = 1;
+// optional .module.protocol.CandidateSetBase base = 1;
 inline bool CandidateSet::has_base() const {
   return !_is_default_instance_ && base_ != NULL;
 }
@@ -5496,25 +5542,25 @@ inline void CandidateSet::clear_base() {
   if (GetArenaNoVirtual() == NULL && base_ != NULL) delete base_;
   base_ = NULL;
 }
-inline const ::CandidateSetBase& CandidateSet::base() const {
-  // @@protoc_insertion_point(field_get:CandidateSet.base)
+inline const ::module::protocol::CandidateSetBase& CandidateSet::base() const {
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSet.base)
   return base_ != NULL ? *base_ : *default_instance_->base_;
 }
-inline ::CandidateSetBase* CandidateSet::mutable_base() {
+inline ::module::protocol::CandidateSetBase* CandidateSet::mutable_base() {
   
   if (base_ == NULL) {
-    base_ = new ::CandidateSetBase;
+    base_ = new ::module::protocol::CandidateSetBase;
   }
-  // @@protoc_insertion_point(field_mutable:CandidateSet.base)
+  // @@protoc_insertion_point(field_mutable:module.protocol.CandidateSet.base)
   return base_;
 }
-inline ::CandidateSetBase* CandidateSet::release_base() {
+inline ::module::protocol::CandidateSetBase* CandidateSet::release_base() {
   
-  ::CandidateSetBase* temp = base_;
+  ::module::protocol::CandidateSetBase* temp = base_;
   base_ = NULL;
   return temp;
 }
-inline void CandidateSet::set_allocated_base(::CandidateSetBase* base) {
+inline void CandidateSet::set_allocated_base(::module::protocol::CandidateSetBase* base) {
   delete base_;
   base_ = base;
   if (base) {
@@ -5522,10 +5568,10 @@ inline void CandidateSet::set_allocated_base(::CandidateSetBase* base) {
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:CandidateSet.base)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.CandidateSet.base)
 }
 
-// optional .CandidateSetPayload payload = 2;
+// optional .module.protocol.CandidateSetPayload payload = 2;
 inline bool CandidateSet::has_payload() const {
   return !_is_default_instance_ && payload_ != NULL;
 }
@@ -5533,25 +5579,25 @@ inline void CandidateSet::clear_payload() {
   if (GetArenaNoVirtual() == NULL && payload_ != NULL) delete payload_;
   payload_ = NULL;
 }
-inline const ::CandidateSetPayload& CandidateSet::payload() const {
-  // @@protoc_insertion_point(field_get:CandidateSet.payload)
+inline const ::module::protocol::CandidateSetPayload& CandidateSet::payload() const {
+  // @@protoc_insertion_point(field_get:module.protocol.CandidateSet.payload)
   return payload_ != NULL ? *payload_ : *default_instance_->payload_;
 }
-inline ::CandidateSetPayload* CandidateSet::mutable_payload() {
+inline ::module::protocol::CandidateSetPayload* CandidateSet::mutable_payload() {
   
   if (payload_ == NULL) {
-    payload_ = new ::CandidateSetPayload;
+    payload_ = new ::module::protocol::CandidateSetPayload;
   }
-  // @@protoc_insertion_point(field_mutable:CandidateSet.payload)
+  // @@protoc_insertion_point(field_mutable:module.protocol.CandidateSet.payload)
   return payload_;
 }
-inline ::CandidateSetPayload* CandidateSet::release_payload() {
+inline ::module::protocol::CandidateSetPayload* CandidateSet::release_payload() {
   
-  ::CandidateSetPayload* temp = payload_;
+  ::module::protocol::CandidateSetPayload* temp = payload_;
   payload_ = NULL;
   return temp;
 }
-inline void CandidateSet::set_allocated_payload(::CandidateSetPayload* payload) {
+inline void CandidateSet::set_allocated_payload(::module::protocol::CandidateSetPayload* payload) {
   delete payload_;
   payload_ = payload;
   if (payload) {
@@ -5559,7 +5605,7 @@ inline void CandidateSet::set_allocated_payload(::CandidateSetPayload* payload) 
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:CandidateSet.payload)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.CandidateSet.payload)
 }
 
 // -------------------------------------------------------------------
@@ -5571,13 +5617,13 @@ inline void User::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 User::user_id() const {
-  // @@protoc_insertion_point(field_get:User.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.User.user_id)
   return user_id_;
 }
 inline void User::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:User.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.User.user_id)
 }
 
 // -------------------------------------------------------------------
@@ -5589,13 +5635,13 @@ inline void UserStatus::clear_is_new_user() {
   is_new_user_ = 0;
 }
 inline ::google::protobuf::int32 UserStatus::is_new_user() const {
-  // @@protoc_insertion_point(field_get:UserStatus.is_new_user)
+  // @@protoc_insertion_point(field_get:module.protocol.UserStatus.is_new_user)
   return is_new_user_;
 }
 inline void UserStatus::set_is_new_user(::google::protobuf::int32 value) {
   
   is_new_user_ = value;
-  // @@protoc_insertion_point(field_set:UserStatus.is_new_user)
+  // @@protoc_insertion_point(field_set:module.protocol.UserStatus.is_new_user)
 }
 
 // -------------------------------------------------------------------
@@ -5607,13 +5653,13 @@ inline void Feedback::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Feedback::user_id() const {
-  // @@protoc_insertion_point(field_get:Feedback.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Feedback.user_id)
   return user_id_;
 }
 inline void Feedback::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:Feedback.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Feedback.user_id)
 }
 
 // repeated fixed64 item_id = 2;
@@ -5624,25 +5670,25 @@ inline void Feedback::clear_item_id() {
   item_id_.Clear();
 }
 inline ::google::protobuf::uint64 Feedback::item_id(int index) const {
-  // @@protoc_insertion_point(field_get:Feedback.item_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Feedback.item_id)
   return item_id_.Get(index);
 }
 inline void Feedback::set_item_id(int index, ::google::protobuf::uint64 value) {
   item_id_.Set(index, value);
-  // @@protoc_insertion_point(field_set:Feedback.item_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Feedback.item_id)
 }
 inline void Feedback::add_item_id(::google::protobuf::uint64 value) {
   item_id_.Add(value);
-  // @@protoc_insertion_point(field_add:Feedback.item_id)
+  // @@protoc_insertion_point(field_add:module.protocol.Feedback.item_id)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >&
 Feedback::item_id() const {
-  // @@protoc_insertion_point(field_list:Feedback.item_id)
+  // @@protoc_insertion_point(field_list:module.protocol.Feedback.item_id)
   return item_id_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::uint64 >*
 Feedback::mutable_item_id() {
-  // @@protoc_insertion_point(field_mutable_list:Feedback.item_id)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.Feedback.item_id)
   return &item_id_;
 }
 
@@ -5655,13 +5701,13 @@ inline void FeedbackRespond::clear_respond() {
   respond_ = 0;
 }
 inline ::google::protobuf::int32 FeedbackRespond::respond() const {
-  // @@protoc_insertion_point(field_get:FeedbackRespond.respond)
+  // @@protoc_insertion_point(field_get:module.protocol.FeedbackRespond.respond)
   return respond_;
 }
 inline void FeedbackRespond::set_respond(::google::protobuf::int32 value) {
   
   respond_ = value;
-  // @@protoc_insertion_point(field_set:FeedbackRespond.respond)
+  // @@protoc_insertion_point(field_set:module.protocol.FeedbackRespond.respond)
 }
 
 // -------------------------------------------------------------------
@@ -5676,25 +5722,25 @@ inline void AlgorithmPower::clear_power() {
   power_.Clear();
 }
 inline float AlgorithmPower::power(int index) const {
-  // @@protoc_insertion_point(field_get:AlgorithmPower.power)
+  // @@protoc_insertion_point(field_get:module.protocol.AlgorithmPower.power)
   return power_.Get(index);
 }
 inline void AlgorithmPower::set_power(int index, float value) {
   power_.Set(index, value);
-  // @@protoc_insertion_point(field_set:AlgorithmPower.power)
+  // @@protoc_insertion_point(field_set:module.protocol.AlgorithmPower.power)
 }
 inline void AlgorithmPower::add_power(float value) {
   power_.Add(value);
-  // @@protoc_insertion_point(field_add:AlgorithmPower.power)
+  // @@protoc_insertion_point(field_add:module.protocol.AlgorithmPower.power)
 }
 inline const ::google::protobuf::RepeatedField< float >&
 AlgorithmPower::power() const {
-  // @@protoc_insertion_point(field_list:AlgorithmPower.power)
+  // @@protoc_insertion_point(field_list:module.protocol.AlgorithmPower.power)
   return power_;
 }
 inline ::google::protobuf::RepeatedField< float >*
 AlgorithmPower::mutable_power() {
-  // @@protoc_insertion_point(field_mutable_list:AlgorithmPower.power)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.AlgorithmPower.power)
   return &power_;
 }
 
@@ -5707,13 +5753,13 @@ inline void Category::clear_user_id() {
   user_id_ = GOOGLE_ULONGLONG(0);
 }
 inline ::google::protobuf::uint64 Category::user_id() const {
-  // @@protoc_insertion_point(field_get:Category.user_id)
+  // @@protoc_insertion_point(field_get:module.protocol.Category.user_id)
   return user_id_;
 }
 inline void Category::set_user_id(::google::protobuf::uint64 value) {
   
   user_id_ = value;
-  // @@protoc_insertion_point(field_set:Category.user_id)
+  // @@protoc_insertion_point(field_set:module.protocol.Category.user_id)
 }
 
 // optional int32 request_num = 2;
@@ -5721,13 +5767,13 @@ inline void Category::clear_request_num() {
   request_num_ = 0;
 }
 inline ::google::protobuf::int32 Category::request_num() const {
-  // @@protoc_insertion_point(field_get:Category.request_num)
+  // @@protoc_insertion_point(field_get:module.protocol.Category.request_num)
   return request_num_;
 }
 inline void Category::set_request_num(::google::protobuf::int32 value) {
   
   request_num_ = value;
-  // @@protoc_insertion_point(field_set:Category.request_num)
+  // @@protoc_insertion_point(field_set:module.protocol.Category.request_num)
 }
 
 // -------------------------------------------------------------------
@@ -5742,25 +5788,25 @@ inline void AlgorithmCategory::clear_category() {
   category_.Clear();
 }
 inline ::google::protobuf::int32 AlgorithmCategory::category(int index) const {
-  // @@protoc_insertion_point(field_get:AlgorithmCategory.category)
+  // @@protoc_insertion_point(field_get:module.protocol.AlgorithmCategory.category)
   return category_.Get(index);
 }
 inline void AlgorithmCategory::set_category(int index, ::google::protobuf::int32 value) {
   category_.Set(index, value);
-  // @@protoc_insertion_point(field_set:AlgorithmCategory.category)
+  // @@protoc_insertion_point(field_set:module.protocol.AlgorithmCategory.category)
 }
 inline void AlgorithmCategory::add_category(::google::protobuf::int32 value) {
   category_.Add(value);
-  // @@protoc_insertion_point(field_add:AlgorithmCategory.category)
+  // @@protoc_insertion_point(field_add:module.protocol.AlgorithmCategory.category)
 }
 inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
 AlgorithmCategory::category() const {
-  // @@protoc_insertion_point(field_list:AlgorithmCategory.category)
+  // @@protoc_insertion_point(field_list:module.protocol.AlgorithmCategory.category)
   return category_;
 }
 inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
 AlgorithmCategory::mutable_category() {
-  // @@protoc_insertion_point(field_mutable_list:AlgorithmCategory.category)
+  // @@protoc_insertion_point(field_mutable_list:module.protocol.AlgorithmCategory.category)
   return &category_;
 }
 
@@ -5773,13 +5819,13 @@ inline void TransferRequest::clear_main_protocol() {
   main_protocol_ = 0;
 }
 inline ::google::protobuf::int32 TransferRequest::main_protocol() const {
-  // @@protoc_insertion_point(field_get:TransferRequest.main_protocol)
+  // @@protoc_insertion_point(field_get:module.protocol.TransferRequest.main_protocol)
   return main_protocol_;
 }
 inline void TransferRequest::set_main_protocol(::google::protobuf::int32 value) {
   
   main_protocol_ = value;
-  // @@protoc_insertion_point(field_set:TransferRequest.main_protocol)
+  // @@protoc_insertion_point(field_set:module.protocol.TransferRequest.main_protocol)
 }
 
 // optional int32 sub_protocol = 2;
@@ -5787,13 +5833,13 @@ inline void TransferRequest::clear_sub_protocol() {
   sub_protocol_ = 0;
 }
 inline ::google::protobuf::int32 TransferRequest::sub_protocol() const {
-  // @@protoc_insertion_point(field_get:TransferRequest.sub_protocol)
+  // @@protoc_insertion_point(field_get:module.protocol.TransferRequest.sub_protocol)
   return sub_protocol_;
 }
 inline void TransferRequest::set_sub_protocol(::google::protobuf::int32 value) {
   
   sub_protocol_ = value;
-  // @@protoc_insertion_point(field_set:TransferRequest.sub_protocol)
+  // @@protoc_insertion_point(field_set:module.protocol.TransferRequest.sub_protocol)
 }
 
 // optional .google.protobuf.Any protocol = 3;
@@ -5805,7 +5851,7 @@ inline void TransferRequest::clear_protocol() {
   protocol_ = NULL;
 }
 inline const ::google::protobuf::Any& TransferRequest::protocol() const {
-  // @@protoc_insertion_point(field_get:TransferRequest.protocol)
+  // @@protoc_insertion_point(field_get:module.protocol.TransferRequest.protocol)
   return protocol_ != NULL ? *protocol_ : *default_instance_->protocol_;
 }
 inline ::google::protobuf::Any* TransferRequest::mutable_protocol() {
@@ -5813,7 +5859,7 @@ inline ::google::protobuf::Any* TransferRequest::mutable_protocol() {
   if (protocol_ == NULL) {
     protocol_ = new ::google::protobuf::Any;
   }
-  // @@protoc_insertion_point(field_mutable:TransferRequest.protocol)
+  // @@protoc_insertion_point(field_mutable:module.protocol.TransferRequest.protocol)
   return protocol_;
 }
 inline ::google::protobuf::Any* TransferRequest::release_protocol() {
@@ -5830,7 +5876,7 @@ inline void TransferRequest::set_allocated_protocol(::google::protobuf::Any* pro
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:TransferRequest.protocol)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.TransferRequest.protocol)
 }
 
 // -------------------------------------------------------------------
@@ -5842,13 +5888,13 @@ inline void TransferRespond::clear_respond_code() {
   respond_code_ = 0;
 }
 inline ::google::protobuf::int32 TransferRespond::respond_code() const {
-  // @@protoc_insertion_point(field_get:TransferRespond.respond_code)
+  // @@protoc_insertion_point(field_get:module.protocol.TransferRespond.respond_code)
   return respond_code_;
 }
 inline void TransferRespond::set_respond_code(::google::protobuf::int32 value) {
   
   respond_code_ = value;
-  // @@protoc_insertion_point(field_set:TransferRespond.respond_code)
+  // @@protoc_insertion_point(field_set:module.protocol.TransferRespond.respond_code)
 }
 
 // optional .google.protobuf.Any protocol = 2;
@@ -5860,7 +5906,7 @@ inline void TransferRespond::clear_protocol() {
   protocol_ = NULL;
 }
 inline const ::google::protobuf::Any& TransferRespond::protocol() const {
-  // @@protoc_insertion_point(field_get:TransferRespond.protocol)
+  // @@protoc_insertion_point(field_get:module.protocol.TransferRespond.protocol)
   return protocol_ != NULL ? *protocol_ : *default_instance_->protocol_;
 }
 inline ::google::protobuf::Any* TransferRespond::mutable_protocol() {
@@ -5868,7 +5914,7 @@ inline ::google::protobuf::Any* TransferRespond::mutable_protocol() {
   if (protocol_ == NULL) {
     protocol_ = new ::google::protobuf::Any;
   }
-  // @@protoc_insertion_point(field_mutable:TransferRespond.protocol)
+  // @@protoc_insertion_point(field_mutable:module.protocol.TransferRespond.protocol)
   return protocol_;
 }
 inline ::google::protobuf::Any* TransferRespond::release_protocol() {
@@ -5885,7 +5931,7 @@ inline void TransferRespond::set_allocated_protocol(::google::protobuf::Any* pro
   } else {
     
   }
-  // @@protoc_insertion_point(field_set_allocated:TransferRespond.protocol)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.TransferRespond.protocol)
 }
 
 // -------------------------------------------------------------------
@@ -5897,28 +5943,28 @@ inline void HeartBeat::clear_heartbeat() {
   heartbeat_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& HeartBeat::heartbeat() const {
-  // @@protoc_insertion_point(field_get:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_get:module.protocol.HeartBeat.heartbeat)
   return heartbeat_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void HeartBeat::set_heartbeat(const ::std::string& value) {
   
   heartbeat_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_set:module.protocol.HeartBeat.heartbeat)
 }
 inline void HeartBeat::set_heartbeat(const char* value) {
   
   heartbeat_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_set_char:module.protocol.HeartBeat.heartbeat)
 }
 inline void HeartBeat::set_heartbeat(const void* value, size_t size) {
   
   heartbeat_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_set_pointer:module.protocol.HeartBeat.heartbeat)
 }
 inline ::std::string* HeartBeat::mutable_heartbeat() {
   
-  // @@protoc_insertion_point(field_mutable:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_mutable:module.protocol.HeartBeat.heartbeat)
   return heartbeat_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* HeartBeat::release_heartbeat() {
@@ -5932,7 +5978,7 @@ inline void HeartBeat::set_allocated_heartbeat(::std::string* heartbeat) {
     
   }
   heartbeat_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), heartbeat);
-  // @@protoc_insertion_point(field_set_allocated:HeartBeat.heartbeat)
+  // @@protoc_insertion_point(field_set_allocated:module.protocol.HeartBeat.heartbeat)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -5997,44 +6043,47 @@ inline void HeartBeat::set_allocated_heartbeat(::std::string* heartbeat) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace protocol
+}  // namespace module
+
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::Code> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::Code> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::Code>() {
-  return ::Code_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::Code>() {
+  return ::module::protocol::Code_descriptor();
 }
-template <> struct is_proto_enum< ::ActionType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::ActionType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::ActionType>() {
-  return ::ActionType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::ActionType>() {
+  return ::module::protocol::ActionType_descriptor();
 }
-template <> struct is_proto_enum< ::ItemType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::ItemType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::ItemType>() {
-  return ::ItemType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::ItemType>() {
+  return ::module::protocol::ItemType_descriptor();
 }
-template <> struct is_proto_enum< ::TopType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::TopType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::TopType>() {
-  return ::TopType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::TopType>() {
+  return ::module::protocol::TopType_descriptor();
 }
-template <> struct is_proto_enum< ::RecommendType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::RecommendType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::RecommendType>() {
-  return ::RecommendType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::RecommendType>() {
+  return ::module::protocol::RecommendType_descriptor();
 }
-template <> struct is_proto_enum< ::RecommendNetwork> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::RecommendNetwork> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::RecommendNetwork>() {
-  return ::RecommendNetwork_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::RecommendNetwork>() {
+  return ::module::protocol::RecommendNetwork_descriptor();
 }
-template <> struct is_proto_enum< ::CandidateType> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::module::protocol::CandidateType> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::CandidateType>() {
-  return ::CandidateType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::module::protocol::CandidateType>() {
+  return ::module::protocol::CandidateType_descriptor();
 }
 
 }  // namespace protobuf

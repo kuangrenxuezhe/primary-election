@@ -7,7 +7,7 @@
 namespace souyue {
   namespace recmd {
     // 实现GRPC接口
-    class ServiceGrpc: public proto::PrimaryElection::Service {
+    class ServiceGrpc: public module::protocol::PrimaryElection::Service {
       public:
         ServiceGrpc(CandidateDB* canddiate_db);
         virtual ~ServiceGrpc();

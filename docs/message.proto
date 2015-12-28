@@ -1,4 +1,6 @@
 syntax = "proto3";
+package module.protocol;
+
 import "google/protobuf/any.proto";
 
 //@merge Service
@@ -69,7 +71,6 @@ message ItemInfo {
   repeated KeyPair        top = 11;
 }
 
-//@merge proto
 // 所有字符数据均采用GBK编码
 /////////////////////////////////////////////////
 // 行为
@@ -101,7 +102,7 @@ message Action {
 /////////////////////////////////////////////////
 // 文档
 message ItemTag {
-  int32     tag_id = 1; // 标签ID
+  uint64    tag_id = 1; // 标签ID
   bytes   tag_name = 2; // 标签名称
   float  tag_power = 3; // 标签权重
 }
@@ -149,6 +150,7 @@ message Item {
   TopInfo                 top_info = 11; // 全局推荐信息
   repeated bytes              zone = 12; // 地域格式--省:市;省:市; 支持多级, 市可为空
   ItemSource           data_source = 13; // 数据来源 
+  repeated ItemTag             tag = 14; // 文章标签
 }
 
 /////////////////////////////////////////////////

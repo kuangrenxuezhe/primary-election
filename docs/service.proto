@@ -1,5 +1,5 @@
 syntax = "proto3";
-package proto;
+package module.protocol;
 
 import "message.proto";
 import "supplement.proto";

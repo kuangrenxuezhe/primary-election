@@ -13,6 +13,7 @@
 
 namespace souyue {
   namespace recmd {
+    using namespace module::protocol;
     static const uint64_t kInvalidRegionID = 0UL;
 
     typedef std::pair<std::string, float> pair_t;

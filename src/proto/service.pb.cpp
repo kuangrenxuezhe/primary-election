@@ -16,6 +16,9 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
+namespace module {
+namespace protocol {
+
 namespace {
 
 
@@ -53,20 +56,19 @@ void protobuf_AddDesc_service_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-  ::protobuf_AddDesc_message_2eproto();
-  ::protobuf_AddDesc_supplement_2eproto();
+  ::module::protocol::protobuf_AddDesc_message_2eproto();
+  ::module::protocol::protobuf_AddDesc_supplement_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\rservice.proto\032\rmessage.proto\032\020suppleme"
-    "nt.proto2\342\002\n\017PrimaryElection\022\"\n\014updateAc"
-    "tion\022\007.Action\032\007.Action\"\000\022\"\n\nupdateItem\022\005"
-    ".Item\032\013.StatusCode\"\000\022,\n\017updateSubscribe\022"
-    "\n.Subscribe\032\013.StatusCode\"\000\022*\n\016updateFeed"
-    "back\022\t.Feedback\032\013.StatusCode\"\000\022\'\n\017queryU"
-    "serStatus\022\005.User\032\013.UserStatus\"\000\0220\n\021query"
-    "CandidateSet\022\n.Recommend\032\r.CandidateSet\""
-    "\000\022(\n\rqueryUserInfo\022\n.UserQuery\032\t.UserInf"
-    "o\"\000\022(\n\rqueryItemInfo\022\n.ItemQuery\032\t.ItemI"
-    "nfo\"\000b\006proto3", 413);
+    "\n\rservice.proto\022\017module.protocol\032\rmessag"
+    "e.proto\032\020supplement.proto2\300\002\n\017PrimaryEle"
+    "ction\022H\n\rqueryUserInfo\022\032.module.protocol"
+    ".UserQuery\032\031.module.protocol.UserInfo\"\000\022"
+    "H\n\rqueryItemInfo\022\032.module.protocol.ItemQ"
+    "uery\032\031.module.protocol.ItemInfo\"\000\022G\n\017que"
+    "ryUserStatus\022\025.module.protocol.User\032\033.mo"
+    "dule.protocol.UserStatus\"\000\022P\n\021queryCandi"
+    "dateSet\022\032.module.protocol.Recommend\032\035.mo"
+    "dule.protocol.CandidateSet\"\000b\006proto3", 396);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "service.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_service_2eproto);
@@ -80,5 +82,8 @@ struct StaticDescriptorInitializer_service_2eproto {
 } static_descriptor_initializer_service_2eproto_;
 
 // @@protoc_insertion_point(namespace_scope)
+
+}  // namespace protocol
+}  // namespace module
 
 // @@protoc_insertion_point(global_scope)
