@@ -320,6 +320,7 @@ namespace souyue {
 
       void glue::structed_query(const Recommend& proto, query_t& structed)
       {
+        structed.user_id = proto.user_id();
         structed.request_num = proto.request_num();
         structed.start_time = proto.beg_time();
         structed.end_time = proto.end_time();

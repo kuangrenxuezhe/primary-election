@@ -151,28 +151,28 @@ namespace souyue {
       return item_table_->updateAction(action);
     }
 
-    Status CandidateDB::queryCandidateSet(const Recommend& query, CandidateSet& candidate_set)
+    Status CandidateDB::queryCandidateSet(const Recommend& recmd, CandidateSet& candidate_set)
     {
-      if (options_.service_type != 0)
-        return querySubscriptionCandidateSet(query, candidate_set);
-
-      return queryRecommendationCandidateSet(query, candidate_set);
-    }
-
-    Status CandidateDB::querySubscriptionCandidateSet(const Recommend& recmd, CandidateSet& cset)
-    {
-      DurationLogger duration(Duration::kMilliSeconds, "SubscriptionCandidateSet: user_id=", recmd.user_id());
       query_t query;
 
       glue::structed_query(recmd, query);
       // 修正时间
       if (recmd.beg_time() <= 0) {
         query.end_time = time(NULL);
-        query.start_time = query.end_time - options_.interval_recommendation;
       } else {
         query.end_time = recmd.beg_time();
-        query.start_time = query.end_time - options_.item_hold_time;
       }
+      query.start_time = query.end_time - options_.interval_recommendation;
+ 
+      if (options_.service_type != 0)
+        return querySubscriptionCandidateSet(recmd, query, candidate_set);
+
+      return queryRecommendationCandidateSet(recmd, query, candidate_set);
+    }
+
+    Status CandidateDB::querySubscriptionCandidateSet(const Recommend& recmd, query_t& query, CandidateSet& cset)
+    {
+      DurationLogger duration(Duration::kMilliSeconds, "SubscriptionCandidateSet: user_id=", recmd.user_id());
       Status status = Status::OK();
       candidate_set_t candidate_set;
 
@@ -242,21 +242,9 @@ namespace souyue {
       return Status::OK();
     }
 
-    Status CandidateDB::queryRecommendationCandidateSet(const Recommend& recmd, CandidateSet& cset)
+    Status CandidateDB::queryRecommendationCandidateSet(const Recommend& recmd, query_t& query, CandidateSet& cset)
     {
       DurationLogger duration(Duration::kMilliSeconds, "RecommendationCandidateSet: user_id=", recmd.user_id());
-      query_t query;
-
-      glue::structed_query(recmd, query);
-      // 修正时间
-      if (recmd.beg_time() <= 0) {
-        query.end_time = time(NULL);
-        query.start_time = query.end_time - options_.interval_recommendation;
-      } else {
-        query.end_time = recmd.beg_time();
-        query.start_time = query.end_time - options_.interval_recommendation;
-      }
-
       uint64_t region_id[2];
       Status status = Status::OK();
       candidate_set_t candidate_set, candidate_video_set, candidate_region_set;

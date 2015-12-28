@@ -89,6 +89,7 @@ namespace souyue {
 
     // 0x00 normal, 0x01 video, 0x02 region
     struct query_ {
+      uint64_t      user_id;
       int       request_num;
       int32_t    start_time;
       int32_t      end_time;

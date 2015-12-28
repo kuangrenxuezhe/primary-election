@@ -48,8 +48,8 @@ namespace souyue {
         Status lock(); // 单进程锁定
 
       protected:
-        Status querySubscriptionCandidateSet(const Recommend& query, CandidateSet& candidate_set);
-        Status queryRecommendationCandidateSet(const Recommend& query, CandidateSet& candidate_set);
+        Status querySubscriptionCandidateSet(const Recommend& recmd, query_t& query, CandidateSet& candidate_set);
+        Status queryRecommendationCandidateSet(const Recommend& recmd, query_t& query, CandidateSet& candidate_set);
 
       private:
         ModelOptions  options_;
