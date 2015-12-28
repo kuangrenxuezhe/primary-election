@@ -254,8 +254,9 @@ namespace souyue {
         query.start_time = query.end_time - options_.interval_recommendation;
       } else {
         query.end_time = recmd.beg_time();
-        query.start_time = query.end_time - options_.item_hold_time;
+        query.start_time = query.end_time - options_.interval_recommendation;
       }
+
       uint64_t region_id[2];
       Status status = Status::OK();
       candidate_set_t candidate_set, candidate_video_set, candidate_region_set;
