@@ -229,8 +229,8 @@ public:
             return -1;
         }
         
-        //if(cp_create_thread(thread_kafka, this))
-        //    return -1;
+        if(cp_create_thread(thread_kafka, this))
+            return -1;
         
         if(cp_create_thread(thread_network, this, m_cfg.md_work_thread_num))
             return -1;
