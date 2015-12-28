@@ -27,7 +27,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
-#include "message.pb.h"
+#include "proto/message.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace module {
