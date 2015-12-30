@@ -85,12 +85,12 @@ check: all
 .PHONY: install
 install: all
 	@mkdir -p $(PREFIX)
-	@cp ./conf/covisit.conf $(PREFIX)
+	@cp ./conf/candb.conf $(PREFIX)
 	@cp $(BUILD_PATH)/bin/$(TARGET_MAIN) $(PREFIX)
 	
 .PHONY: uninstall
 uninstall:
-	rm -f $(PREFIX)/covisit.conf
+	rm -f $(PREFIX)/candb.conf
 	rm -f $(PREFIX)/$(TARGET_MAIN)
 
 .PHONY: clean
