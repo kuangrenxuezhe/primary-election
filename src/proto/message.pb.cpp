@@ -420,7 +420,7 @@ void protobuf_AssignDesc_message_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Subscribe, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Subscribe, _is_default_instance_));
   Recommend_descriptor_ = file->message_type(16);
-  static const int Recommend_offsets_[8] = {
+  static const int Recommend_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, log_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, user_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, request_num_),
@@ -429,6 +429,7 @@ void protobuf_AssignDesc_message_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, end_time_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, zone_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, network_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Recommend, recommend_num_),
   };
   Recommend_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -851,53 +852,54 @@ void protobuf_AddDesc_message_2eproto() {
     "(\0132\033.module.protocol.ItemSource\022%\n\003tag\030\016"
     " \003(\0132\030.module.protocol.ItemTag\"\?\n\tSubscr"
     "ibe\022\017\n\007user_id\030\001 \001(\004\022\016\n\006srp_id\030\002 \003(\014\022\021\n\t"
-    "circle_id\030\003 \003(\014\"\334\001\n\tRecommend\022\013\n\003log\030\001 \001"
+    "circle_id\030\003 \003(\014\"\363\001\n\tRecommend\022\013\n\003log\030\001 \001"
     "(\005\022\017\n\007user_id\030\002 \001(\004\022\023\n\013request_num\030\003 \001(\005"
     "\0226\n\016recommend_type\030\004 \001(\0162\036.module.protoc"
     "ol.RecommendType\022\020\n\010beg_time\030\005 \001(\005\022\020\n\010en"
     "d_time\030\006 \001(\005\022\014\n\004zone\030\007 \001(\014\0222\n\007network\030\010 "
-    "\001(\0162!.module.protocol.RecommendNetwork\"H"
-    "\n\020CandidateSetBase\022\017\n\007user_id\030\001 \001(\004\022\017\n\007i"
-    "tem_id\030\002 \003(\006\022\022\n\nhistory_id\030\003 \003(\006\"\242\001\n\023Can"
-    "didateSetPayload\022\r\n\005power\030\001 \003(\002\022\030\n\014publi"
-    "sh_time\030\002 \003(\005B\002\020\001\022\027\n\013category_id\030\003 \003(\005B\002"
-    "\020\001\022\027\n\013picture_num\030\004 \003(\005B\002\020\001\0220\n\004type\030\005 \003("
-    "\0162\036.module.protocol.CandidateTypeB\002\020\001\"v\n"
-    "\014CandidateSet\022/\n\004base\030\001 \001(\0132!.module.pro"
-    "tocol.CandidateSetBase\0225\n\007payload\030\002 \001(\0132"
-    "$.module.protocol.CandidateSetPayload\"\027\n"
-    "\004User\022\017\n\007user_id\030\001 \001(\004\"!\n\nUserStatus\022\023\n\013"
-    "is_new_user\030\001 \001(\005\",\n\010Feedback\022\017\n\007user_id"
-    "\030\001 \001(\004\022\017\n\007item_id\030\002 \003(\006\"\"\n\017FeedbackRespo"
-    "nd\022\017\n\007respond\030\001 \001(\005\"\037\n\016AlgorithmPower\022\r\n"
-    "\005power\030\001 \003(\002\"0\n\010Category\022\017\n\007user_id\030\001 \001("
-    "\004\022\023\n\013request_num\030\002 \001(\005\")\n\021AlgorithmCateg"
-    "ory\022\024\n\010category\030\001 \003(\005B\002\020\001\"f\n\017TransferReq"
-    "uest\022\025\n\rmain_protocol\030\001 \001(\005\022\024\n\014sub_proto"
-    "col\030\002 \001(\005\022&\n\010protocol\030\003 \001(\0132\024.google.pro"
-    "tobuf.Any\"O\n\017TransferRespond\022\024\n\014respond_"
-    "code\030\001 \001(\005\022&\n\010protocol\030\002 \001(\0132\024.google.pr"
-    "otobuf.Any\"\036\n\tHeartBeat\022\021\n\theartbeat\030\001 \001"
-    "(\014*\202\001\n\004Code\022\013\n\007CODE_OK\020\000\022\022\n\016CODE_NOT_FOU"
-    "ND\020\001\022\023\n\017CODE_CORRUPTION\020\002\022\026\n\022CODE_NOT_SU"
-    "PPORTED\020\003\022\031\n\025CODE_INVALID_ARGUMENT\020\004\022\021\n\r"
-    "CODE_IO_ERROR\020\005*\316\001\n\nActionType\022\024\n\020ACTION"
-    "_TYPE_NONE\020\000\022\025\n\021ACTION_TYPE_CLICK\020\001\022\024\n\020A"
-    "CTION_TYPE_LIKE\020\002\022\027\n\023ACTION_TYPE_COMMENT"
-    "\020\003\022\030\n\024ACTION_TYPE_FAVORITE\020\004\022\025\n\021ACTION_T"
-    "YPE_SHARE\020\005\022\027\n\023ACTION_TYPE_DISLIKE\020\006\022\032\n\026"
-    "ACTION_TYPE_CLOSE_PAGE\020\007*]\n\010ItemType\022\022\n\016"
-    "ITEM_TYPE_NONE\020\000\022\022\n\016ITEM_TYPE_NEWS\020\001\022\023\n\017"
-    "ITEM_TYPE_VIDEO\020\002\022\024\n\020ITEM_TYPE_CIRCLE\020\003*"
-    "G\n\007TopType\022\021\n\rTOP_TYPE_NONE\020\000\022\023\n\017TOP_TYP"
-    "E_GLOBAL\020\001\022\024\n\020TOP_TYPE_PARTIAL\020\002*\?\n\rReco"
-    "mmendType\022\026\n\022RECOMMEND_TYPE_REC\020\000\022\026\n\022REC"
-    "OMMEND_TYPE_SUB\020\001*L\n\020RecommendNetwork\022\032\n"
-    "\026RECOMMEND_NETWORK_WIFI\020\000\022\034\n\030RECOMMEND_N"
-    "ETWORK_MOBILE\020\001*u\n\rCandidateType\022\031\n\025CAND"
-    "IDATE_TYPE_NORMAL\020\000\022\027\n\023CANDIDATE_TYPE_ZO"
-    "NE\020\001\022\030\n\024CANDIDATE_TYPE_VIDEO\020\002\022\026\n\022CANDID"
-    "ATE_TYPE_TOP\020\003b\006proto3", 3822);
+    "\001(\0162!.module.protocol.RecommendNetwork\022\025"
+    "\n\rrecommend_num\030\t \001(\005\"H\n\020CandidateSetBas"
+    "e\022\017\n\007user_id\030\001 \001(\004\022\017\n\007item_id\030\002 \003(\006\022\022\n\nh"
+    "istory_id\030\003 \003(\006\"\242\001\n\023CandidateSetPayload\022"
+    "\r\n\005power\030\001 \003(\002\022\030\n\014publish_time\030\002 \003(\005B\002\020\001"
+    "\022\027\n\013category_id\030\003 \003(\005B\002\020\001\022\027\n\013picture_num"
+    "\030\004 \003(\005B\002\020\001\0220\n\004type\030\005 \003(\0162\036.module.protoc"
+    "ol.CandidateTypeB\002\020\001\"v\n\014CandidateSet\022/\n\004"
+    "base\030\001 \001(\0132!.module.protocol.CandidateSe"
+    "tBase\0225\n\007payload\030\002 \001(\0132$.module.protocol"
+    ".CandidateSetPayload\"\027\n\004User\022\017\n\007user_id\030"
+    "\001 \001(\004\"!\n\nUserStatus\022\023\n\013is_new_user\030\001 \001(\005"
+    "\",\n\010Feedback\022\017\n\007user_id\030\001 \001(\004\022\017\n\007item_id"
+    "\030\002 \003(\006\"\"\n\017FeedbackRespond\022\017\n\007respond\030\001 \001"
+    "(\005\"\037\n\016AlgorithmPower\022\r\n\005power\030\001 \003(\002\"0\n\010C"
+    "ategory\022\017\n\007user_id\030\001 \001(\004\022\023\n\013request_num\030"
+    "\002 \001(\005\")\n\021AlgorithmCategory\022\024\n\010category\030\001"
+    " \003(\005B\002\020\001\"f\n\017TransferRequest\022\025\n\rmain_prot"
+    "ocol\030\001 \001(\005\022\024\n\014sub_protocol\030\002 \001(\005\022&\n\010prot"
+    "ocol\030\003 \001(\0132\024.google.protobuf.Any\"O\n\017Tran"
+    "sferRespond\022\024\n\014respond_code\030\001 \001(\005\022&\n\010pro"
+    "tocol\030\002 \001(\0132\024.google.protobuf.Any\"\036\n\tHea"
+    "rtBeat\022\021\n\theartbeat\030\001 \001(\014*\202\001\n\004Code\022\013\n\007CO"
+    "DE_OK\020\000\022\022\n\016CODE_NOT_FOUND\020\001\022\023\n\017CODE_CORR"
+    "UPTION\020\002\022\026\n\022CODE_NOT_SUPPORTED\020\003\022\031\n\025CODE"
+    "_INVALID_ARGUMENT\020\004\022\021\n\rCODE_IO_ERROR\020\005*\316"
+    "\001\n\nActionType\022\024\n\020ACTION_TYPE_NONE\020\000\022\025\n\021A"
+    "CTION_TYPE_CLICK\020\001\022\024\n\020ACTION_TYPE_LIKE\020\002"
+    "\022\027\n\023ACTION_TYPE_COMMENT\020\003\022\030\n\024ACTION_TYPE"
+    "_FAVORITE\020\004\022\025\n\021ACTION_TYPE_SHARE\020\005\022\027\n\023AC"
+    "TION_TYPE_DISLIKE\020\006\022\032\n\026ACTION_TYPE_CLOSE"
+    "_PAGE\020\007*]\n\010ItemType\022\022\n\016ITEM_TYPE_NONE\020\000\022"
+    "\022\n\016ITEM_TYPE_NEWS\020\001\022\023\n\017ITEM_TYPE_VIDEO\020\002"
+    "\022\024\n\020ITEM_TYPE_CIRCLE\020\003*G\n\007TopType\022\021\n\rTOP"
+    "_TYPE_NONE\020\000\022\023\n\017TOP_TYPE_GLOBAL\020\001\022\024\n\020TOP"
+    "_TYPE_PARTIAL\020\002*\?\n\rRecommendType\022\026\n\022RECO"
+    "MMEND_TYPE_REC\020\000\022\026\n\022RECOMMEND_TYPE_SUB\020\001"
+    "*L\n\020RecommendNetwork\022\032\n\026RECOMMEND_NETWOR"
+    "K_WIFI\020\000\022\034\n\030RECOMMEND_NETWORK_MOBILE\020\001*u"
+    "\n\rCandidateType\022\031\n\025CANDIDATE_TYPE_NORMAL"
+    "\020\000\022\027\n\023CANDIDATE_TYPE_ZONE\020\001\022\030\n\024CANDIDATE"
+    "_TYPE_VIDEO\020\002\022\026\n\022CANDIDATE_TYPE_TOP\020\003b\006p"
+    "roto3", 3845);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message.proto", &protobuf_RegisterTypes);
   StatusCode::default_instance_ = new StatusCode();
@@ -8338,6 +8340,7 @@ const int Recommend::kBegTimeFieldNumber;
 const int Recommend::kEndTimeFieldNumber;
 const int Recommend::kZoneFieldNumber;
 const int Recommend::kNetworkFieldNumber;
+const int Recommend::kRecommendNumFieldNumber;
 #endif  // !_MSC_VER
 
 Recommend::Recommend()
@@ -8370,6 +8373,7 @@ void Recommend::SharedCtor() {
   end_time_ = 0;
   zone_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   network_ = 0;
+  recommend_num_ = 0;
 }
 
 Recommend::~Recommend() {
@@ -8420,6 +8424,7 @@ void Recommend::Clear() {
   ZR_(user_id_, beg_time_);
   ZR_(end_time_, network_);
   zone_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  recommend_num_ = 0;
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -8551,6 +8556,21 @@ bool Recommend::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(72)) goto parse_recommend_num;
+        break;
+      }
+
+      // optional int32 recommend_num = 9;
+      case 9: {
+        if (tag == 72) {
+         parse_recommend_num:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &recommend_num_)));
+
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -8622,6 +8642,11 @@ void Recommend::SerializeWithCachedSizes(
       8, this->network(), output);
   }
 
+  // optional int32 recommend_num = 9;
+  if (this->recommend_num() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(9, this->recommend_num(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:module.protocol.Recommend)
 }
 
@@ -8670,6 +8695,11 @@ void Recommend::SerializeWithCachedSizes(
   if (this->network() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       8, this->network(), target);
+  }
+
+  // optional int32 recommend_num = 9;
+  if (this->recommend_num() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(9, this->recommend_num(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:module.protocol.Recommend)
@@ -8733,6 +8763,13 @@ int Recommend::ByteSize() const {
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->network());
   }
 
+  // optional int32 recommend_num = 9;
+  if (this->recommend_num() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->recommend_num());
+  }
+
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = total_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
@@ -8778,6 +8815,9 @@ void Recommend::MergeFrom(const Recommend& from) {
   if (from.network() != 0) {
     set_network(from.network());
   }
+  if (from.recommend_num() != 0) {
+    set_recommend_num(from.recommend_num());
+  }
 }
 
 void Recommend::CopyFrom(const ::google::protobuf::Message& from) {
@@ -8810,6 +8850,7 @@ void Recommend::InternalSwap(Recommend* other) {
   std::swap(end_time_, other->end_time_);
   zone_.Swap(&other->zone_);
   std::swap(network_, other->network_);
+  std::swap(recommend_num_, other->recommend_num_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -8964,6 +9005,20 @@ void Recommend::clear_network() {
   
   network_ = value;
   // @@protoc_insertion_point(field_set:module.protocol.Recommend.network)
+}
+
+// optional int32 recommend_num = 9;
+void Recommend::clear_recommend_num() {
+  recommend_num_ = 0;
+}
+ ::google::protobuf::int32 Recommend::recommend_num() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.recommend_num)
+  return recommend_num_;
+}
+ void Recommend::set_recommend_num(::google::protobuf::int32 value) {
+  
+  recommend_num_ = value;
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.recommend_num)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

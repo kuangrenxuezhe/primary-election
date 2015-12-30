@@ -416,10 +416,11 @@ namespace souyue {
         pthread_rwlock_rdlock(&window_lock_[idx%kWindowLockSize]);
         iter = item_window_[idx].begin();
         for (; iter != item_window_[idx].end(); ++iter) {
-          if ((*iter)->publish_time < query.start_time
-              || (*iter)->publish_time > query.end_time) {
+          if ((*iter)->publish_time > query.end_time)
             continue;
-          }
+
+          if ((*iter)->publish_time < query.start_time)
+            break;
 
           if ((*iter)->item_type != query.item_type)
             continue;

@@ -6,6 +6,7 @@
 #include "utils/util.h"
 #include "utils/crc32c.h"
 #include "utils/ahead_log.h"
+#include "utils/char_conv.h"
 #include "glog/logging.h"
 #include "proto/supplement.pb.h"
 #include "proto/service.pb.h"
@@ -137,29 +138,38 @@ namespace souyue {
                 LOG(WARNING) << "Invalid dislike data: " << tokens[i];
                 continue;
               }
-
               trimString(key_value[0], "\"");
               trimString(key_value[1], "\"");
 
-              // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
-              int type = atoi(key_value[0].c_str());
-              if (0 == type) {
-                LOG(WARNING) << "Invalid dislike data: " << tokens[i];
-                continue;
-              }
+              std::vector<std::string> keys;
 
-              id.type_id_component.type = type;
-              id.type_id_component.id = 0UL;
-              if (key_value[0].length() > 2) {
-                seperator = strchr(key_value[0].c_str(), '_');
-                if (NULL != seperator) {
-                  seperator++;
-                  id.type_id_component.id = makeID(seperator, strlen(seperator));
+              splitString(key_value[0], ';', keys);
+              for (size_t j = 0; j < keys.size(); ++j) {
+                trimString(keys[j], " ");
+                // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
+                int type = atoi(keys[j].c_str());
+                if (type <= IDTYPE_NONE || type >= IDTYPE_MAXVALUE) {
+                  LOG(WARNING) << "Invalid dislike data: " << toUTF8(tokens[i]);
+                  continue;
                 }
-              }
 
-              if (!user_info->dislike.insert(std::make_pair(id.type_id, tokens[i])).second)
-                return false;
+                // 将类型TAG=8映射到IDTYPE_TAG=11上
+                if (type == 8)
+                  type = IDTYPE_TAG;
+
+                id.type_id_component.type = type;
+                id.type_id_component.id = 0UL;
+                if (keys[j].length() > 2) {
+                  seperator = strchr(keys[j].c_str(), '_');
+                  if (NULL != seperator) {
+                    seperator++;
+                    id.type_id_component.id = makeID(seperator, strlen(seperator));
+                  }
+                }
+
+                if (!user_info->dislike.insert(std::make_pair(id.type_id, tokens[i])).second)
+                  return false;
+              }
             }
           }
           return true;

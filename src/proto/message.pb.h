@@ -2151,6 +2151,12 @@ class Recommend : public ::google::protobuf::Message {
   ::module::protocol::RecommendNetwork network() const;
   void set_network(::module::protocol::RecommendNetwork value);
 
+  // optional int32 recommend_num = 9;
+  void clear_recommend_num();
+  static const int kRecommendNumFieldNumber = 9;
+  ::google::protobuf::int32 recommend_num() const;
+  void set_recommend_num(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:module.protocol.Recommend)
  private:
 
@@ -2164,6 +2170,7 @@ class Recommend : public ::google::protobuf::Message {
   ::google::protobuf::internal::ArenaStringPtr zone_;
   ::google::protobuf::int32 end_time_;
   int network_;
+  ::google::protobuf::int32 recommend_num_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_message_2eproto();
   friend void protobuf_AssignDesc_message_2eproto();
@@ -5296,6 +5303,20 @@ inline void Recommend::set_network(::module::protocol::RecommendNetwork value) {
   
   network_ = value;
   // @@protoc_insertion_point(field_set:module.protocol.Recommend.network)
+}
+
+// optional int32 recommend_num = 9;
+inline void Recommend::clear_recommend_num() {
+  recommend_num_ = 0;
+}
+inline ::google::protobuf::int32 Recommend::recommend_num() const {
+  // @@protoc_insertion_point(field_get:module.protocol.Recommend.recommend_num)
+  return recommend_num_;
+}
+inline void Recommend::set_recommend_num(::google::protobuf::int32 value) {
+  
+  recommend_num_ = value;
+  // @@protoc_insertion_point(field_set:module.protocol.Recommend.recommend_num)
 }
 
 // -------------------------------------------------------------------

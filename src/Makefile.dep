@@ -1,0 +1,19 @@
+sources=core/core_type.cpp \
+		    core/model_options.cpp \
+	      core/user_table.cpp \
+		    core/item_table.cpp \
+		    core/candidate_db.cpp \
+				service/service_glue.cpp \
+				service/service_grpc.cpp \
+		    proto/message.pb.cpp \
+				proto/supplement.pb.cpp \
+				proto/service.pb.cpp \
+				proto/service.grpc.pb.cpp
+
+main=main.cpp
+
+unittests=unittest.cpp \
+					#core/user_table_test.cpp \
+					core/item_table_test.cpp \
+					core/candidate_db_test.cpp
+	

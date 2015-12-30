@@ -1,9 +1,16 @@
-BUILD=.build
-TARGET=candb
-UNITTESTS=unittest
+BUILD_PATH:=.build
 
-SRCPATH=./src/
-OBJPATH=$(BUILD)/objs/
+INCLUDE_PATH:=
+SOURCE_PATH:=src
+
+TARGET_MAIN=candb
+TARGET_UNITTEST=unittest
+
+INCLUDES=-Isrc -Ideps/include
+LDFLAGS=-Ldeps/lib -L$(BUILD_PATH)/lib
+LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid \
+		 -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr \
+		 -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz
 
 ifneq ($(strip $(debug)),)
 	DEBUG=1
@@ -13,95 +20,41 @@ DEBUG?=0
 ifneq ($(strip $(prefix)),)
 	PREFIX=$(prefix)
 endif
-PREFIX?=/usr
+PREFIX?=/usr/include
 
-GCC_VERSION=$(shell g++ -dumpversion)
-
-INCLUDES=-I./src -I./deps/include
-LDFLAGS=-L./deps/lib -L$(BUILD)/lib
-
+CXXFLAGS:=-g -w
 ifneq ($(strip $(DEBUG)), 1)
-	CFLAGS+= -g -w -O2 -DNDEBUG
+	CXXFLAGS+= -O2 -DNDEBUG
 else
-	CFLAGS+=-g -w -O0 -DDEBUG -DTRACE
+	CXXFLAGS+= -O0 -DDEBUG -DTRACE
 endif
 
-ifeq ($(GCC_VERSION), 4.8)
-	CFLAGS+= -std=c++11 -DCPP11
+ifeq ($(shell g++ -dumpversion), 4.8)
+	CXXFLAGS+= -std=c++11 -DCPP11
 else
-	CFLAGS+= -std=c++0x
+	CXXFLAGS+= -std=c++0x
 endif
 
-.SUFFIXES:
-.PHONY: build install check rebuild uninstall clean help
+all: dirs main unittest 
+.PHONY: all
 
-LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz
+# 包含cpp文件列表
+include ./src/Makefile.dep
+OBJS=$(addprefix $(BUILD_PATH)/build/, $(sources:.cpp=.o))
+OBJS_MAIN=$(addprefix $(BUILD_PATH)/build/, $(main:.cpp=.o))
+OBJS_UNITTEST=$(addprefix $(BUILD_PATH)/build/, $(unittests:.cpp=.o))
 
-sources=main.cpp \
-				core/core_type.cpp \
-		    core/model_options.cpp \
-	      core/user_table.cpp \
-		    core/item_table.cpp \
-		    core/candidate_db.cpp \
-				service/service_glue.cpp \
-				service/service_grpc.cpp \
-		    proto/message.pb.cpp \
-				proto/supplement.pb.cpp \
-				proto/service.pb.cpp \
-				proto/service.grpc.pb.cpp
+.PHONY: main
+main: $(OBJS) $(OBJS_MAIN)
+	@echo $(CXX) $(CXXFLAGS) -o $(BUILD_PATH)/bin/$(TARGET_MAIN)
+	@$(CXX) -o $(BUILD_PATH)/bin/$(TARGET_MAIN) $(CXXFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS) 
 
-unittests=unittest.cpp \
-					core/user_table_test.cpp \
-					core/item_table_test.cpp \
-					core/candidate_db_test.cpp
-				
-OBJECTS=$(addprefix $(OBJPATH), $(sources:.cpp=.o))
-OBJTESTS=$(addprefix $(OBJPATH), $(unittests:.cpp=.o))
+.PHONY: unittest
+unittest: $(OBJS) $(OBJS_UNITTEST)
+	@echo $(CXX) $(CXXFLAGS) -o $(BUILD_PATH)/bin/$(TARGET_UNITTEST)
+	@$(CXX) -o $(BUILD_PATH)/bin/$(TARGET_UNITTEST) $(CXXFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS) 
 
-build: mkdir $(TARGET) $(UNITTESTS)
-
-$(TARGET): $(OBJECTS)
-	@mkdir -p $(BUILD)/bin/
-	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
-
-$(UNITTESTS): $(OBJTESTS)
-	@mkdir -p $(BUILD)/bin/
-	$(CXX) -o $(BUILD)/bin/$@ $(CFLAGS) $(INCLUDES) $(LDFLAGS) $^ $(LIBS)
-
-sinclude $(addprefix $(OBJPATH), $(sources:.cpp=.d))
-sinclude $(addprefix $(OBJPATH), $(unittests:.cpp=.d))
-$(OBJPATH)%.o: $(SRCPATH)%.cpp
-	@mkdir -p $(@D)
-	$(CXX) $(CFLAGS) $(INCLUDES) $^ -c -o $@
-	@$(CXX) -MM $(CFLAGS) $(INCLUDES) $^ > $(OBJPATH)/$*.d
-	@mv -f $(OBJPATH)/$*.d $(OBJPATH)/$*.d.tmp
-	@sed -e 's|.*:|$(OBJPATH)/$*.o:|' < $(OBJPATH)/$*.d.tmp > $(OBJPATH)/$*.d
-	@sed -e 's/.*://' -e 's/\\$$//' < $(OBJPATH)/$*.d.tmp | fmt -1 | \
-		sed -e 's/^ *//' -e 's/$$/:/' >> $(OBJPATH)/$*.d
-	@rm -f $(OBJPATH)/$*.d.tmp
-
-check: build 
-	@$(BUILD)/bin/unittest
-
-install: build
-	@mkdir -p $(PREFIX)/bin
-	@cp $(BUILD)/lib/$(TARGET) $(PREFIX)/lib/
-	
-rebuild: clean build
-
-uninstall:
-	@rm -rf $(PREFIX)/include/db
-	@rm -rf $(PREFIX)/include/proto
-	@rm -f $(PREFIX)/lib/$(TARGET)
-
-clean:
-	@rm -rf $(BUILD)
-
-mkdir:
-	@mkdir -p $(BUILD)
-	@mkdir -p $(BUILD)/bin
-	@mkdir -p $(BUILD)/objs
-
+.PHONY: proto
 proto:
 	protoc -I./docs -I../../deps/src/db/docs --cpp_out=./src/proto ../../deps/src/db/docs/message.proto ./docs/supplement.proto ./docs/service.proto
 	@mv ./src/proto/message.pb.cc ./src/proto/message.pb.cpp
@@ -115,11 +68,50 @@ proto:
 	protoc -I./docs -I../../deps/src/db/docs --grpc_out=./src/proto --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin ./docs/service.proto
 	@mv ./src/proto/service.grpc.pb.cc ./src/proto/service.grpc.pb.cpp
 
+$(BUILD_PATH)/build/%.o: $(SOURCE_PATH)/%.cpp $(BUILD_PATH)/build/%.d
+	@echo $(CXX) $(CFLAGS) $(CXXFLAGS) $<
+	@mkdir -p $(shell dirname $@)
+	@$(CXX) $(CFLAGS) $(CXXFLAGS) $(INCLUDES) -MT $@ -MMD -MP -MF $(BUILD_PATH)/build/$*.Td -c -o $@ $<
+	@mv $(BUILD_PATH)/build/$*.Td $(BUILD_PATH)/build/$*.d
+
+$(BUILD_PATH)/build/%.d: ;
+
+-include $(patsubst %,$(BUILD_PATH)/build/%.d,$(basename $(sources)))
+
+.PHONY: check
+check: all
+	@$(BUILD_PATH)/bin/$(TARGET_UNITTEST)
+
+.PHONY: install
+install: all
+	@mkdir -p $(PREFIX)
+	@cp ./conf/covisit.conf $(PREFIX)
+	@cp $(BUILD_PATH)/bin/$(TARGET_MAIN) $(PREFIX)
+	
+.PHONY: uninstall
+uninstall:
+	rm -f $(PREFIX)/covisit.conf
+	rm -f $(PREFIX)/$(TARGET_MAIN)
+
+.PHONY: clean
+clean:
+	@rm -rf $(BUILD_PATH)
+
+.PHONY: dirs
+dirs:
+	@mkdir -p $(BUILD_PATH)
+	@mkdir -p $(BUILD_PATH)/bin
+	@mkdir -p $(BUILD_PATH)/lib
+	@mkdir -p $(BUILD_PATH)/build
+
+.PHONY: help
 help:
 	@echo "Usage: make [options] [target]"
+	@echo
 	@echo "Options:"
 	@echo "  debug[=FLAG]   : flag: 0 ndebug, 1 debug"
 	@echo "  prefix[=PATH]  : install path, default: /usr/include"
+	@echo 
 	@echo "Target:"
 	@echo "  build          : Build target"
 	@echo "  install        : Install target to prefix path"

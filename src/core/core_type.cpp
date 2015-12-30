@@ -1,5 +1,6 @@
 #include "core/core_type.h"
 #include "utils/util.h"
+#include "utils/char_conv.h"
 #include "glog/logging.h"
 
 namespace souyue {
@@ -213,6 +214,21 @@ namespace souyue {
           structed.belongs_to.insert(std::make_pair(id.type_id, value));
         }
 
+        for (int i = 0; i < proto.tag_size(); ++i) {
+          type_id_t id;
+
+          char tagstr[100];
+          // 内部是对其ID值的10进制字符串求MD5
+          sprintf(tagstr, "%llu", proto.tag(i).tag_id());
+          
+          id.type_id_component.type = IDTYPE_TAG;
+          id.type_id_component.id = makeID(tagstr);
+
+          std::string tag_name = std::string(tagstr) + ":" + proto.tag(i).tag_name();
+          pair_t value = std::make_pair(tag_name, proto.tag(i).tag_power());
+          structed.belongs_to.insert(std::make_pair(id.type_id, value));
+        }
+
         for (int i = 0; i < proto.circle_size(); ++i) {
           type_id_t id;
 
@@ -241,7 +257,7 @@ namespace souyue {
 
           int zone_num = zone_to_region_id(proto.zone(i).c_str(), region_id);
           if (zone_num <= 0) {
-            LOG(WARNING) << "Invalid region: " << proto.zone(i);
+            LOG(WARNING) << "Invalid region: " << toUTF8(proto.zone(i));
           } else {
             structed.item_type = kRegionItem;
             pair_t pair = std::make_pair(proto.zone(i), 1.0f);

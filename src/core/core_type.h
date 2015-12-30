@@ -33,7 +33,9 @@ namespace souyue {
       IDTYPE_SRP           = 7,
       IDTYPE_CITY          = 8,  // 城市值要小于省份，便于排序时排在前面
       IDTYPE_PROVINCE      = 9,
-      IDTYPE_TOP          = 10,
+      IDTYPE_TOP           = 10,
+      IDTYPE_TAG           = 11,
+      IDTYPE_MAXVALUE      = 12
     };
     typedef enum id_type_ id_type_t;
 
