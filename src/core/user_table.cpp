@@ -134,16 +134,14 @@ namespace souyue {
               std::vector<std::string> key_value;
 
               splitString(tokens[i], ':', key_value);
-              if (key_value.size() != 2) {
-                LOG(WARNING) << "Invalid dislike data: " << tokens[i];
+              if (key_value.size() < 1) {
+                LOG(WARNING) << "Invalid dislike data: " << toUTF8(tokens[i]);
                 continue;
               }
-              trimString(key_value[0], "\"");
-              trimString(key_value[1], "\"");
-
               std::vector<std::string> keys;
 
-              splitString(key_value[0], ';', keys);
+              trimString(key_value[0], "\"");
+              splitString(key_value[0], '|', keys);
               for (size_t j = 0; j < keys.size(); ++j) {
                 trimString(keys[j], " ");
                 // 格式：N_XX, N数字表示不喜欢类型, XX表示来源ID/分类ID/圈ID/SRPID
