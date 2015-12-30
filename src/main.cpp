@@ -8,6 +8,7 @@
 #include <pthread.h>
 #include <grpc++/grpc++.h>
 
+#include "utils/char_conv.h"
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 #include "core/candidate_db.h"
@@ -43,6 +44,11 @@ pthread_t grpc_;
 void* service_grpc(void* args);
 DEFINE_string(conf, "conf/candb.conf", "Candidate config file");
 DEFINE_int32(monitor_port, -1, "Monitor port");
+
+// 便于在Linux环境下调试GBK编码输出字符
+// // usage: call printGBK(var)
+void printGBK(const char *pstr);
+void printGBK(const std::string &pstr);
 
 int main(int argc, char* argv[])
 {
@@ -143,3 +149,17 @@ void* service_grpc(void* args)
   server->Wait();
   return NULL;
 }
+
+void printGBK(const std::string &pstr)
+{
+  CharConv cc("UTF-8", "GBK");
+  fprintf(stderr, "%s\n", cc.charConv(pstr).c_str());
+}
+
+void printGBK(const char *pstr)
+{
+  std::string str(pstr);
+  printGBK(str);
+}
+
+
