@@ -205,7 +205,7 @@ namespace souyue {
 
       int total = (int)candidate_set.size();
       // 修正返回结果总个数
-      if (total > recmd.recommend_num()) {
+      if (recmd.recommend_num() > 0 && total > recmd.recommend_num()) {
         total = recmd.recommend_num();
       }
       if (total > options_.max_candidate_set_size) {
@@ -318,7 +318,7 @@ namespace souyue {
       cset.mutable_payload()->mutable_type()->Reserve(total);
 
       int total_video = candidate_video_set.size();
-      if (total_video > recmd.recommend_num()) {
+      if (recmd.recommend_num() > 0 && total_video > recmd.recommend_num()) {
         total_video = recmd.recommend_num();
       }
       if (total_video > options_.max_candidate_video_size)
@@ -334,7 +334,7 @@ namespace souyue {
       }
 
       int total_region = candidate_region_set.size();
-      if (total_region > recmd.recommend_num()) {
+      if (recmd.recommend_num() > 0 && total_region > recmd.recommend_num()) {
         total_region = recmd.recommend_num();
       }
       if (total_region > options_.max_candidate_region_size)
@@ -349,7 +349,7 @@ namespace souyue {
       }
 
       int total_normal = total - total_region - total_video;
-      if (total_normal > recmd.recommend_num()) {
+      if (recmd.recommend_num() > 0 && total_normal > recmd.recommend_num()) {
         total_normal = recmd.recommend_num();
       }
       if (candidate_set.size() < total_normal)

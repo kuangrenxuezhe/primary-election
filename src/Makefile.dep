@@ -13,7 +13,7 @@ sources=core/core_type.cpp \
 main=main.cpp
 
 unittests=unittest.cpp \
-					#core/user_table_test.cpp \
+					core/user_table_test.cpp \
 					core/item_table_test.cpp \
 					core/candidate_db_test.cpp
 	

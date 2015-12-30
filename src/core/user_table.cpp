@@ -150,11 +150,6 @@ namespace souyue {
                   LOG(WARNING) << "Invalid dislike data: " << toUTF8(tokens[i]);
                   continue;
                 }
-
-                // 将类型TAG=8映射到IDTYPE_TAG=11上
-                if (type == 8)
-                  type = IDTYPE_TAG;
-
                 id.type_id_component.type = type;
                 id.type_id_component.id = 0UL;
                 if (keys[j].length() > 2) {

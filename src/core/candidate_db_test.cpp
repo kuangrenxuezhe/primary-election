@@ -1,11 +1,11 @@
 #include "catch.hpp"
-#include "core/options.h"
+#include "core/model_options.h"
 #include "core/candidate_db.h"
 
 using namespace souyue::recmd;
 SCENARIO("CandidateDB测试", "[base]") {
   GIVEN("创建空的CandidateDB") {
-    Options options;
+    ModelOptions options;
     CandidateDB* candb = NULL;
 
     WHEN("创建空候选集库") {
@@ -19,7 +19,7 @@ SCENARIO("CandidateDB测试", "[base]") {
   }
 
   GIVEN("创建空的CandidateDB") {
-    Options options;
+    ModelOptions options;
     CandidateDB* candb = NULL;
     Status status = CandidateDB::openDB(options, &candb);
     if (!status.ok())
@@ -34,7 +34,7 @@ SCENARIO("CandidateDB测试", "[base]") {
   }
 
   GIVEN("Candidate空库") {
-    Options options;
+    ModelOptions options;
     CandidateDB* candb = NULL;
     Status status = CandidateDB::openDB(options, &candb);
     if (!status.ok())
@@ -50,9 +50,9 @@ SCENARIO("CandidateDB测试", "[base]") {
         FAIL(status.ok());
 
       THEN("数据添加成功") {
-        proto::ItemQuery query;
+        ItemQuery query;
         query.set_item_id(1);
-        proto::ItemInfo item_info;
+        ItemInfo item_info;
         status = candb->queryItemInfo(query, item_info);
         if (!status.ok())
           FAIL(status.ok());
@@ -72,8 +72,8 @@ SCENARIO("CandidateDB测试", "[base]") {
         FAIL(status.ok());
 
       THEN("数据更新成功") {
-        proto::UserInfo user_info;
-        proto::UserQuery query;
+        UserInfo user_info;
+        UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
         if (!status.ok())
@@ -113,8 +113,8 @@ SCENARIO("CandidateDB测试", "[base]") {
         FAIL(status.toString());
 
       THEN("数据状态更新") {
-        proto::UserInfo user_info;
-        proto::UserQuery query;
+        UserInfo user_info;
+        UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
         if (!status.ok())
@@ -122,9 +122,9 @@ SCENARIO("CandidateDB测试", "[base]") {
 
         REQUIRE(user_info.readed_size() == 1);
 
-        proto::ItemQuery query1;
+        ItemQuery query1;
         query1.set_item_id(1);
-        proto::ItemInfo item_info;
+        ItemInfo item_info;
         status = candb->queryItemInfo(query1, item_info);
         if (!status.ok())
           FAIL(status.toString());
@@ -151,8 +151,8 @@ SCENARIO("CandidateDB测试", "[base]") {
         FAIL(status.toString());
 
       THEN("数据状态更新") {
-        proto::UserInfo user_info;
-        proto::UserQuery query;
+        UserInfo user_info;
+        UserQuery query;
         query.set_user_id(1);
         status = candb->queryUserInfo(query, user_info);
         if (!status.ok())
@@ -214,7 +214,7 @@ SCENARIO("CandidateDB测试", "[base]") {
 }
 
 TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
-  Options opts;
+  ModelOptions opts;
   CandidateDB* candb;
   Status status = CandidateDB::openDB(opts, &candb);
   if (!status.ok())
@@ -468,7 +468,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
 }
 
 TEST_CASE("CandidateDB圈子订阅逻辑测试", "[base]") {
-  Options opts;
+  ModelOptions opts;
   opts.service_type = 1;
   CandidateDB* candb;
   Status status = CandidateDB::openDB(opts, &candb);
@@ -535,4 +535,63 @@ TEST_CASE("CandidateDB圈子订阅逻辑测试", "[base]") {
   remove("./wal-user.writing");
 }
 
+TEST_CASE("不喜欢Tag", "[base]") {
+  ModelOptions opts;
+  opts.service_type = 0;
 
+  CandidateDB* candb;
+  Status status = CandidateDB::openDB(opts, &candb);
+  if (!status.ok())
+    FAIL(status.toString()); 
+  SECTION("添加&查询Tag") {
+    int32_t ctime = time(NULL);
+    Item item;
+    item.set_item_id(1);
+    item.set_publish_time(ctime - 3);
+    item.set_item_type(ITEM_TYPE_NEWS);
+    ItemTag* tag = item.add_tag();
+    tag->set_tag_id(1);
+    tag->set_tag_name("tag1");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    item.set_item_id(2);
+    item.clear_tag();
+    tag = item.add_tag();
+    tag->set_tag_id(2);
+    tag->set_tag_name("tag2");
+    status = candb->addItem(item);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    Recommend recmd;
+    CandidateSet candset;
+
+    recmd.set_user_id(1);
+    status = candb->queryCandidateSet(recmd, candset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(candset.base().item_id_size() == 2);
+
+    Action action;
+    action.set_user_id(1);
+    action.set_item_id(1);
+    action.set_click_time(time(NULL));
+    action.set_action(ACTION_TYPE_DISLIKE);
+    action.set_dislike("\"8_2|5_xxx\":\"tag2\"");
+    status = candb->updateAction(action, action);
+    if (!status.ok())
+      FAIL(status.toString());
+
+    CandidateSet nodislikeset;
+
+    status = candb->queryCandidateSet(recmd, nodislikeset);
+    if (!status.ok())
+      FAIL(status.toString());
+    REQUIRE(nodislikeset.base().item_id_size() == 1);
+  }
+  delete candb;
+  remove("./wal-item.writing");
+  remove("./wal-user.writing");
+}

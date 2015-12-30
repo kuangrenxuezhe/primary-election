@@ -5,7 +5,7 @@
 using namespace souyue::recmd;
 SCENARIO("测试User表", "[base]") {
   GIVEN("空用户表") {
-    Options opts;
+    ModelOptions opts;
     UserTable table(opts);
     Status status = table.loadTable();
     REQUIRE(status.ok());
@@ -31,7 +31,7 @@ SCENARIO("测试User表", "[base]") {
   }
 
   GIVEN("给定用户") {
-    Options opts;
+    ModelOptions opts;
     UserTable table(opts);
     Status status = table.loadTable();
     REQUIRE(status.ok());
@@ -99,7 +99,7 @@ SCENARIO("测试User表", "[base]") {
   }
 
   GIVEN("带有已读和推荐数据用户") {
-    Options opts;
+    ModelOptions opts;
     UserTable table(opts);
     Status status = table.loadTable();
     REQUIRE(status.ok());
@@ -161,7 +161,7 @@ SCENARIO("测试User表", "[base]") {
   }
 
   GIVEN("正常写入用户表") {
-    Options opts;
+    ModelOptions opts;
     UserTable table(opts);
     Status status = table.loadTable();
     REQUIRE(status.ok()); 
@@ -181,7 +181,7 @@ SCENARIO("测试User表", "[base]") {
   }
 
   GIVEN("正常读取用户表") {
-    Options opts;
+    ModelOptions opts;
     UserTable table(opts);
     Status status = table.loadTable();
     REQUIRE(status.ok()); 
@@ -203,7 +203,7 @@ SCENARIO("测试User表", "[base]") {
   }
 
   GIVEN("给定已有用户表") {
-    Options opts;
+    ModelOptions opts;
     opts.user_hold_time = 2;
     UserTable table(opts);
     Status status = table.loadTable();

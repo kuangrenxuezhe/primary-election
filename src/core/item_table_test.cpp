@@ -5,7 +5,7 @@
 using namespace souyue::recmd;
 SCENARIO("测试item表", "[base]") {
   GIVEN("给定空的item表") {
-    Options opts;
+    ModelOptions opts;
     ItemTable table(opts);
     Status status = table.loadTable();
     if (!status.ok())
@@ -75,7 +75,7 @@ SCENARIO("测试item表", "[base]") {
   }
 
   GIVEN("给定item表") {
-    Options opts;
+    ModelOptions opts;
     ItemTable table(opts);
 
     WHEN("加载item表") {
