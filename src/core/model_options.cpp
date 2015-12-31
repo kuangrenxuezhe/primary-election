@@ -16,6 +16,7 @@ namespace souyue {
       max_table_level = 3;
       new_item_max_age = 2 * 24 * 60 * 60;
       interval_recommendation = 1 * 24 * 60 * 60;
+      profile_expired_time = 1 * 24 * 60 * 60;
       max_candidate_set_size = 5000;
       top_item_max_age = 1 * 24 * 60 * 60;
       flush_timer = "23/day";
@@ -49,6 +50,8 @@ namespace souyue {
           opts.new_item_max_age = 2 * 24 * 60 * 60;
         if (!parser.lookupValue("interval_recommendation", opts.interval_recommendation))
           opts.interval_recommendation = 1 * 24 * 60 * 60;
+        if (!parser.lookupValue("profile_expired_time", opts.profile_expired_time))
+          opts.profile_expired_time = 1 * 24 * 60 * 60;
         if (!parser.lookupValue("max_candidate_set_size", opts.max_candidate_set_size))
           opts.max_candidate_set_size = 5000;
         if (!parser.lookupValue("max_candidate_video_size", opts.max_candidate_video_size))
