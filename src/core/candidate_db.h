@@ -3,10 +3,10 @@
 
 #include "utils/status.h"
 #include "core/model_options.h"
+#include "proto/service.pb.h"
 #include "core/user_table.h"
 #include "core/item_table.h"
 #include "proto/supplement.pb.h"
-#include "proto/service.pb.h"
 
 namespace souyue {
   namespace recmd {

@@ -6,9 +6,9 @@ SOURCE_PATH:=src
 TARGET_MAIN=candb
 TARGET_UNITTEST=unittest
 
-INCLUDES=-Isrc -Ideps/include
+INCLUDES=-Isrc -Ideps/include -Ideps/include/db
 LDFLAGS=-Ldeps/lib -L$(BUILD_PATH)/lib
-LIBS=-lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid \
+LIBS=-ldb -lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid \
 		 -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr \
 		 -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz
 
@@ -56,11 +56,7 @@ unittest: $(OBJS) $(OBJS_UNITTEST)
 
 .PHONY: proto
 proto:
-	protoc -I./docs -I../../deps/src/db/docs --cpp_out=./src/proto ../../deps/src/db/docs/message.proto ./docs/supplement.proto ./docs/service.proto
-	@mv ./src/proto/message.pb.cc ./src/proto/message.pb.cpp
-	@sed "s/message.pb.h/proto\/message.pb.h/" ./src/proto/supplement.pb.h  > ./src/proto/supplement.pb.h.tmp
-	@mv ./src/proto/supplement.pb.h.tmp ./src/proto/supplement.pb.h
-	@mv ./src/proto/supplement.pb.cc ./src/proto/supplement.pb.cpp
+	protoc -I./docs -I../../deps/src/db/docs --cpp_out=./src/proto ./docs/service.proto
 	@sed "s/message.pb.h/proto\/message.pb.h/" ./src/proto/service.pb.h  > ./src/proto/service.pb.h.tmp
 	@sed "s/supplement.pb.h/proto\/supplement.pb.h/" ./src/proto/service.pb.h.tmp  > ./src/proto/service.pb.h
 	@rm ./src/proto/service.pb.h.tmp
