@@ -406,6 +406,13 @@ namespace souyue {
 
       return Status::OK();
     }
+
+    Status CandidateDB::deleteUserProfileFieldByKey(const UserProfileFieldKey& field_key)
+    {
+      DurationLogger duration(Duration::kMilliSeconds, "DeleteUserDislike: user_id=", field_key.user_id());
+
+      return user_table_->deleteFieldByKey(field_key);
+    }
   } // namespace recmd
 } // namespace souyue
 

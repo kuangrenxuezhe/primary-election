@@ -42,6 +42,8 @@ namespace souyue {
         Status queryItemInfo(const ItemQuery& query, ItemInfo& item_info);
         // 查询用户是否在用户表中
         Status queryUserInfo(const UserQuery& query, UserInfo& user_info);
+        // 删除指定用户的信息域
+        Status deleteUserProfileFieldByKey(const UserProfileFieldKey& field_key);
 
       protected:
         Status lock(); // 单进程锁定

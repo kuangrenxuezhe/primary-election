@@ -116,5 +116,40 @@ namespace souyue {
 
       return failed_status_glue(status);
     }
+
+
+    grpc::Status ServiceGrpc::updateAction(grpc::ServerContext* context, const Action* request, StatusCode* response)
+    {
+      Action updated;
+
+      Status status = candidate_db_->updateAction(*request, updated);
+      if (status.ok()) {
+        response->set_code(CODE_OK);
+        return grpc::Status::OK;
+      } else if (status.isNotFound()) {
+        response->set_code(CODE_NOT_FOUND);
+        response->set_reason(status.toString());
+        return grpc::Status::OK;
+      }
+      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+
+      return failed_status_glue(status);
+    }
+
+    grpc::Status ServiceGrpc::deleteUserDislike(grpc::ServerContext* context, const UserProfileFieldKey* request, StatusCode* response)
+    {
+      Status status = candidate_db_->deleteUserProfileFieldByKey(*request);
+      if (status.ok()) {
+        response->set_code(CODE_OK);
+        return grpc::Status::OK;
+      } else if (status.isNotFound()) {
+        response->set_code(CODE_NOT_FOUND);
+        response->set_reason(status.toString());
+        return grpc::Status::OK;
+      }
+      LOG(ERROR)<<status.toString()<<", from="<<context->peer();
+
+      return failed_status_glue(status);
+    }
   } // namespace recmd
 } // namespace souyue

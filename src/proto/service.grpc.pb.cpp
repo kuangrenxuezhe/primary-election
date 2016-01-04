@@ -20,6 +20,8 @@ static const char* PrimaryElection_method_names[] = {
   "/module.protocol.PrimaryElection/queryItemInfo",
   "/module.protocol.PrimaryElection/queryUserStatus",
   "/module.protocol.PrimaryElection/queryCandidateSet",
+  "/module.protocol.PrimaryElection/updateAction",
+  "/module.protocol.PrimaryElection/deleteUserDislike",
 };
 
 std::unique_ptr< PrimaryElection::Stub> PrimaryElection::NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options) {
@@ -32,6 +34,8 @@ PrimaryElection::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   , rpcmethod_queryItemInfo_(PrimaryElection_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_queryUserStatus_(PrimaryElection_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_queryCandidateSet_(PrimaryElection_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_updateAction_(PrimaryElection_method_names[4], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_deleteUserDislike_(PrimaryElection_method_names[5], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status PrimaryElection::Stub::queryUserInfo(::grpc::ClientContext* context, const ::module::protocol::UserQuery& request, ::module::protocol::UserInfo* response) {
@@ -66,7 +70,23 @@ PrimaryElection::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   return new ::grpc::ClientAsyncResponseReader< ::module::protocol::CandidateSet>(channel_.get(), cq, rpcmethod_queryCandidateSet_, context, request);
 }
 
-PrimaryElection::AsyncService::AsyncService() : ::grpc::AsynchronousService(PrimaryElection_method_names, 4) {}
+::grpc::Status PrimaryElection::Stub::updateAction(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::module::protocol::StatusCode* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_updateAction_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>* PrimaryElection::Stub::AsyncupdateActionRaw(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>(channel_.get(), cq, rpcmethod_updateAction_, context, request);
+}
+
+::grpc::Status PrimaryElection::Stub::deleteUserDislike(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::module::protocol::StatusCode* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_deleteUserDislike_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>* PrimaryElection::Stub::AsyncdeleteUserDislikeRaw(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>(channel_.get(), cq, rpcmethod_deleteUserDislike_, context, request);
+}
+
+PrimaryElection::AsyncService::AsyncService() : ::grpc::AsynchronousService(PrimaryElection_method_names, 6) {}
 
 PrimaryElection::Service::Service() {
 }
@@ -118,6 +138,28 @@ void PrimaryElection::AsyncService::RequestqueryCandidateSet(::grpc::ServerConte
   AsynchronousService::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
 }
 
+::grpc::Status PrimaryElection::Service::updateAction(::grpc::ServerContext* context, const ::module::protocol::Action* request, ::module::protocol::StatusCode* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+void PrimaryElection::AsyncService::RequestupdateAction(::grpc::ServerContext* context, ::module::protocol::Action* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  AsynchronousService::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+}
+
+::grpc::Status PrimaryElection::Service::deleteUserDislike(::grpc::ServerContext* context, const ::module::protocol::UserProfileFieldKey* request, ::module::protocol::StatusCode* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+void PrimaryElection::AsyncService::RequestdeleteUserDislike(::grpc::ServerContext* context, ::module::protocol::UserProfileFieldKey* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  AsynchronousService::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+}
+
 ::grpc::RpcService* PrimaryElection::Service::service() {
   if (service_) {
     return service_.get();
@@ -143,6 +185,16 @@ void PrimaryElection::AsyncService::RequestqueryCandidateSet(::grpc::ServerConte
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::module::protocol::Recommend, ::module::protocol::CandidateSet>(
           std::mem_fn(&PrimaryElection::Service::queryCandidateSet), this)));
+  service_->AddMethod(new ::grpc::RpcServiceMethod(
+      PrimaryElection_method_names[4],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::module::protocol::Action, ::module::protocol::StatusCode>(
+          std::mem_fn(&PrimaryElection::Service::updateAction), this)));
+  service_->AddMethod(new ::grpc::RpcServiceMethod(
+      PrimaryElection_method_names[5],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< PrimaryElection::Service, ::module::protocol::UserProfileFieldKey, ::module::protocol::StatusCode>(
+          std::mem_fn(&PrimaryElection::Service::deleteUserDislike), this)));
   return service_.get();
 }
 

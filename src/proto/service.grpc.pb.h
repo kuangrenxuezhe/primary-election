@@ -47,11 +47,21 @@ class PrimaryElection GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::CandidateSet>> AsyncqueryCandidateSet(::grpc::ClientContext* context, const ::module::protocol::Recommend& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::CandidateSet>>(AsyncqueryCandidateSetRaw(context, request, cq));
     }
+    virtual ::grpc::Status updateAction(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::module::protocol::StatusCode* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>> AsyncupdateAction(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>>(AsyncupdateActionRaw(context, request, cq));
+    }
+    virtual ::grpc::Status deleteUserDislike(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::module::protocol::StatusCode* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>> AsyncdeleteUserDislike(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>>(AsyncdeleteUserDislikeRaw(context, request, cq));
+    }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::UserInfo>* AsyncqueryUserInfoRaw(::grpc::ClientContext* context, const ::module::protocol::UserQuery& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::ItemInfo>* AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::module::protocol::ItemQuery& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::module::protocol::User& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::module::protocol::Recommend& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>* AsyncupdateActionRaw(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::module::protocol::StatusCode>* AsyncdeleteUserDislikeRaw(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
@@ -72,6 +82,14 @@ class PrimaryElection GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::CandidateSet>> AsyncqueryCandidateSet(::grpc::ClientContext* context, const ::module::protocol::Recommend& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::CandidateSet>>(AsyncqueryCandidateSetRaw(context, request, cq));
     }
+    ::grpc::Status updateAction(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::module::protocol::StatusCode* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>> AsyncupdateAction(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>>(AsyncupdateActionRaw(context, request, cq));
+    }
+    ::grpc::Status deleteUserDislike(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::module::protocol::StatusCode* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>> AsyncdeleteUserDislike(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>>(AsyncdeleteUserDislikeRaw(context, request, cq));
+    }
 
    private:
     std::shared_ptr< ::grpc::Channel> channel_;
@@ -79,10 +97,14 @@ class PrimaryElection GRPC_FINAL {
     ::grpc::ClientAsyncResponseReader< ::module::protocol::ItemInfo>* AsyncqueryItemInfoRaw(::grpc::ClientContext* context, const ::module::protocol::ItemQuery& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::module::protocol::UserStatus>* AsyncqueryUserStatusRaw(::grpc::ClientContext* context, const ::module::protocol::User& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::module::protocol::CandidateSet>* AsyncqueryCandidateSetRaw(::grpc::ClientContext* context, const ::module::protocol::Recommend& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>* AsyncupdateActionRaw(::grpc::ClientContext* context, const ::module::protocol::Action& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncResponseReader< ::module::protocol::StatusCode>* AsyncdeleteUserDislikeRaw(::grpc::ClientContext* context, const ::module::protocol::UserProfileFieldKey& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     const ::grpc::RpcMethod rpcmethod_queryUserInfo_;
     const ::grpc::RpcMethod rpcmethod_queryItemInfo_;
     const ::grpc::RpcMethod rpcmethod_queryUserStatus_;
     const ::grpc::RpcMethod rpcmethod_queryCandidateSet_;
+    const ::grpc::RpcMethod rpcmethod_updateAction_;
+    const ::grpc::RpcMethod rpcmethod_deleteUserDislike_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -94,6 +116,8 @@ class PrimaryElection GRPC_FINAL {
     virtual ::grpc::Status queryItemInfo(::grpc::ServerContext* context, const ::module::protocol::ItemQuery* request, ::module::protocol::ItemInfo* response);
     virtual ::grpc::Status queryUserStatus(::grpc::ServerContext* context, const ::module::protocol::User* request, ::module::protocol::UserStatus* response);
     virtual ::grpc::Status queryCandidateSet(::grpc::ServerContext* context, const ::module::protocol::Recommend* request, ::module::protocol::CandidateSet* response);
+    virtual ::grpc::Status updateAction(::grpc::ServerContext* context, const ::module::protocol::Action* request, ::module::protocol::StatusCode* response);
+    virtual ::grpc::Status deleteUserDislike(::grpc::ServerContext* context, const ::module::protocol::UserProfileFieldKey* request, ::module::protocol::StatusCode* response);
     ::grpc::RpcService* service() GRPC_OVERRIDE GRPC_FINAL;
    private:
     std::unique_ptr< ::grpc::RpcService> service_;
@@ -106,6 +130,8 @@ class PrimaryElection GRPC_FINAL {
     void RequestqueryItemInfo(::grpc::ServerContext* context, ::module::protocol::ItemQuery* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::ItemInfo>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestqueryUserStatus(::grpc::ServerContext* context, ::module::protocol::User* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::UserStatus>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestqueryCandidateSet(::grpc::ServerContext* context, ::module::protocol::Recommend* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::CandidateSet>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestupdateAction(::grpc::ServerContext* context, ::module::protocol::Action* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestdeleteUserDislike(::grpc::ServerContext* context, ::module::protocol::UserProfileFieldKey* request, ::grpc::ServerAsyncResponseWriter< ::module::protocol::StatusCode>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
   };
 };
 

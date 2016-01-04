@@ -4,12 +4,18 @@ package module.protocol;
 import "message.proto";
 
 service PrimaryElection {
-  // 用户信息查询
+  // 查询用户信息
   rpc queryUserInfo(UserQuery) returns(UserInfo) {}
+  // 查询Item信息
   rpc queryItemInfo(ItemQuery) returns(ItemInfo) {}
 
   // 用户查询
   rpc queryUserStatus(User) returns(UserStatus) {}
   // 查询候选集合
   rpc queryCandidateSet(Recommend) returns(CandidateSet) {}
+
+  // 更新用户操作
+  rpc updateAction(Action) returns(StatusCode) {}
+  // 删除不喜欢
+  rpc deleteUserDislike(UserProfileFieldKey) returns(StatusCode) {}
 }

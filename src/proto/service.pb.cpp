@@ -59,7 +59,7 @@ void protobuf_AddDesc_service_2eproto() {
   ::module::protocol::protobuf_AddDesc_message_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\rservice.proto\022\017module.protocol\032\rmessag"
-    "e.proto2\300\002\n\017PrimaryElection\022H\n\rqueryUser"
+    "e.proto2\342\003\n\017PrimaryElection\022H\n\rqueryUser"
     "Info\022\032.module.protocol.UserQuery\032\031.modul"
     "e.protocol.UserInfo\"\000\022H\n\rqueryItemInfo\022\032"
     ".module.protocol.ItemQuery\032\031.module.prot"
@@ -67,7 +67,11 @@ void protobuf_AddDesc_service_2eproto() {
     "ule.protocol.User\032\033.module.protocol.User"
     "Status\"\000\022P\n\021queryCandidateSet\022\032.module.p"
     "rotocol.Recommend\032\035.module.protocol.Cand"
-    "idateSet\"\000b\006proto3", 378);
+    "idateSet\"\000\022F\n\014updateAction\022\027.module.prot"
+    "ocol.Action\032\033.module.protocol.StatusCode"
+    "\"\000\022X\n\021deleteUserDislike\022$.module.protoco"
+    "l.UserProfileFieldKey\032\033.module.protocol."
+    "StatusCode\"\000b\006proto3", 540);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "service.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_service_2eproto);
