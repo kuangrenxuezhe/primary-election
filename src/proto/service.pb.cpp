@@ -57,18 +57,17 @@ void protobuf_AddDesc_service_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::module::protocol::protobuf_AddDesc_message_2eproto();
-  ::module::protocol::protobuf_AddDesc_supplement_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\rservice.proto\022\017module.protocol\032\rmessag"
-    "e.proto\032\020supplement.proto2\300\002\n\017PrimaryEle"
-    "ction\022H\n\rqueryUserInfo\022\032.module.protocol"
-    ".UserQuery\032\031.module.protocol.UserInfo\"\000\022"
-    "H\n\rqueryItemInfo\022\032.module.protocol.ItemQ"
-    "uery\032\031.module.protocol.ItemInfo\"\000\022G\n\017que"
-    "ryUserStatus\022\025.module.protocol.User\032\033.mo"
-    "dule.protocol.UserStatus\"\000\022P\n\021queryCandi"
-    "dateSet\022\032.module.protocol.Recommend\032\035.mo"
-    "dule.protocol.CandidateSet\"\000b\006proto3", 396);
+    "e.proto2\300\002\n\017PrimaryElection\022H\n\rqueryUser"
+    "Info\022\032.module.protocol.UserQuery\032\031.modul"
+    "e.protocol.UserInfo\"\000\022H\n\rqueryItemInfo\022\032"
+    ".module.protocol.ItemQuery\032\031.module.prot"
+    "ocol.ItemInfo\"\000\022G\n\017queryUserStatus\022\025.mod"
+    "ule.protocol.User\032\033.module.protocol.User"
+    "Status\"\000\022P\n\021queryCandidateSet\022\032.module.p"
+    "rotocol.Recommend\032\035.module.protocol.Cand"
+    "idateSet\"\000b\006proto3", 378);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "service.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_service_2eproto);

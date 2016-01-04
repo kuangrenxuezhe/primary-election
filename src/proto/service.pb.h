@@ -26,7 +26,6 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include "proto/message.pb.h"
-#include "proto/supplement.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace module {

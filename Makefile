@@ -58,8 +58,7 @@ unittest: $(OBJS) $(OBJS_UNITTEST)
 proto:
 	protoc -I./docs -I../../deps/src/db/docs --cpp_out=./src/proto ./docs/service.proto
 	@sed "s/message.pb.h/proto\/message.pb.h/" ./src/proto/service.pb.h  > ./src/proto/service.pb.h.tmp
-	@sed "s/supplement.pb.h/proto\/supplement.pb.h/" ./src/proto/service.pb.h.tmp  > ./src/proto/service.pb.h
-	@rm ./src/proto/service.pb.h.tmp
+	@mv ./src/proto/service.pb.h.tmp ./src/proto/service.pb.h
 	@mv ./src/proto/service.pb.cc ./src/proto/service.pb.cpp
 	protoc -I./docs -I../../deps/src/db/docs --grpc_out=./src/proto --plugin=protoc-gen-grpc=/usr/local/bin/grpc_cpp_plugin ./docs/service.proto
 	@mv ./src/proto/service.grpc.pb.cc ./src/proto/service.grpc.pb.cpp

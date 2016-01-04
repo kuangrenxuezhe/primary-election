@@ -2,7 +2,6 @@ syntax = "proto3";
 package module.protocol;
 
 import "message.proto";
-import "supplement.proto";
 
 service PrimaryElection {
   // 用户信息查询

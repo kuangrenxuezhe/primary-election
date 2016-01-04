@@ -4,7 +4,6 @@
 #include "utils/chrono_expr.h"
 #include "core/candidate_db.h"
 #include "proto/service.pb.h"
-#include "proto/supplement.pb.h"
 #include "framework/CF_framework_interface.h"
 
 namespace souyue {
