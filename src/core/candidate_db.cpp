@@ -148,6 +148,11 @@ namespace souyue {
       if (!status.ok()) {
         return status;
       } 
+
+      if (action.action() != ACTION_TYPE_CLICK) {
+        return status;
+      }
+
       return item_table_->updateAction(action);
     }
 
