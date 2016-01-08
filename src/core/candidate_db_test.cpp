@@ -247,7 +247,7 @@ TEST_CASE("CandidateDB操作逻辑测试", "[base]") {
     action.set_user_id(2);
     action.set_item_id(1);
     status = candb->updateAction(action, action);
-    if (!status.isNotFound()) // item没有添加
+    if (!status.ok()) // item没有添加
       FAIL(status.toString());
 
     Recommend query;
