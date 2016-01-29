@@ -10,21 +10,6 @@ namespace souyue {
     static const fver_t kSingletonVer(1,0);
     static const std::string kSingletonName = "/._candb_lock_";
 
-    class DurationLogger: public AutoDuration {
-      public:
-        template<typename... Args>
-          DurationLogger(Duration::Unit unit, Args... args)
-          : AutoDuration(unit, args...) {
-          }
-
-        virtual ~DurationLogger() {
-          if (duration().count() < 100) {
-            LOG(INFO) << info() << ", used: " << duration().count() << "ms";
-          } else {
-            LOG(WARNING) << info() << ", used: " << duration().count() << "ms";
-          }
-        }
-    };
     Status CandidateDB::openDB(const ModelOptions& opts, CandidateDB** dbptr)
     {
       DurationLogger duration(Duration::kMilliSeconds, "OpenDB");
