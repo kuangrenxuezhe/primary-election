@@ -65,7 +65,7 @@ namespace souyue {
     Status CandidateDB::flush()
     {
       DurationLogger duration(Duration::kMilliSeconds, "Flush");
-      Status status = Status::OK(); // user_table_->eliminate();
+      Status status = user_table_->eliminate();
       if (!status.ok()) {
         LOG(WARNING)<<status.toString();
       }
