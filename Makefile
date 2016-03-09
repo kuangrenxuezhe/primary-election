@@ -10,7 +10,7 @@ INCLUDES=-Isrc -Ideps/include -Ideps/include/db
 LDFLAGS=-Ldeps/lib -L$(BUILD_PATH)/lib
 LIBS=-ldb -lrdkafka++ -lrdkafka -ljson -lutils -lpthread -luuid \
 		 -lglog -lprotobuf -lconfig++ -lcrypto -lgrpc -lgpr \
-		 -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz
+		 -lgrpc_unsecure -lgrpc++_unsecure -lgflags -lz -lrt
 
 ifneq ($(strip $(debug)),)
 	DEBUG=1
@@ -29,7 +29,8 @@ else
 	CXXFLAGS+= -O0 -DDEBUG -DTRACE
 endif
 
-ifeq ($(shell g++ -dumpversion), 4.8)
+GCC_VER:=$(shell echo `gcc -dumpversion | cut -f1-2 -d.` \>= 4.8 | sed -e 's/\./*100+/g' | bc )
+ifeq ($(GCC_VER),1)
 	CXXFLAGS+= -std=c++11 -DCPP11
 else
 	CXXFLAGS+= -std=c++0x
