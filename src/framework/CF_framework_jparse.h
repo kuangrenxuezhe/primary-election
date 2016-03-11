@@ -190,6 +190,12 @@ private:
         else
             item->set_picture_num(node->valueint);
         
+        node = cJSON_GetObjectItem(json, "expiredtime");
+        if(node == NULL)
+            item->set_expired_time(0);
+        else
+            item->set_picture_num(node->valueint);
+        
         node = cJSON_GetObjectItem(json, "power");
         if(node == NULL)
             item->set_power(0);
